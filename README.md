@@ -27,7 +27,9 @@ means. Design decisions can then point to the insight or source behind them.
 | **Funding:** which grants fit the project | open and upcoming calls from the EU Funding & Tenders Portal and Romania's official sites, each with deadline, grant per project, who can apply, fit and the date it was checked | `research/funding/` |
 
 Research reports what the sources say. Interpreting it (patterns, gaps, opportunities, futures) is the job of
-[poiesis-insight](https://github.com/gorgmihai92/poiesis-insight), or yours.
+[poiesis-insight](https://github.com/gorgmihai92/poiesis-insight), or yours. Insight starts from
+`research/README.md`, the index, reads the notes in `research/notes/` and cites back to the note and page; it never
+edits them. Keep the index current and every claim in a note with its page, and the handover needs nothing else.
 
 ## Install
 
