@@ -149,9 +149,21 @@ LICENSE                       MIT
 
 ## Where the rules come from
 
-Each rule names its source, with a note per source in `research/notes`: fabricated citations by language models
-(Walters & Wilder 2023), evidence quality (Murad et al. 2016), citations and quality (Aksnes et al. 2019), database
-coverage (Martín-Martín et al. 2021; Culbert et al. 2025), co-citation and snowballing (Small 1973; Wohlin 2014).
+Each rule names its source; there is one note per source in `research/notes`.
+
+- **Nothing invented, every citation checked:** Walters & Wilder 2023. Language models fabricated 18–55% of the
+  citations they wrote, and answered wrongly when asked whether a citation was correct, so citations are checked
+  against the DOI registry, not by asking the model.
+- **Quality by kind, then by the source itself:** Murad et al. 2016, the new evidence pyramid. The kind of study is
+  a starting point; each source moves up or down by its own bias, sample, precision and fit, and a review is only as
+  good as the studies it combines.
+- **Citations mean influence, not truth:** Aksnes, Langfeldt & Wouters 2019.
+- **Several databases, and Google Scholar through your export:** Martín-Martín et al. 2021. Google Scholar found
+  88% of citations against 60% or less elsewhere, with the widest gaps in the humanities and older works.
+- **Reference lists from OpenAlex:** Culbert et al. 2025. Its reference lists are as complete as Web of Science and
+  Scopus for recent work.
+- **Founding works from what top papers cite together:** Small 1973 (co-citation) and Wohlin 2014 (snowballing).
+- **Licences, legal copies, fresh funding calls:** the plugin's own choices, not research findings.
 
 ## Update or remove
 
