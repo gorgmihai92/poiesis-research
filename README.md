@@ -1,0 +1,171 @@
+# Poiesis Research
+
+A Claude Code plugin for research you can check. It finds the literature on a topic, the evidence behind a
+claim, and the EU and Romanian grants that fit a project. Every source, page, date and amount comes from a search
+or a page it read, never from memory.
+
+## The Poiesis toolkits
+
+**Collect → connect → create.** Three toolkits, each usable on its own; together, each one builds on what the
+previous one left in your project.
+
+| Toolkit | You | What it does | Leaves in your project |
+|---|---|---|---|
+| [poiesis-research](https://github.com/gorgmihai92/poiesis-research) | **collect** | finds and cites sources: the literature on a topic, the evidence behind a claim, the grants that fit | `research/` |
+| [poiesis-insight](https://github.com/gorgmihai92/poiesis-insight) | **connect** | interprets what was collected, or any data: insights and foresight, each conclusion challenged | `insights/`, `foresight/` |
+| [poiesis-design](https://github.com/gorgmihai92/poiesis-design) | **create** | designs the interface and how the app behaves, and checks both before release | `.poiesis-design/`, your design tokens |
+
+Research reports what sources say and stops there. Insight reads `research/` (or your own data) and says what it
+means. Design decisions can then point to the insight or source behind them.
+
+## What it covers
+
+| You want to know | It returns | Saved in |
+|---|---|---|
+| **Literature:** what is known on a topic, who founded the field, the best sources for a need | founding works first, then current work, each with citations, kind (review, empirical, analytical) and whether an open copy exists | `research/notes/` |
+| **Evidence:** whether data support a claim | meta-analyses, experiments, validated measures and datasets, with design, sample and the key number, and a verdict: supported, mixed, not supported or not studied | `research/notes/` |
+| **Funding:** which grants fit the project | open and upcoming calls from the EU Funding & Tenders Portal and Romania's official sites, each with deadline, grant per project, who can apply, fit and the date it was checked | `research/funding/` |
+
+Research reports what the sources say. Interpreting it (patterns, gaps, opportunities, futures) is the job of
+[poiesis-insight](https://github.com/gorgmihai92/poiesis-insight), or yours.
+
+## Install
+
+In Claude Code:
+
+```
+/plugin marketplace add gorgmihai92/poiesis-research
+/plugin install poiesis-research@poiesis-research
+```
+
+It needs **Python 3**, which macOS and most Linux systems already have. It works without keys. For heavy use, two
+free keys help (set them in your shell profile): `OPENALEX_API_KEY` ([openalex.org](https://openalex.org/settings/api);
+without it everyone on your network shares about 100 searches a day) and `S2_API_KEY`
+([Semantic Scholar](https://www.semanticscholar.org/product/api); without it that database answers slowly).
+
+## What to ask Claude
+
+Ask in plain language. The plugin comes in when the work is research, and you can name its agents directly.
+
+- *"Who are the founders of framing research?"*
+- *"Find the best sources on how people judge credibility from speech."*
+- *"Is there evidence that short texts are enough to describe someone's style?"*
+- *"Find EU and Romanian grants for a civic-tech app run by a small NGO."*
+- *"Use paper-scout on persuasion, evidence-scout on measuring populism and funding-scout on grants, in parallel."*
+
+The first time, Claude asks what your project is, the sections of your library and the language of your notes
+(for funding, also who applies), and writes them to `research/research.config.md`.
+
+## How it works
+
+One skill, `research`, is the entry point. It reads your project's config and what the library already holds,
+then picks a **playbook** for the kind of request. Each playbook has an **agent** for parallel work: the skill
+works inside your conversation, while an agent runs on its own and returns only a report, so you can send several
+at once, one part of a question each.
+
+| Playbook | Agent | Where it searches |
+|---|---|---|
+| literature | `paper-scout` | OpenAlex and Semantic Scholar, merged; Google Scholar through your own export |
+| evidence | `evidence-scout` | the same databases, empirical studies first |
+| funding | `funding-scout` | EU Funding & Tenders Portal (Horizon Europe, Digital Europe, Creative Europe, Erasmus+, CERV, and calls EU projects open to SMEs); Ministry of Investments and European Projects, regional development agencies, UEFISCDI, AFIR |
+
+- **Literature, founders first.** It reads the bibliographies of the most-cited works on the topic. Works that
+  most of them cite are the field's foundations, however old. Then it adds current work by citations and
+  relevance.
+- **Google Scholar by hand.** Scholar has no open API. Save results from
+  [Publish or Perish](https://harzing.com/resources/publish-or-perish) (free) as CSV and ask Claude to combine
+  them with the other databases.
+- **Funding, checked on the official page.** A call counts only from its official page, with the date it was
+  checked. Stale and cancelled calls are dropped.
+
+## The rules
+
+The same rules apply to every playbook (`skills/research/rules.md`):
+
+- **Nothing invented.** No source, page, number, date or amount without a search result or a page read. What
+  Claude remembers but can't confirm is marked "unconfirmed".
+- **Cited.** A claim names its page; a funding detail names its official page and the date checked.
+- **Honest evidence.** Samples, effect sizes and limits as the source states them. One study is not a consensus,
+  and disagreement is reported.
+- **Checked against the registry.** After notes are written, every DOI is looked up in the DOI registry and must
+  match its note's title; a model asked about its own citations is not a check.
+- **Quality, by kind and then by the source itself.** Systematic reviews and meta-analyses, validated measures and
+  experiments, other empirical studies, theory, popular books: a starting point, after which each source moves up
+  or down by its own bias, sample, precision and fit. Many citations mean influence, not truth.
+- **Legal copies only.** Open copies are downloaded. For the rest you get where to find one (library, the
+  author, or buying it). No shadow libraries.
+- **Closed-licence files stay local.** Never pushed to a public repository or shipped with a product.
+
+## What it adds to your project
+
+```
+research/
+  research.config.md          your project, library sections, note language; for funding, who applies
+  README.md                   index of everything below
+  papers/<section>/…pdf/.txt  sources and their text, with a page marker before each page
+  notes/<section>/….md        what a source says (with pages) and what it means for the project
+  funding/<call-id>.md        one call: deadline, grant, eligibility, fit, date checked
+```
+
+## What's in this repository
+
+The repository is a Claude Code **marketplace** holding one **plugin**.
+
+```
+.claude-plugin/
+  marketplace.json            the marketplace: its name and the plugins it lists (here, one)
+plugins/
+  poiesis-research/           the plugin
+    .claude-plugin/
+      plugin.json             name, version, description
+    skills/research/          the skill: what Claude follows when you ask for research
+      SKILL.md                entry point: reads the config, picks the playbook
+      rules.md                honesty, quality order, freshness, copies; shared by all playbooks
+      playbooks/
+        literature.md         how to map a field and find the best sources
+        evidence.md           how to weigh the data behind a claim
+        funding.md            how to find and check grant calls
+      scripts/                Python 3, standard library only
+        search.py             search OpenAlex and Semantic Scholar together, or look up a DOI
+        foundations.py        find a field's founding works from what its top papers cite
+        scholar_import.py     merge a Google Scholar export (Publish or Perish CSV) with the databases
+        copies.py             download the open copy of a work, or say where to find it
+        extract_text.py       turn a PDF into text with "[p. N]" page markers, so notes can cite pages
+        funding.py            search open and upcoming calls on the EU Funding & Tenders Portal
+        verify_citations.py   check that every DOI in the notes exists and matches its title
+        scholarly.py          shared database access used by the scripts above
+      templates/
+        research.config.md    the project config created on first use
+        note.md               a source note
+        funding.md            a call note
+    agents/                   agents for parallel work, one per playbook
+      paper-scout.md          literature for one question
+      evidence-scout.md       evidence for one claim
+      funding-scout.md        funding for one project or need
+research/                     the sources behind the rules: one note per source
+CHANGELOG.md                  what changed in each version
+LICENSE                       MIT
+```
+
+## Where the rules come from
+
+Each rule names its source, with a note per source in `research/notes`: fabricated citations by language models
+(Walters & Wilder 2023), evidence quality (Murad et al. 2016), citations and quality (Aksnes et al. 2019), database
+coverage (Martín-Martín et al. 2021; Culbert et al. 2025), co-citation and snowballing (Small 1973; Wohlin 2014).
+
+## Update or remove
+
+```
+/plugin marketplace update poiesis-research
+/plugin update poiesis-research@poiesis-research
+/plugin uninstall poiesis-research@poiesis-research
+```
+
+## Changing the plugin
+
+Edit the files under `plugins/poiesis-research/`, run `claude plugin validate .`, bump the version in
+`plugin.json`, `marketplace.json` and `CHANGELOG.md`, and push. Projects get it with the update commands above.
+
+## License
+
+MIT. Requires Python 3.

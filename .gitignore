@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.DS_Store
+*.pdf
+# Closed-licence research files stay local
+research/papers/martin-martin-2021-*
+research/papers/culbert-2025-*
