@@ -8,6 +8,14 @@
 - `independence.py`: groups studies that share authors; verdicts count independent groups, not papers.
 - Rules for non-academic sources: find out who is behind them first (lateral reading).
 - Two new research notes: Nickerson 1998, Wineburg & McGrew 2019.
+- Depth: quick, standard (default) or thorough, per request or `Depth:` in `research.config.md`. A few rules hold
+  at every depth; the rest are defaults, skippable if the report says why. Every report ends with "Not checked".
+  Rules limit what is reported as true, never what may be explored.
+- Answers short and direct, the answer first; agents only for independent parallel parts or the thorough check;
+  each agent has a word limit.
+- "Other Poiesis plugins": when another one would change the result, Claude suggests it once and installs it only
+  if the user agrees.
+- README: the four toolkits, their roles, agents, what each reads and leaves, and how they connect.
 
 ## 2.2.1
 - `verify_citations.py` keeps parentheses inside DOIs (e.g. `S0016-3287(98)00086-X`).

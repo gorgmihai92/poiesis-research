@@ -4,8 +4,8 @@ Research you can check: the literature on a topic, the evidence behind a claim, 
 `research` skill picks a playbook (literature, evidence, funding); the agents `paper-scout`, `evidence-scout` and
 `funding-scout` run one part each, in parallel.
 
-Part of the Poiesis toolkits: research collects, insight connects, design creates
-([poiesis-research](https://github.com/gorgmihai92/poiesis-research), [poiesis-insight](https://github.com/gorgmihai92/poiesis-insight), [poiesis-design](https://github.com/gorgmihai92/poiesis-design)).
+Part of the Poiesis toolkits: research collects, insight connects, frontier explores, design creates
+([poiesis-research](https://github.com/gorgmihai92/poiesis-research), [poiesis-insight](https://github.com/gorgmihai92/poiesis-insight), [poiesis-frontier](https://github.com/gorgmihai92/poiesis-frontier), [poiesis-design](https://github.com/gorgmihai92/poiesis-design)).
 
 ```
 /plugin marketplace add gorgmihai92/poiesis-research

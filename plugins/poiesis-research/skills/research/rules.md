@@ -1,5 +1,20 @@
 # Rules (every playbook)
 
+## Depth
+Some rules hold at every depth; the rest are defaults, scaled to what is at stake. The user picks the depth, or the
+project's `research.config.md` sets it (`Depth:`); otherwise **standard**.
+- **Always:** nothing invented; every claim cites its page; DOIs checked whenever notes are written; sources
+  reported as they say it; who is behind a non-academic source; legal copies only.
+- **Quick:** one search for the claim and one against it, from titles and abstracts; no forward citations or
+  grouping.
+- **Standard:** the playbook as written: searches for and against, forward citations for the 3–5 studies the verdict
+  rests on, independent groups.
+- **Thorough:** also forward citations for every study kept and every founding work, and full texts where an open
+  copy exists.
+
+A default may be skipped at any depth if the report says which one and why. Every report ends with **Not
+checked:** what was skipped, or "nothing". These rules limit what is reported as true, never what may be explored.
+
 ## Honesty
 - Never invent a source, page, number, date or amount. Everything comes from a search result or a page or file
   you read; anything you remember but cannot confirm is marked "unconfirmed".

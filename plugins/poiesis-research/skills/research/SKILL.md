@@ -29,3 +29,19 @@ say, and leave the interpretation to the user or to an insights tool.
 
 Scripts are in `${CLAUDE_SKILL_DIR}/scripts` (called `$S`; if that path does not exist, Glob for
 `**/research/scripts/search.py` under `~/.claude`). They need only Python 3; run them with `python3 -I`.
+
+## Answers
+Short and direct: the answer first, then what it rests on, in bullets or a table; no preamble, no recap. The full
+work goes in the saved file; the chat gets the summary, the "Not checked" line and the file's path. Use an agent
+only for independent parts that can run in parallel, or for the independent check at thorough depth; otherwise
+work inline.
+
+## Other Poiesis plugins
+This plugin works alone. Suggest another one only when it would change the result: once, in one line, and go
+on without it if the user says no (say what was left out). Check with `claude plugin list`; install only after
+the user agrees, with `claude plugin marketplace add gorgmihai92/<repo>` and then
+`claude plugin install <plugin>@<repo>` (it works after Claude Code restarts).
+- **poiesis-insight** (repo `poiesis-insight`): when the user wants to know what the sources mean (patterns,
+  contradictions, implications) or what is emerging; research stops at what they say.
+- **poiesis-frontier** (repo `poiesis-frontier`): when the user wants new concepts or experiments from the gaps the
+  library shows.
