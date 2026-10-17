@@ -4,6 +4,9 @@ A Claude Code plugin for research you can check. It finds the literature on a to
 claim, and the EU and Romanian grants that fit a project. Every source, page, date and amount comes from a search
 or a page it read, never from memory.
 
+For a thesis, a paper, a grant application or a product decision that has to rest on sources someone else can
+check. Install it below and ask in plain language.
+
 ## The Poiesis toolkits
 
 **Collect → connect → explore → create.** Four toolkits. Each works on its own; together, each reads what the others
@@ -14,7 +17,7 @@ left in your project, as plain files.
 | [poiesis-research](https://github.com/gorgmihai92/poiesis-research) | **collect:** the literature on a topic, the evidence for and against a claim, the grants that fit | `paper-scout`, `evidence-scout`, `funding-scout` | the web's scholarly databases, official funding pages | `research/` |
 | [poiesis-insight](https://github.com/gorgmihai92/poiesis-insight) | **connect:** what the evidence or your data mean, and what is emerging; every conclusion challenged | `insight-analyst`, `foresight-analyst`, `challenger` | `research/`, your own data, `frontier/results/` | `insights/`, `foresight/` |
 | [poiesis-frontier](https://github.com/gorgmihai92/poiesis-frontier) | **explore:** new concepts, each with the smallest experiment that could kill it | `experimentalist` | `insights/`, `foresight/`, `research/` | `frontier/` |
-| [poiesis-design](https://github.com/gorgmihai92/poiesis-design) | **create:** how the interface looks and behaves, checked before release | `ui-auditor`, `ux-tester` | your code, `.poiesis-design/` | `.poiesis-design/`, design tokens, components |
+| [poiesis-design](https://github.com/gorgmihai92/poiesis-design) | **create:** how the interface looks, behaves and what it says, checked before release | `ui-auditor`, `ux-tester`, `copy-reviewer` | your code, `.poiesis-design/` | `.poiesis-design/`, design tokens, components |
 
 ```
 research ──► insight ──► frontier ──► design
@@ -33,7 +36,7 @@ research ──► insight ──► frontier ──► design
   parts in parallel, or for an independent check at thorough depth.
 - **Rules limit what is reported as true, never what may be explored.**
 
-## What it covers
+## Three kinds of question: literature, evidence, funding
 
 | You want to know | It returns | Saved in |
 |---|---|---|
@@ -60,9 +63,9 @@ free keys help (set them in your shell profile): `OPENALEX_API_KEY` ([openalex.o
 without it everyone on your network shares about 100 searches a day) and `S2_API_KEY`
 ([Semantic Scholar](https://www.semanticscholar.org/product/api); without it that database answers slowly).
 
-## What to ask Claude
+## Ask in plain language
 
-Ask in plain language. The plugin comes in when the work is research, and you can name its agents directly.
+The plugin comes in when the work is research, and you can name its agents directly.
 
 - *"Who are the founders of framing research?"*
 - *"Find the best sources on how people judge credibility from speech."*
@@ -73,7 +76,7 @@ Ask in plain language. The plugin comes in when the work is research, and you ca
 The first time, Claude asks what your project is, the sections of your library and the language of your notes
 (for funding, also who applies), and writes them to `research/research.config.md`.
 
-## How it works
+## One skill picks a playbook; an agent can run each part
 
 One skill, `research`, is the entry point. It reads your project's config and what the library already holds,
 then picks a **playbook** for the kind of request. Each playbook has an **agent** for parallel work: the skill
@@ -95,7 +98,7 @@ at once, one part of a question each.
 - **Funding, checked on the official page.** A call counts only from its official page, with the date it was
   checked. Stale and cancelled calls are dropped.
 
-## The rules
+## The same rules for every request: nothing invented, everything cited
 
 The same rules apply to every playbook (`skills/research/rules.md`):
 
@@ -118,7 +121,7 @@ The same rules apply to every playbook (`skills/research/rules.md`):
   author, or buying it). No shadow libraries.
 - **Closed-licence files stay local.** Never pushed to a public repository or shipped with a product.
 
-## What it adds to your project
+## Everything it finds stays in `research/`
 
 ```
 research/
@@ -216,4 +219,4 @@ Edit the files under `plugins/poiesis-research/`, run `claude plugin validate .`
 
 ## License
 
-MIT. Requires Python 3.
+MIT.
