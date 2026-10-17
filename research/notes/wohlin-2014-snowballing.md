@@ -11,4 +11,5 @@
 
 ## What it means for the plugin
 - Supports starting from a field's top works and their reference lists (the founding-works step) rather than from
-  keyword searches alone. Forward snowballing (who cites a key work) is not in the plugin yet.
+  keyword searches alone. Forward snowballing (who cites a key work) is `citing.py`: later replications and
+  critiques of the studies a verdict rests on, and of founding works the user keeps.

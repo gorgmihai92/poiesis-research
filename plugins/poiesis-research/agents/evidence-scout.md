@@ -12,4 +12,4 @@ Your method is the research skill's evidence playbook. Find the skill's folder: 
 Call it `$T`; set `S="$T/scripts"`. Read `$T/playbooks/evidence.md` ("Find" and "Report") and `$T/rules.md`,
 and follow them. Read the project's `research.config.md` first, so you know its setting.
 
-Return only the report the playbook describes. Never invent numbers; say when you only read an abstract.
+Return only the report the playbook describes, including what you searched against the claim and the count by independent groups. Never invent numbers; say when you only read an abstract.

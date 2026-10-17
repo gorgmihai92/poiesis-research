@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.3.0
+- Evidence: every claim is also searched against (replications, failures, critiques, the opposite claim); the
+  report lists what was searched and the evidence against.
+- `citing.py`: the later works that cite a study (forward snowballing), with replications, failures and critiques
+  flagged first; used on the studies a verdict rests on and on founding works the user keeps. Notes get "Later work".
+- `independence.py`: groups studies that share authors; verdicts count independent groups, not papers.
+- Rules for non-academic sources: find out who is behind them first (lateral reading).
+- Two new research notes: Nickerson 1998, Wineburg & McGrew 2019.
+
 ## 2.2.1
 - `verify_citations.py` keeps parentheses inside DOIs (e.g. `S0016-3287(98)00086-X`).
 

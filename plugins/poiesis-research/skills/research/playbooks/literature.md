@@ -9,6 +9,8 @@ What has been written on a topic: the field's founding works, the current method
    `python3 -I $S/foundations.py "<topic>"` reads the bibliographies of the most-cited works on the topic and
    lists the works they all cite. Try two or three wordings; if it warns that the seeds drifted, use the field's own
    term. Old books are indexed poorly: add the classics handbooks name, marked "from the literature".
+   Founding works are old and the most likely to have been revised since: for the ones the user keeps,
+   `python3 -I $S/citing.py --doi <DOI>` shows later replications and critiques.
 3. **Current work:** `python3 -I $S/search.py "<query>" --sort cited --brief`, and the same by relevance. Each
    line shows citations, the evidence kind (review / empirical / analytical) and whether an open copy exists.
 4. **Google Scholar** (optional, the widest coverage: 88% of citations vs 60% or less elsewhere, most in the
@@ -24,7 +26,8 @@ it), evidence kind, open or closed, what it would change. Then ask which ones to
    one; otherwise the user gets one (see `rules.md`). Move it to `research/papers/<section>/<slug>.pdf`
    (`firstauthor-year-short-title`).
 2. **Text:** `python3 -I $S/extract_text.py <pdf>` writes the text next to it, with `[p. N]` page markers.
-3. **Note:** write `research/notes/<section>/<slug>.md` from `templates/note.md`. Every claim has a page.
+3. **Note:** write `research/notes/<section>/<slug>.md` from `templates/note.md`. Every claim has a page; "Later
+   work" lists what `citing.py` found against it, with the date checked.
 4. **Verify:** `python3 -I $S/verify_citations.py research/notes` checks that every DOI exists and matches its note.
 5. **Index:** one line in `research/README.md` under its section.
 

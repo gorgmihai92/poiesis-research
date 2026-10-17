@@ -23,7 +23,7 @@ means. Design decisions can then point to the insight or source behind them.
 | You want to know | It returns | Saved in |
 |---|---|---|
 | **Literature:** what is known on a topic, who founded the field, the best sources for a need | founding works first, then current work, each with citations, kind (review, empirical, analytical) and whether an open copy exists | `research/notes/` |
-| **Evidence:** whether data support a claim | meta-analyses, experiments, validated measures and datasets, with design, sample and the key number, and a verdict: supported, mixed, not supported or not studied | `research/notes/` |
+| **Evidence:** whether data support a claim | meta-analyses, experiments, validated measures and datasets, with design, sample and the key number; the evidence against (failed replications, critiques); and a verdict counted by independent groups: supported, mixed, not supported or not studied | `research/notes/` |
 | **Funding:** which grants fit the project | open and upcoming calls from the EU Funding & Tenders Portal and Romania's official sites, each with deadline, grant per project, who can apply, fit and the date it was checked | `research/funding/` |
 
 Research reports what the sources say. Interpreting it (patterns, gaps, opportunities, futures) is the job of
@@ -89,6 +89,11 @@ The same rules apply to every playbook (`skills/research/rules.md`):
 - **Cited.** A claim names its page; a funding detail names its official page and the date checked.
 - **Honest evidence.** Samples, effect sizes and limits as the source states them. One study is not a consensus,
   and disagreement is reported.
+- **Searched for and against.** Every claim is also searched for replications, failures, critiques and the opposite
+  claim; the studies a verdict rests on are followed forward to the later work that cites them.
+- **Independent groups, not papers.** Studies that share authors, a dataset or a sample count once together.
+- **Non-academic sources, checked laterally.** Reports, vendor surveys, blogs and docs are used after finding out
+  who is behind them; a number from a party that profits from it is a lead, not evidence.
 - **Checked against the registry.** After notes are written, every DOI is looked up in the DOI registry and must
   match its note's title; a model asked about its own citations is not a check.
 - **Quality, by kind and then by the source itself.** Systematic reviews and meta-analyses, validated measures and
@@ -134,6 +139,8 @@ plugins/
         copies.py             download the open copy of a work, or say where to find it
         extract_text.py       turn a PDF into text with "[p. N]" page markers, so notes can cite pages
         funding.py            search open and upcoming calls on the EU Funding & Tenders Portal
+        citing.py             later works that cite a study, with replications and critiques flagged first
+        independence.py       group studies that share authors, so evidence is counted by independent groups
         verify_citations.py   check that every DOI in the notes exists and matches its title
         scholarly.py          shared database access used by the scripts above
       templates/
@@ -165,6 +172,10 @@ Each rule names its source; there is one note per source in `research/notes`.
 - **Reference lists from OpenAlex:** Culbert et al. 2025. Its reference lists are as complete as Web of Science and
   Scopus for recent work.
 - **Founding works from what top papers cite together:** Small 1973 (co-citation) and Wohlin 2014 (snowballing).
+- **Later work that cites a study (forward snowballing):** Wohlin 2014.
+- **Search against the claim, not only for it:** Nickerson 1998, confirmation bias.
+- **Check who is behind a non-academic source:** Wineburg & McGrew 2019. Fact checkers who left a site to read
+  about it judged credibility better, in a fraction of the time, than historians and students who stayed on it.
 - **Licences, legal copies, fresh funding calls:** the plugin's own choices, not research findings.
 
 ## Update or remove

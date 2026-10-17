@@ -12,4 +12,8 @@ The sources behind the rules in `skills/research/rules.md` ("Where these rules c
   88%; [Culbert et al. 2025](notes/culbert-2025-openalex-references.md), OpenAlex references comparable to WoS and
   Scopus. arXiv: local only.
 - **Finding foundations:** [Small 1973](notes/small-1973-co-citation.md), co-citation;
-  [Wohlin 2014](notes/wohlin-2014-snowballing.md), snowballing. Closed: references only.
+  [Wohlin 2014](notes/wohlin-2014-snowballing.md), snowballing, backward and forward. Closed: references only.
+- **Searching against a claim:** [Nickerson 1998](notes/nickerson-1998-confirmation-bias.md), confirmation bias.
+  Closed.
+- **Non-academic sources:** [Wineburg & McGrew 2019](notes/wineburg-2019-lateral-reading.md), lateral reading.
+  Closed, abstract only.

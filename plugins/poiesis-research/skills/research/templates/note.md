@@ -8,6 +8,9 @@
 ## What it says
 - <claim> (p. N)
 
+## Later work
+- <replication, failure or critique that cites it, and what it found> · <DOI> (checked <YYYY-MM-DD>; or "none found")
+
 ## What it means for the project
 - <what we can use, what we cannot, and the limits>
 
