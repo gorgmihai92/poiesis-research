@@ -10,7 +10,7 @@
     {
       "name": "poiesis-research",
       "description": "Research for any project from sources that can be checked: the literature on a topic, the evidence behind a claim, and EU and Romanian grants. One skill with three playbooks and the paper-scout, evidence-scout and funding-scout agents.",
-      "version": "2.3.2",
+      "version": "2.3.3",
       "author": {
         "name": "George Mihai",
         "email": "hi@georgemihai.com"

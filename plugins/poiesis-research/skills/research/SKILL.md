@@ -43,9 +43,11 @@ This plugin works alone. Suggest another one only when it would change the resul
 on without it if the user says no (say what was left out). Check with `claude plugin list`; install only after
 the user agrees, with `claude plugin marketplace add gorgmihai92/<repo>` and then
 `claude plugin install <plugin>@<repo>` (it works after Claude Code restarts).
-- **poiesis-insight** (repo `poiesis-insight`): when the user wants to know what the sources mean (patterns,
+Every suggestion, from the skill or an agent, gives the plugin's link (below) and names the skill or agent
+to use, e.g. "[poiesis-insight](https://github.com/gorgmihai92/poiesis-insight), `foresight-analyst`".
+- **[poiesis-insight](https://github.com/gorgmihai92/poiesis-insight)**: when the user wants to know what the sources mean (patterns,
   contradictions, implications) or what is emerging; research stops at what they say.
-- **poiesis-frontier** (repo `poiesis-frontier`): when the user wants new concepts or experiments from the gaps the
+- **[poiesis-frontier](https://github.com/gorgmihai92/poiesis-frontier)**: when the user wants new concepts or experiments from the gaps the
   library shows.
 
 ## Files other Poiesis plugins read

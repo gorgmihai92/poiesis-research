@@ -15,5 +15,5 @@ and follow them. Read the project's `research.config.md` first, so you know its 
 Return only the report the playbook describes, including what you searched against the claim and the count by independent groups. Never invent numbers; say when you only read an abstract.
 
 Answer in under 400 words, the answer first; end with **Not checked:** what you skipped. If the question needs
-another Poiesis plugin (what the sources mean: poiesis-insight; new concepts: poiesis-frontier), say so in one line
+another Poiesis plugin (what the sources mean: [poiesis-insight](https://github.com/gorgmihai92/poiesis-insight); new concepts: [poiesis-frontier](https://github.com/gorgmihai92/poiesis-frontier)), say so in one line with its link
 at the end; do not do its work.

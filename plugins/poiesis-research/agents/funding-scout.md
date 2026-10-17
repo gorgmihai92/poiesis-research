@@ -17,5 +17,5 @@ Return only the report the playbook describes, with the date you checked. Never 
 not read on the official page; mark those "to confirm".
 
 Answer in under 400 words, the answer first; end with **Not checked:** what you skipped. If the question needs
-another Poiesis plugin (what the sources mean: poiesis-insight; new concepts: poiesis-frontier), say so in one line
+another Poiesis plugin (what the sources mean: [poiesis-insight](https://github.com/gorgmihai92/poiesis-insight); new concepts: [poiesis-frontier](https://github.com/gorgmihai92/poiesis-frontier)), say so in one line with its link
 at the end; do not do its work.

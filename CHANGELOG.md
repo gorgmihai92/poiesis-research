@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.3.3
+- Suggestions of another Poiesis plugin, from the skill or its agents, give the plugin's link and name the skill or
+  agent to use.
+
 ## 2.3.2
 - Starts from any question, claim, proposal or document; asks for `research.config.md` only when saving notes
   or for funding.
