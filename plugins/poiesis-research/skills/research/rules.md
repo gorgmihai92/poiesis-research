@@ -2,7 +2,8 @@
 
 ## Depth
 Some rules hold at every depth; the rest are defaults, scaled to what is at stake. The user picks the depth, or the
-project's `research.config.md` sets it (`Depth:`); otherwise **standard**.
+project sets it with a `Depth:` line in its `CLAUDE.md` (read in every session, by every Poiesis plugin);
+otherwise **standard**.
 - **Always:** nothing invented; every claim cites its page; DOIs checked whenever notes are written; sources
   reported as they say it; who is behind a non-academic source; legal copies only.
 - **Quick:** one search for the claim and one against it, from titles and abstracts; no forward citations or

@@ -26,8 +26,8 @@ research ──► insight ──► frontier ──► design
   and how to test it; design builds and checks. None does another's job.
 - **None needs another.** When one would really improve the answer, Claude says so once, in one line, and offers
   to install it. You can say no; the work goes on and the report says what was left out.
-- **Depth you choose:** quick, standard (the default) or thorough, per request or as `Depth:` in
-  `research/research.config.md`. A few rules hold at every depth (nothing invented, sources cited, interpretation
+- **Depth you choose:** quick, standard (the default) or thorough, per request or as a line in your project's
+  `CLAUDE.md`, e.g. `Depth: quick`. A few rules hold at every depth (nothing invented, sources cited, interpretation
   labelled); the rest scale with what is at stake, and every report ends with what was **not checked**.
 - **Short answers.** The answer first; the full work goes in the saved file. Agents are used only for independent
   parts in parallel, or for an independent check at thorough depth.

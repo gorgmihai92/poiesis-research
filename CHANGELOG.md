@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.3.1
+- Depth is set with a `Depth:` line in the project's `CLAUDE.md`, so it works without poiesis-research.
+
 ## 2.3.0
 - Evidence: every claim is also searched against (replications, failures, critiques, the opposite claim); the
   report lists what was searched and the evidence against.
