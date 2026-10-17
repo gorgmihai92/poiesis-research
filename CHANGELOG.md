@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.3.2
+- Starts from any question, claim, proposal or document; asks for `research.config.md` only when saving notes
+  or for funding.
+- "Files": the paths and fields shared with the other Poiesis plugins, as a contract (changed only in a major
+  version), in the skill and the README; other plugins' files are read tolerantly.
+
 ## 2.3.1
 - Depth is set with a `Depth:` line in the project's `CLAUDE.md`, so it works without poiesis-research.
 

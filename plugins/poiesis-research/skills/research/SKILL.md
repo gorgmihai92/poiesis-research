@@ -18,11 +18,13 @@ say, and leave the interpretation to the user or to an insights tool.
 
 ## Every request
 
-1. **Project context:** read `research.config.md` (in `research/`, `docs/research/` or the root). If there is
-   none, ask what the project is, the library's sections and the note language, and create it from
-   `templates/research.config.md`. For funding, the config also needs the applicant (see the template).
-2. **What exists:** read the index (`research/README.md`) and the files that touch the question, and say what
-   the project already has.
+1. **Start from anything:** a question, a claim, a proposal, a document, a problem to figure out. Say in one line
+   what you will look for, and start. If `research.config.md` exists (in `research/`, `docs/research/` or the
+   root), read it for the project's setting; never ask for it first. Create it from `templates/research.config.md`
+   only when notes are about to be saved (sections, note language) or for funding (the applicant), asking only
+   what cannot be inferred.
+2. **What exists:** if the project has a library, read the index (`research/README.md`) and the files that touch
+   the question, and say what it already has.
 3. **Pick the playbook** from the table. A request can use more than one (e.g. funding, then evidence for the
    application). For a broad request, the user can ask for the agents, one per part, in parallel.
 4. **Follow `rules.md`**, the same for every playbook.
@@ -31,8 +33,8 @@ Scripts are in `${CLAUDE_SKILL_DIR}/scripts` (called `$S`; if that path does not
 `**/research/scripts/search.py` under `~/.claude`). They need only Python 3; run them with `python3 -I`.
 
 ## Answers
-Short and direct: the answer first, then what it rests on, in bullets or a table; no preamble, no recap. The full
-work goes in the saved file; the chat gets the summary, the "Not checked" line and the file's path. Use an agent
+Short and direct: the answer first, then what it rests on, in bullets or a table; no preamble, no recap. When the
+work is saved, the chat gets the summary, the "Not checked" line and the file's path. Use an agent
 only for independent parts that can run in parallel, or for the independent check at thorough depth; otherwise
 work inline.
 
@@ -45,3 +47,12 @@ the user agrees, with `claude plugin marketplace add gorgmihai92/<repo>` and the
   contradictions, implications) or what is emerging; research stops at what they say.
 - **poiesis-frontier** (repo `poiesis-frontier`): when the user wants new concepts or experiments from the gaps the
   library shows.
+
+## Files other Poiesis plugins read
+These paths and fields are a contract between the Poiesis plugins: rename or remove one only in a major version,
+and say so in the changelog; adding fields is free. Read other plugins' files tolerantly: a missing file or field
+means "unknown", said in the report, never an error.
+- `research/README.md`: the index, one line per source under its section.
+- `research/notes/<section>/<slug>.md`: **Source** (DOI or URL), **Evidence**, "What it says" (each claim with
+  `(p. N)`), "Later work", "What it means for the project". Read by insight and frontier.
+- `research/funding/<call-id>.md`: the call, its official page and the date checked.

@@ -193,6 +193,14 @@ Each rule names its source; there is one note per source in `research/notes`.
   about it judged credibility better, in a fraction of the time, than historians and students who stayed on it.
 - **Licences, legal copies, fresh funding calls:** the plugin's own choices, not research findings.
 
+## Files shared with the other toolkits
+
+Writes the index `research/README.md`; notes in `research/notes/<section>/<slug>.md` with **Source**, **Evidence**, "What it says" (claims with pages), "Later work", "What it means for the project"; calls in `research/funding/`. Read by insight and frontier.
+
+The paths and fields the other toolkits read are a contract: they change only in a major version, noted in the
+changelog. Every plugin reads the others' files tolerantly: a missing file or field is reported as unknown, never
+an error. The full list is in each skill's `SKILL.md`, so Claude knows it too.
+
 ## Update or remove
 
 ```
@@ -203,7 +211,7 @@ Each rule names its source; there is one note per source in `research/notes`.
 
 ## Changing the plugin
 
-Edit the files under `plugins/poiesis-research/`, run `claude plugin validate .`, bump the version in
+Edit the files under `plugins/poiesis-research/`, run `claude plugin validate .`, bump the version (major if a field under "Files" changes) in
 `plugin.json`, `marketplace.json` and `CHANGELOG.md`, and push. Projects get it with the update commands above.
 
 ## License
