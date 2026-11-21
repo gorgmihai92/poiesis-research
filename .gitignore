@@ -9,3 +9,6 @@ research/papers/wu-2025-*
 research/papers/chelli-2024-*
 research/papers/beel-2025-*
 research/papers/liu-2024-*
+
+# Results of claude plugin eval
+plugins/poiesis-research/evals/results/
