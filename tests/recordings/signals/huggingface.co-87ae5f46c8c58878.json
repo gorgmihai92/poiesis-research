@@ -1,0 +1,7 @@
+{
+ "url": "https://huggingface.co/api/models?search=EEG&sort=downloads&direction=-1&limit=3",
+ "method": "GET",
+ "status": 200,
+ "fetched": "2026-11-21T21:08:30Z",
+ "body": "[{\"id\": \"braindecode/eegpt-pretrained\", \"createdAt\": \"2026-01-06T16:47:22.000Z\", \"downloads\": 4427, \"likes\": 3}, {\"id\": \"PierreGtch/eeg-fm-masking_jepa_r9cm_L2\", \"createdAt\": \"2026-09-27T15:34:38.000Z\", \"downloads\": 2955, \"likes\": 0}, {\"id\": \"braindecode/eegdino-medium-pretrained\", \"createdAt\": \"2026-06-16T10:04:48.000Z\", \"downloads\": 1248, \"likes\": 1}]"
+}

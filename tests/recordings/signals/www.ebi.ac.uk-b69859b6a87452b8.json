@@ -1,0 +1,7 @@
+{
+ "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=TITLE_ABS%3A%22brain-computer+interface%22+AND+SRC%3APPR+AND+FIRST_PDATE%3A%5B2026-05-21+TO+2026-11-21%5D&resultType=lite&pageSize=3&sort=P_PDATE_D+desc&format=json",
+ "method": "GET",
+ "status": 200,
+ "fetched": "2026-11-21T21:08:12Z",
+ "body": "{\"hitCount\": 48, \"resultList\": {\"result\": [{\"id\": \"PPR1370366\", \"source\": \"PPR\", \"title\": \"Effects of closed-loop BCI-triggered iTBS over the DLPFC on upper-limb Motor and cognitive recovery after stroke: a randomized controlled trial\", \"doi\": \"10.21203/rs.3.rs-11452392/v1\", \"pubYear\": \"2026\", \"firstPublicationDate\": \"2026-11-18\", \"bookOrReportDetails\": {\"publisher\": \"Research Square\", \"yearOfPublication\": 2026}}, {\"id\": \"PPR1369442\", \"source\": \"PPR\", \"title\": \"An Emotion Recognition from EEG Using Spiking Neural Encoding and Attention-Driven Graph-LSTM Networks\", \"doi\": \"10.21203/rs.3.rs-8465044/v1\", \"pubYear\": \"2026\", \"firstPublicationDate\": \"2026-11-17\", \"bookOrReportDetails\": {\"publisher\": \"Research Square\", \"yearOfPublication\": 2026}}, {\"id\": \"PPR1361319\", \"source\": \"PPR\", \"title\": \"Probing EEG Foundation Model Attention Maps for Lightweight Interpretable Emotion Recognition\", \"doi\": \"10.64898/2026.11.05.764629\", \"pubYear\": \"2026\", \"firstPublicationDate\": \"2026-11-06\", \"bookOrReportDetails\": {\"publisher\": \"bioRxiv\", \"yearOfPublication\": 2026}}]}}"
+}
