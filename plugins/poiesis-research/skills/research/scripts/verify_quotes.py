@@ -191,7 +191,14 @@ def check_references(report: Path, notes: Path, bibliography: Path | None) -> in
     lib = library(notes, bibliography)
     text = report.read_text(encoding="utf-8")
     found, missing, leads = 0, [], []
+    fenced = False
     for n, line in enumerate(text.splitlines(), 1):
+        if line.lstrip().startswith("```"):
+            fenced = not fenced
+            continue
+        if fenced:
+            continue
+        line = re.sub(r"`[^`]*`", " ", line)  # what is shown as code is an example, not a reference
         for doi in {trim(d) for d in DOI.findall(line)}:
             if doi in lib["dois"]:
                 found += 1

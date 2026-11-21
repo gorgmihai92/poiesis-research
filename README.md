@@ -1,8 +1,9 @@
 # Poiesis Research
 
 Research you can check, in Claude Code. Poiesis Research finds the literature on a topic, the evidence behind a
-claim, and the EU and Romanian grants that fit a project. Every source, page, date and amount comes from a search or
-a page it read, never from memory.
+claim, and the EU and Romanian grants that fit a project. It also counts how much is published on a subject year
+by year, records what is being noticed about it now, and looks for the nearest existing work before anything is
+called new. Every source, page, date, count and amount comes from a search or a page it read, never from memory.
 
 For a thesis, a paper, a grant application or a product decision that has to rest on sources someone else can check.
 Poiesis Research is one of the four products in the [Poiesis Toolkit](#part-of-the-poiesis-toolkit) and works on its
@@ -39,15 +40,18 @@ Research ──► Insight ──► Frontier ──► Design
   parts in parallel, or for an independent check at thorough depth.
 - **Rules limit what is reported as true, never what may be explored.**
 
-## Three kinds of question: literature, evidence, funding
+## Six kinds of question
 
 | You want to know | It returns | Saved in |
 |---|---|---|
 | **Literature:** what is known on a topic, who founded the field, the best sources for a need | founding works first, then current work, each with citations, kind (review, empirical, analytical) and whether an open copy exists | `research/notes/` |
 | **Evidence:** whether data support a claim | meta-analyses, experiments, validated measures and datasets, with design, sample and the key number; the evidence against (failed replications, critiques); and a verdict counted by independent groups: supported, mixed, not supported or not studied | `research/notes/` |
 | **Funding:** which grants fit the project | open and upcoming calls from the EU Funding & Tenders Portal and Romania's official sites, each with deadline, grant per project, who can apply, fit and the date it was checked | `research/funding/` |
+| **Trends:** how much is published on a subject, year by year | counts and shares per 100,000 works, with the same document types above and below the line, the unfinished year marked, and the database and date they came from | `research/data/` |
+| **Signals:** what is new or being noticed about a subject | what seven open sources show in a recent window: preprints, funded projects, models and datasets, discussion, article views, each with its date, numbers and link | `research/signals/` |
+| **Prior art:** whether something already exists | the nearest existing works and what differs, searched by what the thing does, in several databases; never the word "new" | `research/maps/` |
 
-Research reports what the sources say. Interpreting it (patterns, gaps, opportunities, futures) is the job of
+Research reports what the sources say, what the counts are and what was observed. Interpreting it (patterns, gaps, opportunities, trends, futures) is the job of
 [Poiesis Insight](https://github.com/gorgmihai92/poiesis-insight), or yours. It starts from
 `research/README.md`, the index, reads the notes in `research/notes/` and cites back to the note and page; it never
 edits them. Keep the index current and every claim in a note with its page, and the handover needs nothing else.
@@ -64,7 +68,13 @@ In Claude Code:
 It needs **Python 3**, which macOS and most Linux systems already have. It works without keys. For heavy use, two
 free keys help (set them in your shell profile): `OPENALEX_API_KEY` ([openalex.org](https://openalex.org/settings/api);
 without it everyone on your network shares about 100 searches a day) and `S2_API_KEY`
-([Semantic Scholar](https://www.semanticscholar.org/product/api); without it that database answers slowly).
+([Semantic Scholar](https://www.semanticscholar.org/product/api); without it that database answers slowly). The
+plugin never sends your email address anywhere, and it does not create keys for you.
+
+Answers from the databases are kept for a day in `~/.cache/poiesis-research/`, outside your projects, so a search
+that stopped halfway can be run again without asking twice. Set `POIESIS_RESEARCH_CACHE` to another folder, or to
+`off`. When OpenAlex's free budget for the day is used up, or Semantic Scholar is busy, Crossref, Europe PMC and
+arXiv answer in their place, and each result ends with a line that says which databases answered.
 
 ## Ask in plain language
 
@@ -74,6 +84,9 @@ The plugin comes in when the work is research, and you can name its agents direc
 - *"Find the best sources on how people judge credibility from speech."*
 - *"Is there evidence that short texts are enough to describe someone's style?"*
 - *"Find EU and Romanian grants for a civic-tech app run by a small NGO."*
+- *"How much has been published on solid-state batteries each year since 2015?"*
+- *"What is being noticed about brain-computer interfaces in the last six months?"*
+- *"Has anyone built this already? Find the nearest existing work."*
 - *"Use paper-scout on persuasion, evidence-scout on measuring populism and funding-scout on grants, in parallel."*
 
 The first time, Claude asks what your project is, the sections of your library and the language of your notes
@@ -91,6 +104,9 @@ at once, one part of a question each.
 | literature | `paper-scout` | OpenAlex and Semantic Scholar, merged; Google Scholar through your own export |
 | evidence | `evidence-scout` | the same databases, empirical studies first |
 | funding | `funding-scout` | EU Funding & Tenders Portal (Horizon Europe, Digital Europe, Creative Europe, Erasmus+, CERV, and calls EU projects open to SMEs); Ministry of Investments and European Projects, regional development agencies, UEFISCDI, AFIR |
+| trends | none: a script counts | OpenAlex, by year and by document type; Europe PMC as a second database |
+| signals | `signal-scout` | arXiv, Europe PMC, NIH RePORTER, OpenAIRE, Hacker News, Wikimedia pageviews, Hugging Face |
+| prior art | `paper-scout` | every database above for papers: OpenAlex, Semantic Scholar, Crossref, Europe PMC, arXiv |
 
 - **Literature, founders first.** It reads the bibliographies of the most-cited works on the topic. Works that
   most of them cite are the field's foundations, however old. Then it adds current work by citations and
@@ -100,6 +116,13 @@ at once, one part of a question each.
   them with the other databases.
 - **Funding, checked on the official page.** A call counts only from its official page, with the date it was
   checked. Stale and cancelled calls are dropped.
+- **Counts, on the same document types.** In one recorded run a database's count of other kinds of records rose
+  faster than its count of articles, and a share of articles among all records fell for that reason alone. A share
+  here counts the same types above and below the line, and the file says which.
+- **Signals, as observations.** A signal says what was seen, where, when, how visible and how widespread. What it
+  means is left to you or to Poiesis Insight.
+- **Scouts return rows, not prose.** Each source is one row in fixed columns: citation, DOI, how it was verified,
+  how much was read, what it says, whether an open copy exists. Rows are copied into the saved file as returned.
 
 ## The same rules for every request: nothing invented, everything cited
 
@@ -117,6 +140,13 @@ The same rules apply to every playbook (`skills/research/rules.md`):
   who is behind them; a number from a party that profits from it is a lead, not evidence.
 - **Checked against the registry.** After notes are written, every DOI is looked up in the DOI registry and must
   match its note's title; a model asked about its own citations is not a check.
+- **Quotes checked against the text.** Every quote in a note is looked for in the source's text, on the page the
+  note gives. Before a report goes out, its references are checked against the notes.
+- **How much was read.** Each source says it: full text, part of the text, abstract only, or title only.
+- **Who answered.** Each search ends by naming the databases that answered and the ones that refused. "Not found"
+  is never "does not exist".
+- **Nothing called new without a search.** The nearest existing works are listed first, with what differs.
+- **No silent improvisation.** When a step has no playbook or script, Claude stops and says what is missing.
 - **Quality, by kind and then by the source itself.** Systematic reviews and meta-analyses, validated measures and
   experiments, other empirical studies, theory, popular books: a starting point, after which each source moves up
   or down by its own bias, sample, precision and fit. Many citations mean influence, not truth.
@@ -133,7 +163,13 @@ research/
   papers/<section>/…pdf/.txt  sources and their text, with a page marker before each page
   notes/<section>/….md        what a source says (with pages) and what it means for the project
   funding/<call-id>.md        one call: deadline, grant, eligibility, fit, date checked
+  maps/<date>-….md            an evidence table for a claim, or the nearest existing works for an idea
+  data/<name>.csv             a yearly series, with <name>.types.csv and <name>.meta.json beside it
+  signals/<date>-….md         one signal each, and the scan its numbers come from
 ```
+
+In an Obsidian vault that uses Texere, the plugin reads `Support/Texere/Bibliography/bibliography.json` as the
+index of your library and cites as Texere does, `[@key, p. N]`. It never writes in Texere's folders.
 
 ## What's in this repository
 
@@ -153,6 +189,9 @@ plugins/
         literature.md         how to map a field and find the best sources
         evidence.md           how to weigh the data behind a claim
         funding.md            how to find and check grant calls
+        trends.md             how to count works by year and report shares
+        signals.md            how to record what is being noticed, as observations
+        prior-art.md          how to find the nearest existing work before calling something new
       scripts/                Python 3, standard library only
         search.py             search OpenAlex and Semantic Scholar together, or look up a DOI
         foundations.py        find a field's founding works from what its top papers cite
@@ -163,16 +202,25 @@ plugins/
         citing.py             later works that cite a study, with replications and critiques flagged first
         independence.py       group studies that share authors, so evidence is counted by independent groups
         verify_citations.py   check that every DOI in the notes exists and matches its title
-        scholarly.py          shared database access used by the scripts above
+        verify_quotes.py      check that every quote is in its source's text, and a report's references in the notes
+        counts.py             yearly counts and shares for a search, a topic or the whole topic taxonomy
+        signals.py            what seven open sources show about a subject in a recent window
+        library.py            what the project's library already holds, with a Texere bibliography when there is one
+        scholarly.py          shared database access: cache, pacing, budget, fallback databases, the Coverage line
       templates/
         research.config.md    the project config created on first use
         note.md               a source note
         funding.md            a call note
-    agents/                   agents for parallel work, one per playbook
+        evidence-map.md       an evidence table for one claim
+        signal.md             a signal note
+    agents/                   agents for parallel work
       paper-scout.md          literature for one question
       evidence-scout.md       evidence for one claim
       funding-scout.md        funding for one project or need
+      signal-scout.md         signals for one subject
+    evals/                    cases for `claude plugin eval`
 research/                     the sources behind the rules: one note per source
+tests/                        tests of the scripts; they never use the network
 CHANGELOG.md                  what changed in each version
 LICENSE                       MIT
 ```
@@ -197,11 +245,32 @@ Each rule names its source; there is one note per source in `research/notes`.
 - **Search against the claim, not only for it:** Nickerson 1998, confirmation bias.
 - **Check who is behind a non-academic source:** Wineburg & McGrew 2019. Fact checkers who left a site to read
   about it judged credibility better, in a fraction of the time, than historians and students who stayed on it.
-- **Licences, legal copies, fresh funding calls:** the plugin's own choices, not research findings.
+- **Quotes checked against the text:** Wu et al. 2025, read in full. Between 50% and 90% of language models'
+  answers to medical questions were not fully supported by the sources they cited.
+- **References checked against the notes, and the DOI verified:** Chelli et al. 2024, read in full as the accepted
+  manuscript. Three models invented between 28.6% and 91.4% of the references they gave; for the real papers two
+  of them returned, the DOI was right in 15.9% and 20.2% of cases.
+- **Nothing called new without the nearest existing work:** Beel, Kan & Baumgart 2025, read in full as a preprint.
+  A system that took "no match found" for "new" marked 12 of 12 ideas as new; four were known techniques.
+- **The same document types on both sides of a share:** two recorded runs of these plugins (an observation), and
+  Liu, Ni & Hu 2024, read in part: counts show the database's growth as well as the field's.
+- **The evidence table and the map:** Robinson, Saldanha & Mckoy 2011 and Snilstveit et al. 2016, both read at
+  abstract level only.
+- **The signal record:** the horizon-scanning section of the UK Government Office for Science's Futures Toolkit
+  (2024). It is practitioner guidance, not evidence that scanning works.
+- **What each database allows:** its own documentation, as read on 2026-11-21.
+- **Licences, legal copies, fresh funding calls, where the cache lives, the default document types and the
+  six-month signal window:** the plugin's own choices, not research findings.
 
 ## Files shared with the other products
 
 Writes the index `research/README.md`; notes in `research/notes/<section>/<slug>.md` with **Source**, **Evidence**, "What it says" (claims with pages), "Later work", "What it means for the project"; calls in `research/funding/`. Read by Insight and Frontier.
+
+Added in 2.4.0, with everything above unchanged: a **Read** line in each note; evidence maps and prior-art maps in
+`research/maps/`; yearly series in `research/data/` as CSV with a metadata file (query, database, date, document
+types, script); signal notes in `research/signals/` with an id (`SG-001`) and the fields What, Where, When, How
+visible, How widespread; and a Coverage line at the end of every search. In a Texere vault the plugin reads
+`Support/Texere/Bibliography/bibliography.json` and writes nothing in Texere's folders.
 
 The paths and fields the other products read are a contract: they change only in a major version, noted in the
 changelog. Every plugin reads the others' files tolerantly: a missing file or field is reported as unknown, never
@@ -217,8 +286,17 @@ an error. The full list is in each skill's `SKILL.md`, so Claude knows it too.
 
 ## Changing the plugin
 
-Edit the files under `plugins/poiesis-research/`, run `claude plugin validate .`, bump the version (major if a field under "Files" changes) in
-`plugin.json`, `marketplace.json` and `CHANGELOG.md`, and push. Projects get it with the update commands above.
+Edit the files under `plugins/poiesis-research/`, then run the two checks from the repository's root:
+
+```
+python3 -I -m unittest discover -s tests
+claude plugin validate plugins/poiesis-research
+```
+
+Validate at the plugin's path: `claude plugin validate .` at the root checks only the marketplace file. The tests
+never use the network. A new rule starts with reading its source and a note in `research/notes/` that says how much
+was read. Bump the version (major if a field under "Files" changes) in `plugin.json`, `marketplace.json` and
+`CHANGELOG.md`, and push. Projects get it with the update commands above.
 
 ## License
 
