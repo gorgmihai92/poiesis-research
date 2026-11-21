@@ -2,6 +2,11 @@
 
 Whether data support a claim. Not what theorists argue (that is literature), but what was measured.
 
+## Read first
+The evidence table below rests on two notes in `research/notes` of the plugin's repository, both read **at
+abstract level only**: `robinson-2011-research-gaps-framework` (the PICOS elements that describe a study and a
+gap) and `snilstveit-2016-evidence-gap-maps` (an overview saved as a map of what was studied and what was not).
+
 ## Find
 1. Turn the claim into testable questions: what is measured, on what, compared with what.
 2. Search empirical work first:
@@ -15,19 +20,57 @@ Whether data support a claim. Not what theorists argue (that is literature), but
    works that cite them, with replications, failures and critiques flagged first (Wohlin 2014). A flag is a guess
    from the title: read the abstract before counting it.
 5. For each study: design, sample (size, language, setting), the key number (effect size or agreement between
-   coders), limits. Say when you only read the abstract.
+   coders), limits. Say when you only read the abstract. Each study becomes one row of the evidence table.
 6. **Independence:** `python3 -I $S/independence.py <DOI> <DOI> ...` on the studies kept groups those that share
    authors; check by hand whether groups share a dataset or sample. Count each group once.
+
+Every script ends with a "Coverage" line: the databases that answered and the ones that refused. Keep the lines;
+the report needs them.
+
+## Evidence table
+One row per study the verdict rests on. The middle columns are the elements that describe a study (population,
+intervention, comparison, outcome, setting: Robinson et al. 2011), in plain words.
+
+| Column | What goes in it |
+|---|---|
+| Study | first author and year |
+| DOI | the DOI; "none" when the work has none |
+| Population | who or what was studied, and how many |
+| What was varied | the intervention, exposure or condition that differs between groups or cases |
+| Compared with | the comparison or control; "none" when the study has no comparison |
+| What was measured | the outcome and the instrument that measured it |
+| Setting | where and how: country, language, lab or field, the task or the material |
+| Design | meta-analysis, experiment, survey, corpus study, case study … |
+| Key number | the effect size or agreement as the source states it, with its page |
+| Read | full text, abstract, or title only |
+| Group | the independent group the study belongs to (step 6) |
+| Open copy | yes, no or unknown, as the search line shows it |
+
+- A cell says what the source says. Write "not stated" when the part you read does not say it. Never fill a cell
+  from what such studies usually do.
+- **Read** is per study. A row filled from an abstract says "abstract" and its key number has no page. A study
+  known by title only has its Study, DOI and Read cells filled and the rest "not read".
+- No cell contains a `|`. A link to a note is written `[[note-name]]`, without an alias.
+- A new column goes at the end, after Open copy.
 
 ## Report
 - **Verdict:** supported / mixed / not supported / not studied, and how close the evidence is to the project's
   setting. Give the count as independent groups ("6 studies from 3 groups"), not papers.
-- **Searched:** the queries for and against the claim, and the studies followed forward.
-- **Studies,** strongest first: citation · DOI · design and sample · key number · open or closed · group.
+- **Searched:** the queries for and against the claim, the studies followed forward, and the databases that
+  answered (the Coverage lines).
+- **Studies,** strongest first: the evidence table. It carries what this report always gave (design and sample,
+  key number, open or closed, group) and what each study varied, compared and measured.
 - **Against:** replications that failed, critiques, null results, and what they found; "none found" when the
   search for them came back empty.
 - **Datasets** the project could test itself against.
-- **Not measured yet:** what no study covers.
+- **Not measured yet:** the combinations of population, what was varied and what was measured for which this
+  search found no study. Say "none found by this search", never "does not exist". Why a combination is empty,
+  and whether it matters, is interpretation and is left out (see "Other Poiesis plugins" in `SKILL.md`).
+
+## Save the table
+Save the table as `research/maps/<date>-<claim>.md`, from `templates/evidence-map.md`: the claim, the date, the
+searches with their Coverage lines, the table, and the combinations with no study found. Add one line to
+`research/README.md`. The map is what an interpretation tool reads, so it has to stand without the conversation.
 
 ## Add
 Studies the user keeps are added like literature (`playbooks/literature.md`, "Add"), with the key number and its
