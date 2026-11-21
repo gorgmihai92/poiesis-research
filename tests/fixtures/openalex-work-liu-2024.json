@@ -1,0 +1,111 @@
+{
+ "id": "https://openalex.org/W4390704560",
+ "doi": "https://doi.org/10.1007/s11192-023-04917-w",
+ "title": "Web of Science Core Collection’s coverage expansion: the forgotten Arts & Humanities Citation Index?",
+ "display_name": "Web of Science Core Collection’s coverage expansion: the forgotten Arts & Humanities Citation Index?",
+ "publication_year": 2024,
+ "type": "article",
+ "cited_by_count": 76,
+ "citation_normalized_percentile": {
+  "value": 0.99750951,
+  "is_in_top_1_percent": true,
+  "is_in_top_10_percent": true
+ },
+ "is_retracted": false,
+ "open_access": {
+  "is_oa": true,
+  "oa_status": "green",
+  "oa_url": "https://arxiv.org/pdf/2312.05524",
+  "any_repository_has_fulltext": true
+ },
+ "abstract_inverted_index": null,
+ "authorships": [
+  {
+   "author": {
+    "display_name": "Weishu Liu"
+   }
+  },
+  {
+   "author": {
+    "display_name": "Rong Ni"
+   }
+  },
+  {
+   "author": {
+    "display_name": "Guangyuan Hu"
+   }
+  }
+ ],
+ "primary_location": {
+  "is_oa": false,
+  "pdf_url": null,
+  "landing_page_url": "https://doi.org/10.1007/s11192-023-04917-w",
+  "license": null,
+  "source": {
+   "display_name": "Scientometrics"
+  }
+ },
+ "best_oa_location": {
+  "is_oa": true,
+  "pdf_url": "https://arxiv.org/pdf/2312.05524",
+  "landing_page_url": "http://arxiv.org/abs/2312.05524",
+  "license": "other-oa",
+  "source": {
+   "display_name": "arXiv (Cornell University)"
+  }
+ },
+ "locations": [
+  {
+   "is_oa": false,
+   "pdf_url": null,
+   "landing_page_url": "https://doi.org/10.1007/s11192-023-04917-w",
+   "license": null,
+   "source": {
+    "display_name": "Scientometrics"
+   }
+  },
+  {
+   "is_oa": true,
+   "pdf_url": "https://arxiv.org/pdf/2312.05524",
+   "landing_page_url": "http://arxiv.org/abs/2312.05524",
+   "license": "other-oa",
+   "source": {
+    "display_name": "arXiv (Cornell University)"
+   }
+  },
+  {
+   "is_oa": false,
+   "pdf_url": null,
+   "landing_page_url": "http://link.springer.com/10.1007/s11192-023-04917-w",
+   "license": null,
+   "source": {
+    "display_name": "RePEc: Research Papers in Economics"
+   }
+  },
+  {
+   "is_oa": false,
+   "pdf_url": null,
+   "landing_page_url": "https://hdl.handle.net/10356/231406",
+   "license": null,
+   "source": {
+    "display_name": "DR-NTU (Nanyang Technological University)"
+   }
+  },
+  {
+   "is_oa": true,
+   "pdf_url": null,
+   "landing_page_url": "https://doi.org/10.48550/arxiv.2312.05524",
+   "license": null,
+   "source": {
+    "display_name": "arXiv (Cornell University)"
+   }
+  }
+ ],
+ "referenced_works": [
+  "https://openalex.org/W566254505",
+  "https://openalex.org/W1767272795",
+  "https://openalex.org/W1786193818",
+  "https://openalex.org/W2057954853",
+  "https://openalex.org/W2069544221"
+ ]
+}

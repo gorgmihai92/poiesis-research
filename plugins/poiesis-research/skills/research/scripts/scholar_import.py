@@ -39,9 +39,16 @@ def read_pop(path: Path) -> list[dict]:
 
 
 def find_openalex(w: dict) -> dict | None:
-    if w.get("doi"):
-        return sc.openalex_doi(w["doi"])
-    for cand in sc.openalex_search(w["title"], 3):
+    """The same work in OpenAlex; when OpenAlex refuses, in Crossref or Europe PMC."""
+    try:
+        if w.get("doi"):
+            return sc.openalex_doi(w["doi"])
+        candidates = sc.openalex_search(w["title"], 3)
+    except sc.REFUSALS:
+        if w.get("doi"):
+            return sc.fallback_doi(w["doi"])
+        candidates = sc.fallback_search(w["title"], 3)
+    for cand in candidates:
         if sc.fold(cand["title"]) == sc.fold(w["title"]) and (not w["year"] or not cand["year"] or abs(cand["year"] - w["year"]) <= 2):
             return cand
     return None
@@ -53,7 +60,9 @@ def main() -> int:
     p.add_argument("--foundations", type=Path, help="foundations.py --json output to merge")
     p.add_argument("--top", type=int, default=40)
     p.add_argument("--json", action="store_true")
+    sc.add_request_args(p)
     a = p.parse_args()
+    sc.apply_request_args(a)
 
     scholar = sc.merge_all([w for f in a.csv for w in read_pop(f)])
     # Old or obscure items are matched by title; many books keep no DOI.
@@ -77,7 +86,7 @@ def main() -> int:
     in_scholar = {sc.key(w) for w in scholar}
 
     def best(w: dict) -> int:
-        return max(w.get("cited_scholar") or 0, w.get("cited_openalex") or 0, w.get("cited_s2") or 0)
+        return sc.most_cited(w)
 
     combined.sort(key=lambda w: (-share.get(sc.key(w), 0), -best(w)))
     combined = combined[: a.top]
@@ -93,7 +102,7 @@ def main() -> int:
         tags = []
         if share.get(sc.key(w)):
             tags.append(f"{share[sc.key(w)]:.0%} of seeds")
-        if sc.key(w) in in_scholar and not w.get("openalex") and not w.get("s2"):
+        if sc.key(w) in in_scholar and not any(w.get(k) for k in ("openalex", "s2", "crossref", "epmc", "arxiv")):
             tags.append("only in Google Scholar")
         if found and sc.key(w) not in in_scholar:
             tags.append("not in the Scholar export")
@@ -102,4 +111,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(sc.finish(main))

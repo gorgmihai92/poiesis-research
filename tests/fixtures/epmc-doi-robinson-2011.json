@@ -1,0 +1,110 @@
+{
+ "version": "6.9",
+ "hitCount": 1,
+ "request": {
+  "queryString": "DOI:\"10.1016/j.jclinepi.2011.06.009\"",
+  "resultType": "core",
+  "cursorMark": "*",
+  "pageSize": 3,
+  "sort": "",
+  "synonym": false
+ },
+ "resultList": {
+  "result": [
+   {
+    "id": "21937195",
+    "source": "MED",
+    "pmid": "21937195",
+    "doi": "10.1016/j.jclinepi.2011.06.009",
+    "title": "Development of a framework to identify research gaps from systematic reviews.",
+    "authorString": "Robinson KA, Saldanha IJ, McKoy NA.",
+    "authorList": {
+     "author": [
+      {
+       "fullName": "Robinson KA",
+       "lastName": "Robinson",
+       "firstName": "Karen A",
+       "initials": "KA"
+      },
+      {
+       "fullName": "Saldanha IJ",
+       "lastName": "Saldanha",
+       "firstName": "Ian J",
+       "initials": "IJ"
+      },
+      {
+       "fullName": "McKoy NA",
+       "lastName": "McKoy",
+       "firstName": "Naomi A",
+       "initials": "NA"
+      }
+     ]
+    },
+    "journalInfo": {
+     "issue": "12",
+     "volume": "64",
+     "journalIssueId": 1875684,
+     "dateOfPublication": "2011 Dec",
+     "monthOfPublication": 12,
+     "yearOfPublication": 2011,
+     "journal": {
+      "medlineAbbreviation": "J Clin Epidemiol",
+      "title": "Journal of clinical epidemiology",
+      "essn": "1878-5921",
+      "issn": "0895-4356",
+      "nlmid": "8801383",
+      "isoabbreviation": "J Clin Epidemiol"
+     },
+     "printPublicationDate": "2011-12-01"
+    },
+    "pubYear": "2011",
+    "pageInfo": "1325-1330",
+    "abstractText": "<h4>Objective</h4>Shortened for the test fixture.<h4>Results</h4>Shortened for the test fixture.",
+    "publicationStatus": "ppublish",
+    "language": "eng",
+    "pubModel": "Print-Electronic",
+    "pubTypeList": {
+     "pubType": [
+      "Research Support, U.S. Gov't, P.H.S.",
+      "Review",
+      "Journal Article"
+     ]
+    },
+    "fullTextUrlList": {
+     "fullTextUrl": [
+      {
+       "availability": "Subscription required",
+       "availabilityCode": "S",
+       "documentStyle": "doi",
+       "site": "DOI",
+       "url": "https://doi.org/10.1016/j.jclinepi.2011.06.009"
+      }
+     ]
+    },
+    "isOpenAccess": "N",
+    "inEPMC": "N",
+    "inPMC": "N",
+    "citedByCount": 120,
+    "hasReferences": "Y",
+    "hasTextMinedTerms": "Y",
+    "hasDbCrossReferences": "N",
+    "hasPDF": "N",
+    "hasBook": "N",
+    "hasSuppl": "N",
+    "hasLabsLinks": "N",
+    "hasData": "N",
+    "authMan": "N",
+    "epmcAuthMan": "N",
+    "nihAuthMan": "N",
+    "hasTMAccessionNumbers": "N",
+    "dateOfCompletion": "2011-12-27",
+    "dateOfCreation": "2011-09-23",
+    "dateOfRevision": "2017-11-16",
+    "electronicPublicationDate": "2011-09-19",
+    "firstPublicationDate": "2011-09-19",
+    "firstIndexDate": "2011-09-23",
+    "hasEvaluations": "N"
+   }
+  ]
+ }
+}
