@@ -78,6 +78,85 @@ class Cache(LayerCase):
         self.assertFalse((self.tmp / "cache").exists())
 
 
+class Secrets(LayerCase):
+    """Found by the lab's review of 2026-11-21: keys were taken out of the address only."""
+
+    def test_a_key_the_answer_repeats_is_not_stored_or_returned(self):
+        key = "SECRET+KEY/123"  # as it is, and as an address carries it: SECRET%2BKEY%2F123
+        echo = Answer(json.dumps({"meta": {"url": "/works?filter=a&api_key=SECRET%2BKEY%2F123", "note": f"your key is {key}"}, "results": [1]}))
+        self.use([("api.openalex.org", echo)])
+        sc.configure(record=self.tmp / "rec")
+        got = sc.get(f"{OA}?filter=a&api_key=SECRET%2BKEY%2F123")
+        self.assertEqual(got["results"], [1])
+        stored = json.dumps(got) + "".join(f.read_text() for f in list((self.tmp / "cache").rglob("*.json")) + list((self.tmp / "rec").glob("*.json")))
+        for form in (key, "SECRET%2BKEY%2F123", "SECRET"):
+            self.assertNotIn(form, stored)
+        self.assertIn("REDACTED", stored)
+
+    def test_a_key_from_the_environment_that_travels_in_a_header_is_scrubbed_too(self):
+        os.environ["S2_API_KEY"] = "S2-SECRET-999"
+        try:
+            self.use([("semanticscholar", Answer(json.dumps({"message": "your key S2-SECRET-999 is fine", "data": []})))])
+            sc.configure(record=self.tmp / "rec")
+            got = sc.s2_get("/paper/search", {"query": "x"})
+            self.assertNotIn("S2-SECRET-999", json.dumps(got))
+            stored = "".join(f.read_text() for f in list((self.tmp / "cache").rglob("*.json")) + list((self.tmp / "rec").glob("*.json")))
+            self.assertNotIn("S2-SECRET-999", stored)
+        finally:
+            del os.environ["S2_API_KEY"]
+
+    def test_an_answer_with_no_secret_in_it_is_kept_as_it_came(self):
+        body = '{"results": [{"title": "a  title with  two spaces", "n": 1.50}]}'
+        self.use([("api.openalex.org", Answer(body))])
+        sc.get(f"{OA}?filter=a")
+        entry = json.loads(next((self.tmp / "cache" / "api.openalex.org").glob("*.json")).read_text())
+        self.assertEqual(entry["body"], body)
+
+
+class ClearingTheCache(LayerCase):
+    """Found by the same review: --clear removed the whole folder, with whatever else was in it."""
+
+    def clear(self) -> str:
+        import contextlib
+        import io
+        import sys
+        out = io.StringIO()
+        saved = sys.argv
+        sys.argv = ["scholarly.py", "cache", "--clear"]
+        try:
+            with contextlib.redirect_stdout(out):
+                sc.main()
+        finally:
+            sys.argv = saved
+        return out.getvalue()
+
+    def test_clearing_removes_the_answers_and_leaves_other_files_alone(self):
+        self.use([("api.openalex.org", Answer("{}", head=BUDGET)), ("api.crossref.org", Answer('{"message": {}}'))])
+        sc.get(f"{OA}?filter=a")
+        sc.get("https://api.crossref.org/works/10.1/x")
+        cache = self.tmp / "cache"
+        (cache / "my-notes.txt").write_text("not the cache's", encoding="utf-8")
+        (cache / "mine").mkdir()
+        (cache / "mine" / "keep.json").write_text("{}", encoding="utf-8")
+        (cache / "api.openalex.org" / "something-else.json").write_text("{}", encoding="utf-8")
+        said = self.clear()
+        self.assertEqual((cache / "my-notes.txt").read_text(encoding="utf-8"), "not the cache's")
+        self.assertTrue((cache / "mine" / "keep.json").is_file())
+        self.assertTrue((cache / "api.openalex.org" / "something-else.json").is_file())  # not a name the cache gives
+        left = sorted(str(f.relative_to(cache)) for f in cache.rglob("*") if f.is_file())
+        self.assertEqual(left, ["api.openalex.org/something-else.json", "mine/keep.json", "my-notes.txt"])
+        self.assertFalse((cache / "api.crossref.org").exists())  # a folder the cache emptied is removed
+        self.assertIn("Cleared 2 answers", said)
+        self.assertIn("3 other files in the folder were left alone", said)
+
+    def test_after_clearing_the_next_request_asks_again(self):
+        net = self.use([("api.openalex.org", Answer("{}"))])
+        sc.get(f"{OA}?filter=a")
+        self.clear()
+        sc.get(f"{OA}?filter=a")
+        self.assertEqual(len(net.calls), 2)
+
+
 class Refusals(LayerCase):
     def test_a_short_rate_limit_is_waited_out(self):
         self.use([("api.openalex.org", [Answer("", 429, {"Retry-After": "2"}), Answer('{"ok": 1}')])])

@@ -225,6 +225,65 @@ class StoppingHalfway(LayerCase):
         self.assertIn("without the split by document type", err)
         self.assertFalse((self.tmp / "out").exists() and any((self.tmp / "out").iterdir()))
 
+    def test_a_topic_within_a_base_is_counted_within_that_base(self):
+        """Found by the lab's review of 2026-11-21: the topic was counted in all works and divided by the base."""
+        net = self.use([("api.openalex.org", self.table(40))])
+        code, text, err = self.run_script(counts, ["--topic", "T10001", "--label", "A topic", "--base", "moral", "--from", "2024", "--to", "2025",
+                                                   "--out", str(self.tmp / "out")])
+        self.assertEqual(code, 0, err)
+        topic_calls = [u for u in net.calls if "primary_topic.id%3AT10001" in u]
+        self.assertEqual(len(topic_calls), 1)
+        self.assertIn("title_and_abstract.search%3Amoral", topic_calls[0])  # the same base as below the line
+        meta = json.loads(next((self.tmp / "out").glob("*.meta.json")).read_text())
+        self.assertEqual(meta["series"][0]["filter"], "primary_topic.id:T10001,title_and_abstract.search:moral")
+        self.assertEqual(meta["base"]["filter"], "publication_year:2024-2025,title_and_abstract.search:moral")
+
+    def test_a_base_with_the_taxonomy_is_refused_not_ignored(self):
+        net = self.use([])
+        code, text, err = self.run_script(counts, ["--taxonomy", "--base", "moral", "--from", "2025", "--to", "2025", "--out", str(self.tmp / "out")])
+        self.assertEqual((code, net.calls), (2, []))
+        self.assertIn("--base does not combine with --taxonomy", err)
+
+    def test_the_metadata_does_not_say_that_quotes_turn_stemming_off(self):
+        """Found by the same review: a quoted singular and its plural gave the same counts on 2026-11-21."""
+        self.use([("api.openalex.org", self.table(40))])
+        self.run_script(counts, ['"solid-state battery"', "--from", "2024", "--to", "2025", "--out", str(self.tmp / "out")])
+        field = json.loads(next((self.tmp / "out").glob("*.meta.json")).read_text())["search_field"]
+        self.assertNotIn("unless quoted", field)
+        self.assertIn("stemmed", field)
+        self.assertIn("title_and_abstract.search", field)
+
+    def test_a_second_run_with_other_series_does_not_overwrite_the_first(self):
+        self.use([("api.openalex.org", self.table(40))])
+        out = self.tmp / "out"
+        self.run_script(counts, ["first", "second", "--from", "2024", "--to", "2025", "--out", str(out)])
+        before = {f.name: f.read_bytes() for f in out.iterdir()}
+        code, text, err = self.run_script(counts, ["first", "third", "--from", "2024", "--to", "2025", "--out", str(out)])
+        self.assertEqual(code, 0, err)
+        for name, data in before.items():
+            self.assertEqual((out / name).read_bytes(), data, name)  # the first run's files are as they were
+        metas = sorted(f.name for f in out.glob("*.meta.json"))
+        self.assertEqual(len(metas), 2, metas)
+        searches = [[s["search"] for s in json.loads((out / m).read_text())["series"]] for m in metas]
+        self.assertIn(["first", "second"], searches)
+        self.assertIn(["first", "third"], searches)
+        self.assertIn("kept under a new name", text)
+
+    def test_the_same_command_again_writes_the_same_files(self):
+        self.use([("api.openalex.org", self.table(40))])
+        out = self.tmp / "out"
+        for _ in range(2):
+            code, _, err = self.run_script(counts, ["first", "second", "--from", "2024", "--to", "2025", "--out", str(out)])
+            self.assertEqual(code, 0, err)
+        self.assertEqual(len(list(out.glob("*.meta.json"))), 1)
+
+    def test_a_name_the_user_gave_is_used_as_given(self):
+        self.use([("api.openalex.org", self.table(40))])
+        out = self.tmp / "out"
+        self.run_script(counts, ["first", "--from", "2024", "--to", "2025", "--out", str(out), "--name", "mine"])
+        self.run_script(counts, ["other", "--from", "2024", "--to", "2025", "--out", str(out), "--name", "mine"])
+        self.assertEqual(sorted(f.name for f in out.iterdir()), ["mine.csv", "mine.meta.json", "mine.types.csv"])
+
     def test_types_are_openalex_s_and_are_refused_with_europe_pmc(self):
         code, text, err = self.run_script(counts, ["x", "--db", "epmc", "--types", "article", "--out", str(self.tmp / "out")])
         self.assertEqual(code, 2)  # argparse's own exit code for a wrong argument

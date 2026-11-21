@@ -16,9 +16,12 @@ was retyped, and a step that was improvised.
 Run from the plugin's folder. **Each run is a real model call**, and each `llm` grader calls a judge model:
 
 ```
-claude plugin eval .
-claude plugin eval . --case share-same-types
+claude plugin eval . --no-publish --max-cost-usd 5
+claude plugin eval . --case share-same-types --no-publish
 ```
+
+Without `--no-publish` the command publishes its report to claude.ai when your account allows it; with it the
+report stays in `evals/results/`. `--max-cost-usd` stops the run at a ceiling.
 
 Every case asks for one run (`runs: 1`), so a first pass is six runs with the plugin and six without, plus the
 judges. `--runs 3` gives a steadier score. The cases need only the read-only tools they list; the prompt carries
