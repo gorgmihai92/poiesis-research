@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/G+eRSQQQV/kDJ+UOkUm16HYdXpI</id>
+  <title>arXiv Query: search_query=ti:"Evaluating Sakana" AND ti:"AI Scientist"&amp;id_list=&amp;start=0&amp;max_results=3</title>
+  <updated>2026-11-21T20:27:50Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=ti:%22Evaluating+Sakana%22+AND+ti:%22AI+Scientist%22&amp;start=0&amp;max_results=3&amp;id_list=" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>3</opensearch:itemsPerPage>
+  <opensearch:totalResults>1</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2502.14297v3</id>
+    <title>Evaluating Sakana's AI Scientist: Bold Claims, Mixed Results, and a Promising Future?</title>
+    <updated>2025-10-15T18:03:49Z</updated>
+    <link href="https://arxiv.org/abs/2502.14297v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2502.14297v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Shortened for the test fixture.</summary>
+    <category term="cs.IR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-02-20T06:22:03Z</published>
+    <arxiv:comment>20 pages</arxiv:comment>
+    <arxiv:primary_category term="cs.IR"/>
+    <arxiv:journal_ref>SIGIR Forum 2025</arxiv:journal_ref>
+    <author>
+      <name>Joeran Beel</name>
+    </author>
+    <author>
+      <name>Min-Yen Kan</name>
+    </author>
+    <author>
+      <name>Moritz Baumgart</name>
+    </author>
+    <arxiv:doi>10.1145/3769733.376974</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1145/3769733.376974" title="doi"/>
+  </entry>
+</feed>

@@ -1,0 +1,26 @@
+{
+ "paperId": "6cd9e52698b0154d44b7e4549eb91ceee94d6ec1",
+ "externalIds": {
+  "MAG": "2091983003",
+  "DOI": "10.1016/J.FUTURES.2007.08.021",
+  "CorpusId": 145653093
+ },
+ "title": "The future sign and its three dimensions",
+ "venue": "",
+ "year": 2008,
+ "citationCount": 219,
+ "openAccessPdf": {
+  "url": "",
+  "status": "CLOSED",
+  "license": null,
+  "disclaimer": "Shortened for the test fixture."
+ },
+ "publicationTypes": null,
+ "authors": [
+  {
+   "authorId": "52167268",
+   "name": "Elina Hiltunen"
+  }
+ ],
+ "abstract": null
+}

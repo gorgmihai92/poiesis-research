@@ -7,6 +7,9 @@ Studies linked by a shared author, directly or through another study, form one g
 are not in the metadata: check the methods of each group by hand. A group is a lead about independence, not proof:
 a shared author is not always a shared method, and different authors can share one dataset. A large consortium
 paper (dozens of authors) can link groups that are otherwise independent: read who links them.
+
+Authors come from OpenAlex; when it refuses, from Crossref and Europe PMC, which write names differently, so a
+shared author can be missed. The last line, "Coverage", names the databases that answered.
 """
 import argparse
 import sys
@@ -19,9 +22,11 @@ import scholarly as sc  # noqa: E402
 def main() -> int:
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("dois", nargs="+")
+    sc.add_request_args(p)
     a = p.parse_args()
+    sc.apply_request_args(a)
 
-    works = sc.openalex_dois(a.dois)
+    works = sc.works_by_doi([d.lower().removeprefix("https://doi.org/") for d in a.dois])
     found = {(w["doi"] or "").lower() for w in works}
     missing = [d for d in a.dois if d.lower().removeprefix("https://doi.org/") not in found]
 
@@ -55,9 +60,10 @@ def main() -> int:
         for i in members:
             print("  " + sc.brief(works[i]))
     if missing:
-        print(f"\nNot found in OpenAlex (check by hand): {', '.join(missing)}")
+        where = "the databases that answered" if sc.refused("OpenAlex") else "OpenAlex"
+        print(f"\nNot found in {where} (check by hand): {', '.join(missing)}")
     return 0
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(sc.finish(main))

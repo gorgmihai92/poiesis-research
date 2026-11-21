@@ -1,0 +1,284 @@
+{
+ "status": "ok",
+ "message-type": "work",
+ "message-version": "1.0.0",
+ "message": {
+  "reference-count": 43,
+  "publisher": "Springer Science and Business Media LLC",
+  "issue": "1",
+  "license": [
+   {
+    "start": {
+     "date-parts": [
+      [
+       2025,
+       4,
+       16
+      ]
+     ],
+     "date-time": "2025-04-16T00:00:00Z",
+     "timestamp": 1744761600000
+    },
+    "content-version": "tdm",
+    "delay-in-days": 0,
+    "URL": "https://creativecommons.org/licenses/by-nc-nd/4.0"
+   },
+   {
+    "start": {
+     "date-parts": [
+      [
+       2025,
+       4,
+       16
+      ]
+     ],
+     "date-time": "2025-04-16T00:00:00Z",
+     "timestamp": 1744761600000
+    },
+    "content-version": "vor",
+    "delay-in-days": 0,
+    "URL": "https://creativecommons.org/licenses/by-nc-nd/4.0"
+   }
+  ],
+  "short-container-title": [
+   "Nat Commun"
+  ],
+  "DOI": "10.1038/s41467-025-58551-6",
+  "type": "journal-article",
+  "source": "Crossref",
+  "is-referenced-by-count": 93,
+  "title": [
+   "An automated framework for assessing how well LLMs cite relevant medical references"
+  ],
+  "prefix": "10.1038",
+  "volume": "16",
+  "author": [
+   {
+    "given": "Kevin",
+    "family": "Wu",
+    "sequence": "first",
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Eric",
+    "family": "Wu",
+    "sequence": "additional",
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Kevin",
+    "family": "Wei",
+    "sequence": "additional",
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Angela",
+    "family": "Zhang",
+    "sequence": "additional",
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Allison",
+    "family": "Casasola",
+    "sequence": "additional",
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Teresa",
+    "family": "Nguyen",
+    "sequence": "additional",
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Sith",
+    "family": "Riantawan",
+    "sequence": "additional",
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Patricia",
+    "family": "Shi",
+    "sequence": "additional",
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Daniel",
+    "family": "Ho",
+    "sequence": "additional",
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "James",
+    "family": "Zou",
+    "sequence": "additional",
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   }
+  ],
+  "member": "297",
+  "published-online": {
+   "date-parts": [
+    [
+     2025,
+     4,
+     16
+    ]
+   ]
+  },
+  "reference": [
+   {
+    "key": "58551_CR1",
+    "doi-asserted-by": "publisher",
+    "first-page": "2396",
+    "DOI": "10.1038/s41591-023-02412-6",
+    "volume": "29",
+    "author": "S Gilbert",
+    "year": "2023",
+    "unstructured": "Gilbert, S., Harvey, H., Melvin, T., Vollebregt, E. & Wicks, P. Large language model AI chatbots require approval as medical devices. Nat. Med. 29, 2396–2398 (2023).",
+    "journal-title": "Nat. Med."
+   },
+   {
+    "key": "58551_CR2",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.1038/s41598-023-43436-9",
+    "volume": "13",
+    "author": "D Brin",
+    "year": "2023",
+    "unstructured": "Brin, D. et al. Comparing ChatGPT and GPT-4 performance in USMLE soft skill assessments. Sci. Rep. 13, 16492 (2023).",
+    "journal-title": "Sci. Rep."
+   },
+   {
+    "key": "58551_CR3",
+    "unstructured": "Singhal, K. et al. Toward expert-level medical question answering with large language models. Nat. Med. 31, 1–8 (2025)."
+   },
+   {
+    "key": "58551_CR4",
+    "doi-asserted-by": "publisher",
+    "first-page": "172",
+    "DOI": "10.1038/s41586-023-06291-2",
+    "volume": "620",
+    "author": "K Singhal",
+    "year": "2023",
+    "unstructured": "Singhal, K. et al. Large language models encode clinical knowledge. Nature 620, 172–180 (2023).",
+    "journal-title": "Nature"
+   },
+   {
+    "key": "58551_CR5",
+    "unstructured": "Ingram, D. ChatGPT used by mental health tech app in AI experiment with users. NBC News (2023)."
+   },
+   {
+    "key": "58551_CR6",
+    "doi-asserted-by": "crossref",
+    "first-page": "1",
+    "DOI": "10.1038/s44184-023-00041-y",
+    "volume": "3",
+    "author": "B Maples",
+    "year": "2024",
+    "unstructured": "Maples, B., Cerit, M., Vishwanath, A. & Pea, R. Loneliness and suicide mitigation for students using GPT3-enabled chatbots. NPJ Ment. Health Res. 3, 1–6 (2024).",
+    "journal-title": "NPJ Ment. Health Res."
+   }
+  ],
+  "container-title": [
+   "Nature Communications"
+  ],
+  "original-title": [],
+  "language": "en",
+  "score": 1,
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+   "date-parts": [
+    [
+     2025,
+     4,
+     16
+    ]
+   ]
+  },
+  "references-count": 43,
+  "journal-issue": {
+   "issue": "1",
+   "published-online": {
+    "date-parts": [
+     [
+      2025,
+      12
+     ]
+    ]
+   }
+  },
+  "alternative-id": [
+   "58551"
+  ],
+  "URL": "https://doi.org/10.1038/s41467-025-58551-6",
+  "ISSN": [
+   "2041-1723"
+  ],
+  "issn-type": [
+   {
+    "value": "2041-1723",
+    "type": "electronic"
+   }
+  ],
+  "subject": [],
+  "published": {
+   "date-parts": [
+    [
+     2025,
+     4,
+     16
+    ]
+   ]
+  },
+  "article-number": "3615"
+ }
+}

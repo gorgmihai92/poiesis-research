@@ -7,6 +7,10 @@
 2. Their bibliographies are read, and every work they cite is counted once per seed.
 3. Works cited by many seeds come first, whatever their age. Generic method works (statistics, PRISMA) also
    rise: skip them.
+
+When OpenAlex refuses, seeds come from Semantic Scholar and Crossref, and bibliographies from Semantic Scholar and
+from the reference lists publishers deposited in Crossref, which are often incomplete: a note says so, and the last
+line, "Coverage", names the databases that answered.
 """
 import argparse
 import collections
@@ -27,9 +31,24 @@ def main() -> int:
     p.add_argument("--min-share", type=float, default=0.15, help="minimum share of seeds that must cite a work")
     p.add_argument("--no-s2", action="store_true", help="OpenAlex only")
     p.add_argument("--json", action="store_true")
+    sc.add_request_args(p)
     a = p.parse_args()
+    sc.apply_request_args(a)
     notes: list[str] = []
     s2_ok = not a.no_s2
+    oa_ok = True
+
+    def oa(fn, *args, **kw):
+        nonlocal oa_ok
+        if not oa_ok:
+            return None
+        try:
+            return fn(*args, **kw)
+        except sc.REFUSALS as e:
+            oa_ok = False
+            notes.append(f"OpenAlex did not answer ({e}) Seeds and bibliographies come from Semantic Scholar and "
+                         "Crossref, whose reference lists are often incomplete: read this list as a lower bound.")
+            return None
 
     def s2(fn, *args, **kw):
         nonlocal s2_ok
@@ -45,18 +64,23 @@ def main() -> int:
     # 1. Seeds.
     if a.doi:
         dois = [d.removeprefix("https://doi.org/") for d in a.doi]
-        seeds = sc.openalex_dois(dois) + (s2(sc.s2_batch, dois) or [])
+        seeds = (oa(sc.openalex_dois, dois) or []) + (s2(sc.s2_batch, dois) or [])
+        if not oa_ok:
+            seeds += [w for w in (sc.fallback_doi(d) for d in dois) if w]
     elif a.query:
-        reviews = sc.openalex_search(a.query, a.seeds, "cited_by_count:desc", ["type:review"], in_title_abstract=True)
-        rest = sc.openalex_search(a.query, a.seeds, "cited_by_count:desc", in_title_abstract=True)
+        reviews = oa(sc.openalex_search, a.query, a.seeds, "cited_by_count:desc", ["type:review"], in_title_abstract=True) or []
+        rest = oa(sc.openalex_search, a.query, a.seeds, "cited_by_count:desc", in_title_abstract=True) or []
         s2_seeds = [w for w in s2(sc.s2_search, a.query, a.seeds * 2, by_citations=True) or [] if sc.on_topic(w, a.query)][: a.seeds]
         # Semantic Scholar seeds get their OpenAlex twin, whose bibliography is usually complete.
-        twins = sc.openalex_dois([w["doi"] for w in s2_seeds if w.get("doi")])
+        twins = oa(sc.openalex_dois, [w["doi"] for w in s2_seeds if w.get("doi")]) or []
         seeds = reviews[: a.seeds] + rest[: a.seeds] + s2_seeds + twins
+        if not oa_ok:  # Crossref's most relevant works on the topic, kept when the topic's words are in the title
+            more = [w for w in sc.ask(sc.crossref_search, a.query, a.seeds * 2) or [] if sc.on_topic(w, a.query)]
+            seeds += sorted(more, key=lambda w: -sc.most_cited(w))[: a.seeds]
     else:
         p.error("give a query or --doi")
     seeds = sc.merge_all(seeds)
-    seeds = sorted(seeds, key=lambda w: -max(w.get("cited_openalex") or 0, w.get("cited_s2") or 0))[: a.seeds * 2]
+    seeds = sorted(seeds, key=lambda w: -sc.most_cited(w))[: a.seeds * 2]
     if not seeds:
         print("No seeds found.")
         return 1
@@ -90,7 +114,7 @@ def main() -> int:
             for r in set(s["references"]):
                 by_id[r].add(sc.key(s))
     common = [r for r, c in sorted(by_id.items(), key=lambda x: -len(x[1])) if len(c) >= 2][: a.top * 6]
-    for w in sc.openalex_ids(common):
+    for w in oa(sc.openalex_ids, common) or []:
         for seed in by_id[w["openalex"]]:
             add(w, seed)
 
@@ -102,6 +126,23 @@ def main() -> int:
                 with_refs.add(sc.key(s))
             for w, infl in refs:
                 add(w, sc.key(s), infl)
+
+    # 2c. When OpenAlex did not answer: the reference lists publishers deposited in Crossref, by DOI.
+    if not oa_ok:
+        by_doi: dict[str, set[str]] = collections.defaultdict(set)
+        for s in seeds:
+            if s.get("doi") and sc.key(s) not in with_refs:
+                refs = sc.ask(sc.crossref_references, s["doi"]) or []
+                if refs:
+                    with_refs.add(sc.key(s))
+                for d in set(refs):
+                    by_doi[d].add(sc.key(s))
+        shared = [d for d, c in sorted(by_doi.items(), key=lambda x: -len(x[1])) if len(c) >= 2][: a.top * 2]
+        for d in shared:
+            w = sc.fallback_doi(d)
+            if w:
+                for seed in by_doi[d]:
+                    add(w, seed)
 
     # Join records of the same work that came with and without a DOI.
     by_title: dict[str, str] = {}
@@ -120,7 +161,7 @@ def main() -> int:
     need = max(2, round(a.min_share * base))
     ranked = sorted(
         (k for k in works if len(citing[k]) >= need and k not in seed_keys),
-        key=lambda k: (-len(citing[k]), -influential[k], -max(works[k].get("cited_openalex") or 0, works[k].get("cited_s2") or 0)),
+        key=lambda k: (-len(citing[k]), -influential[k], -sc.most_cited(works[k])),
     )[: a.top]
 
     # 3. Citation counts from both databases for the result.
@@ -154,7 +195,7 @@ def main() -> int:
 
 if __name__ == "__main__":
     try:
-        sys.exit(main())
+        sys.exit(sc.finish(main))
     except sc.BudgetExhausted as e:
         print(f"Stopped: {e}", file=sys.stderr)
         sys.exit(2)
