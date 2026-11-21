@@ -8,7 +8,7 @@
 - **Licence:** OpenAIRE records are CC BY, with OpenAIRE named as the source; Wikimedia's analytics data is CC0.
   The others state no licence on the pages read.
 - **Evidence:** documentation (D) and observation (O) · read and run on 2026-11-21, with no key and no email.
-- **Read:** NIH RePORTER API page: the section "Constraints/Limitations" and the search parameters. OpenAIRE:
+- **Read:** documentation, on 2026-11-21. NIH RePORTER API page: the section "Constraints/Limitations" and the search parameters. OpenAIRE:
   "Graph API", "Filtering search results" (the research-product parameters) and "Terms of use" in full. Hacker
   News Search API page in full, in a browser. Wikimedia Analytics API "Access policy" in full, and the lines of
   the Foundation's User-Agent policy on contact information. Hugging Face "Hub Rate limits": the headers and the
