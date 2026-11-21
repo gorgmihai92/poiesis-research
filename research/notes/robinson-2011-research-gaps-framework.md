@@ -4,7 +4,7 @@
 - **File:** none (reference only)
 - **Licence:** © Elsevier: closed.
 - **Evidence:** analytical, with a review of practice and a pilot test · **abstract only**.
-- **Read:** the abstract, from Europe PMC, on 2026-11-21. The full text was not read.
+- **Read:** abstract only, from Europe PMC, on 2026-11-21. The full text was not read.
 
 ## What it says (from the abstract)
 - Few of the organisations reviewed used an explicit framework to find research gaps: 4 evidence-based practice
