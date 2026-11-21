@@ -1,0 +1,401 @@
+topic_id,topic,year,partial,count,base,share_per_100k
+T10001,Geological and Geochemical Analysis,2025,false,6971,7849714,88.8058
+T10002,Advanced Chemical Physics Studies,2025,false,3299,7849714,42.0270
+T10003,Innovation and Knowledge Management,2025,false,3710,7849714,47.2629
+T10004,Soil Carbon and Nitrogen Dynamics,2025,false,9068,7849714,115.5201
+T10005,Ecology and Vegetation Dynamics Studies,2025,false,4558,7849714,58.0658
+T10006,Job Satisfaction and Organizational Behavior,2025,false,9855,7849714,125.5460
+T10007,Monetary Policy and Economic Impact,2025,false,8454,7849714,107.6982
+T10008,Teacher Education and Leadership Studies,2025,false,8731,7849714,111.2270
+T10009,Dementia and Cognitive Impairment Research,2025,false,16934,7849714,215.7276
+T10010,"Obesity, Physical Activity, Diet",2025,false,4376,7849714,55.7473
+T10011,"Literature: history, themes, analysis",2025,false,1204,7849714,15.3381
+T10012,Genetic diversity and population structure,2025,false,3912,7849714,49.8362
+T10013,Asymmetric Synthesis and Catalysis,2025,false,1731,7849714,22.0518
+T10014,Plant Stress Responses and Tolerance,2025,false,8266,7849714,105.3032
+T10015,Genomics and Phylogenetic Studies,2025,false,4241,7849714,54.0274
+T10016,Adsorption and biosorption for pollutant removal,2025,false,11952,7849714,152.2603
+T10017,Geology and Paleoclimatology Research,2025,false,2556,7849714,32.5617
+T10018,Advancements in Battery Materials,2025,false,10932,7849714,139.2662
+T10019,Corporate Finance and Governance,2025,false,8733,7849714,111.2525
+T10020,Quantum Information and Cryptography,2025,false,6082,7849714,77.4805
+T10021,EFL/ESL Teaching and Learning,2025,false,25219,7849714,321.2729
+T10022,Semiconductor Quantum Structures and Devices,2025,false,914,7849714,11.6437
+T10023,Schizophrenia research and treatment,2025,false,5893,7849714,75.0728
+T10024,TiO2 Photocatalysis and Solar Cells,2025,false,3759,7849714,47.8871
+T10025,Black Holes and Theoretical Physics,2025,false,5492,7849714,69.9643
+T10026,"Galaxies: Formation, Evolution, Phenomena",2025,false,4520,7849714,57.5817
+T10027,"Diabetes, Cardiovascular Risks, and Lipoproteins",2025,false,5142,7849714,65.5056
+T10028,Topic Modeling,2025,false,10585,7849714,134.8457
+T10029,Climate variability and models,2025,false,6895,7849714,87.8376
+T10030,Electrocatalysts for Energy Conversion,2025,false,15029,7849714,191.4592
+T10031,T-cell and B-cell Immunology,2025,false,2869,7849714,36.5491
+T10032,Marine Plankton and Biogeochemistry,2025,false,3105,7849714,39.5556
+T10033,Concrete and Cement Materials Research,2025,false,10573,7849714,134.6928
+T10034,"Syntax, Semantics, Linguistic Variation",2025,false,9374,7849714,119.4184
+T10035,Phytochemicals and Antioxidant Activities,2025,false,4985,7849714,63.5055
+T10036,Advanced Neural Network Applications,2025,false,16304,7849714,207.7018
+T10037,Physics of Superconductivity and Magnetism,2025,false,2383,7849714,30.3578
+T10038,Tuberculosis Research and Epidemiology,2025,false,9635,7849714,122.7433
+T10039,"Stellar, planetary, and galactic studies",2025,false,4942,7849714,62.9577
+T10040,Adaptive Control of Nonlinear Systems,2025,false,3195,7849714,40.7021
+T10041,COVID-19 Clinical Research Studies,2025,false,4736,7849714,60.3334
+T10042,Neural and Behavioral Psychology Studies,2025,false,2865,7849714,36.4981
+T10043,Substance Abuse Treatment and Outcomes,2025,false,7415,7849714,94.4620
+T10044,Protein Structure and Dynamics,2025,false,3301,7849714,42.0525
+T10045,Organic Electronics and Photovoltaics,2025,false,3260,7849714,41.5302
+T10046,Stability and Control of Uncertain Systems,2025,false,2685,7849714,34.2051
+T10047,Financial Markets and Investment Strategies,2025,false,8565,7849714,109.1123
+T10048,Particle physics theoretical and experimental studies,2025,false,4784,7849714,60.9449
+T10049,Magnetic properties of thin films,2025,false,3699,7849714,47.1227
+T10050,Multi-Criteria Decision Making,2025,false,7144,7849714,91.0097
+T10051,Asthma and respiratory diseases,2025,false,5921,7849714,75.4295
+T10052,Medical Image Segmentation Techniques,2025,false,5816,7849714,74.0919
+T10053,International Relations and Foreign Policy,2025,false,8040,7849714,102.4241
+T10054,Parallel Computing and Optimization Techniques,2025,false,2631,7849714,33.5171
+T10055,Diverse Aspects of Tourism Research,2025,false,15636,7849714,199.1920
+T10056,Neurotransmitter Receptor Influence on Behavior,2025,false,1771,7849714,22.5613
+T10057,Face and Expression Recognition,2025,false,544,7849714,6.9302
+T10058,Entrepreneurship Studies and Influences,2025,false,12103,7849714,154.1840
+T10059,Bone Tissue Engineering Materials,2025,false,6173,7849714,78.6398
+T10060,Smoking Behavior and Cessation,2025,false,7215,7849714,91.9142
+T10061,Algebraic Geometry and Number Theory,2025,false,4452,7849714,56.7154
+T10062,MicroRNA in disease regulation,2025,false,2971,7849714,37.8485
+T10063,Nanoparticle-Based Drug Delivery,2025,false,7879,7849714,100.3731
+T10064,Complex Network Analysis Techniques,2025,false,2916,7849714,37.1479
+T10065,Atrial Fibrillation Management and Outcomes,2025,false,7506,7849714,95.6213
+T10066,Gut microbiota and health,2025,false,12340,7849714,157.2032
+T10067,Stochastic processes and financial applications,2025,false,3304,7849714,42.0907
+T10068,Technology Adoption and User Behaviour,2025,false,11115,7849714,141.5975
+T10069,Antenna Design and Analysis,2025,false,4268,7849714,54.3714
+T10070,Political Conflict and Governance,2025,false,2082,7849714,26.5233
+T10071,Bone health and osteoporosis research,2025,false,4462,7849714,56.8428
+T10072,Science Education and Pedagogy,2025,false,9193,7849714,117.1125
+T10073,Hepatocellular Carcinoma Treatment and Prognosis,2025,false,6284,7849714,80.0539
+T10074,Carbon Nanotubes in Composites,2025,false,1151,7849714,14.6630
+T10075,Atmospheric chemistry and aerosols,2025,false,4258,7849714,54.2440
+T10076,Plant-Microbe Interactions and Immunity,2025,false,7935,7849714,101.0865
+T10077,Neuroscience and Neuropharmacology Research,2025,false,2095,7849714,26.6889
+T10078,Advanced Photocatalysis Techniques,2025,false,16073,7849714,204.7591
+T10079,Nanoparticles: synthesis and applications,2025,false,8121,7849714,103.4560
+T10080,Energy Efficient Wireless Sensor Networks,2025,false,1849,7849714,23.5550
+T10081,"Auditing, Earnings Management, Governance",2025,false,8824,7849714,112.4117
+T10082,HIV/AIDS Research and Interventions,2025,false,7169,7849714,91.3282
+T10083,Graphene research and applications,2025,false,2618,7849714,33.3515
+T10084,Musculoskeletal pain and rehabilitation,2025,false,6087,7849714,77.5442
+T10085,Parkinson's Disease Mechanisms and Treatments,2025,false,6993,7849714,89.0860
+T10086,Alzheimer's disease research and treatments,2025,false,7630,7849714,97.2010
+T10087,Archaeology and ancient environmental studies,2025,false,2411,7849714,30.7145
+T10088,Thermochemical Biomass Conversion Processes,2025,false,6116,7849714,77.9137
+T10089,Avian ecology and behavior,2025,false,5807,7849714,73.9772
+T10090,ZnO doping and properties,2025,false,1920,7849714,24.4595
+T10091,Malaria Research and Control,2025,false,4947,7849714,63.0214
+T10092,Organometallic Complex Synthesis and Catalysis,2025,false,1441,7849714,18.3574
+T10093,Nuclear physics research studies,2025,false,3126,7849714,39.8231
+T10094,Epilepsy research and treatment,2025,false,6910,7849714,88.0287
+T10095,Cosmology and Gravitation Theories,2025,false,8806,7849714,112.1824
+T10096,Metal-Organic Frameworks: Synthesis and Applications,2025,false,5429,7849714,69.1618
+T10097,Luminescence Properties of Advanced Materials,2025,false,4159,7849714,52.9828
+T10098,Ruminant Nutrition and Digestive Physiology,2025,false,6468,7849714,82.3979
+T10099,GaN-based semiconductor devices and materials,2025,false,2465,7849714,31.4024
+T10100,Metaheuristic Optimization Algorithms Research,2025,false,4349,7849714,55.4033
+T10101,Cloud Computing and Resource Management,2025,false,5175,7849714,65.9260
+T10102,scientometrics and bibliometrics research,2025,false,8648,7849714,110.1696
+T10103,Reading and Literacy Development,2025,false,6604,7849714,84.1305
+T10104,Nanofluid Flow and Heat Transfer,2025,false,4672,7849714,59.5181
+T10105,Osteoarthritis Treatment and Mechanisms,2025,false,5731,7849714,73.0090
+T10106,Autism Spectrum Disorder Research,2025,false,9150,7849714,116.5648
+T10107,Ferroelectric and Piezoelectric Materials,2025,false,3139,7849714,39.9887
+T10108,Electoral Systems and Political Participation,2025,false,6034,7849714,76.8690
+T10109,Paleontology and Stratigraphy of Fossils,2025,false,3339,7849714,42.5366
+T10110,earthquake and tectonic studies,2025,false,3193,7849714,40.6766
+T10111,Remote Sensing in Agriculture,2025,false,5381,7849714,68.5503
+T10112,HIV Research and Treatment,2025,false,1757,7849714,22.3830
+T10113,Dental materials and restorations,2025,false,9552,7849714,121.6860
+T10114,"Balance, Gait, and Falls Prevention",2025,false,5695,7849714,72.5504
+T10115,Corporate Social Responsibility Reporting,2025,false,14239,7849714,181.3951
+T10116,Sperm and Testicular Function,2025,false,5890,7849714,75.0346
+T10117,Advanced Combustion Engine Technologies,2025,false,3959,7849714,50.4350
+T10118,SARS-CoV-2 and COVID-19 Research,2025,false,5332,7849714,67.9260
+T10119,Sustainability and Climate Change Governance,2025,false,2025,7849714,25.7971
+T10120,Bacterial Genetics and Biotechnology,2025,false,2317,7849714,29.5170
+T10121,Building Energy and Comfort Optimization,2025,false,6889,7849714,87.7612
+T10122,Toxic Organic Pollutants Impact,2025,false,2267,7849714,28.8800
+T10123,DNA Repair Mechanisms,2025,false,1460,7849714,18.5994
+T10124,Prostate Cancer Diagnosis and Treatment,2025,false,4774,7849714,60.8175
+T10125,Advanced Wireless Communication Techniques,2025,false,968,7849714,12.3317
+T10126,"Logic, programming, and type systems",2025,false,1617,7849714,20.5995
+T10127,"Banking stability, regulation, efficiency",2025,false,6490,7849714,82.6782
+T10128,Global trade and economics,2025,false,4526,7849714,57.6582
+T10129,Glioma Diagnosis and Treatment,2025,false,6315,7849714,80.4488
+T10130,Mathematics Education and Teaching Techniques,2025,false,7792,7849714,99.2648
+T10131,Gold and Silver Nanoparticles Synthesis and Applications,2025,false,3784,7849714,48.2056
+T10132,Advanced ceramic materials synthesis,2025,false,3359,7849714,42.7914
+T10133,News Media Framing and Political Communication,2025,false,4526,7849714,57.6582
+T10134,Inflammatory Bowel Disease,2025,false,7661,7849714,97.5959
+T10135,Insect-Plant Interactions and Control,2025,false,4734,7849714,60.3079
+T10136,Statistical Methods and Inference,2025,false,2551,7849714,32.4980
+T10137,Multiple Sclerosis Research Studies,2025,false,5661,7849714,72.1173
+T10138,Network Traffic and Congestion Control,2025,false,1188,7849714,15.1343
+T10139,Heavy metals in environment,2025,false,7871,7849714,100.2712
+T10140,Food composition and properties,2025,false,6200,7849714,78.9838
+T10141,Probiotics and Fermented Foods,2025,false,8076,7849714,102.8827
+T10142,Formal Methods in Verification,2025,false,951,7849714,12.1151
+T10143,Chronic Obstructive Pulmonary Disease (COPD) Research,2025,false,5924,7849714,75.4677
+T10144,Blood Pressure and Hypertension Studies,2025,false,8196,7849714,104.4114
+T10145,Consumer Behavior in Brand Consumption and Identification,2025,false,4115,7849714,52.4223
+T10146,Cervical Cancer and HPV Research,2025,false,5745,7849714,73.1874
+T10147,Antibiotic Resistance in Bacteria,2025,false,7481,7849714,95.3028
+T10148,Advanced MIMO Systems Optimization,2025,false,885,7849714,11.2743
+T10149,Anthropological Studies and Insights,2025,false,824,7849714,10.4972
+T10150,Antifungal resistance and susceptibility,2025,false,4409,7849714,56.1677
+T10151,Hepatitis C virus research,2025,false,1558,7849714,19.8479
+T10152,Animal Nutrition and Physiology,2025,false,8849,7849714,112.7302
+T10153,"Education, sociology, and vocational training",2025,false,454,7849714,5.7837
+T10154,Customer Service Quality and Loyalty,2025,false,9980,7849714,127.1384
+T10155,Nitric Oxide and Endothelin Effects,2025,false,848,7849714,10.8029
+T10156,"LGBTQ Health, Identity, and Policy",2025,false,6121,7849714,77.9774
+T10157,Sports Performance and Training,2025,false,11930,7849714,151.9801
+T10158,Cancer Immunotherapy and Biomarkers,2025,false,10784,7849714,137.3808
+T10159,Ionosphere and magnetosphere dynamics,2025,false,3094,7849714,39.4154
+T10160,Seismic Performance and Analysis,2025,false,6380,7849714,81.2768
+T10161,Rock Mechanics and Modeling,2025,false,5124,7849714,65.2763
+T10162,Online and Blended Learning,2025,false,5083,7849714,64.7540
+T10163,Metal complexes synthesis and properties,2025,false,2447,7849714,31.1731
+T10164,Quality and Supply Management,2025,false,3058,7849714,38.9568
+T10165,Classical Antiquity Studies,2025,false,5221,7849714,66.5120
+T10166,Mosquito-borne diseases and control,2025,false,5799,7849714,73.8753
+T10167,Influenza Virus Research Studies,2025,false,3601,7849714,45.8743
+T10168,COVID-19 and Mental Health,2025,false,4270,7849714,54.3969
+T10169,Protein Kinase Regulation and GTPase Signaling,2025,false,702,7849714,8.9430
+T10170,Retinal Diseases and Treatments,2025,false,5543,7849714,70.6140
+T10171,Biofuel production and bioconversion,2025,false,2709,7849714,34.5108
+T10172,Cardiac Valve Diseases and Treatments,2025,false,8026,7849714,102.2458
+T10173,Computational Fluid Dynamics and Aerodynamics,2025,false,3061,7849714,38.9951
+T10174,Animal Behavior and Reproduction,2025,false,2218,7849714,28.2558
+T10175,Advanced DC-DC Converters,2025,false,3451,7849714,43.9634
+T10176,Mesenchymal stem cell research,2025,false,2514,7849714,32.0266
+T10177,Palliative Care and End-of-Life Issues,2025,false,6222,7849714,79.2640
+T10178,Cancer survivorship and care,2025,false,6514,7849714,82.9839
+T10179,Supercapacitor Materials and Fabrication,2025,false,7733,7849714,98.5131
+T10180,Analytical chemistry methods development,2025,false,3899,7849714,49.6706
+T10181,Natural Language Processing Techniques,2025,false,3247,7849714,41.3646
+T10182,Child and Adolescent Psychosocial and Emotional Development,2025,false,5228,7849714,66.6012
+T10183,Breast Cancer Treatment Studies,2025,false,5820,7849714,74.1428
+T10184,Plant Molecular Biology Research,2025,false,3630,7849714,46.2437
+T10185,Lymphoma Diagnosis and Treatment,2025,false,4964,7849714,63.2380
+T10186,Nursing education and management,2025,false,5035,7849714,64.1425
+T10187,Radio Frequency Integrated Circuit Design,2025,false,972,7849714,12.3826
+T10188,Advanced machining processes and optimization,2025,false,5185,7849714,66.0534
+T10189,Anesthesia and Pain Management,2025,false,8619,7849714,109.8002
+T10190,Air Quality and Health Impacts,2025,false,5345,7849714,68.0917
+T10191,Robotics and Sensor-Based Localization,2025,false,2819,7849714,35.9121
+T10192,Catalytic Processes in Materials Science,2025,false,3603,7849714,45.8998
+T10193,Coronary Interventions and Diagnostics,2025,false,4481,7849714,57.0849
+T10194,Nonlinear Partial Differential Equations,2025,false,3766,7849714,47.9763
+T10195,Antimicrobial Resistance in Staphylococcus,2025,false,2374,7849714,30.2431
+T10196,Pain Mechanisms and Treatments,2025,false,3263,7849714,41.5684
+T10197,Membrane Separation Technologies,2025,false,5226,7849714,66.5757
+T10198,Heart Failure Treatment and Management,2025,false,6310,7849714,80.3851
+T10199,Wildlife Ecology and Conservation,2025,false,4602,7849714,58.6263
+T10200,Rheumatoid Arthritis Research and Therapies,2025,false,4096,7849714,52.1802
+T10001,Geological and Geochemical Analysis,2026,true,6919,8386392,82.5027
+T10002,Advanced Chemical Physics Studies,2026,true,4173,8386392,49.7592
+T10003,Innovation and Knowledge Management,2026,true,4453,8386392,53.0979
+T10004,Soil Carbon and Nitrogen Dynamics,2026,true,9637,8386392,114.9123
+T10005,Ecology and Vegetation Dynamics Studies,2026,true,4870,8386392,58.0703
+T10006,Job Satisfaction and Organizational Behavior,2026,true,10627,8386392,126.7172
+T10007,Monetary Policy and Economic Impact,2026,true,9422,8386392,112.3487
+T10008,Teacher Education and Leadership Studies,2026,true,9072,8386392,108.1752
+T10009,Dementia and Cognitive Impairment Research,2026,true,13903,8386392,165.7805
+T10010,"Obesity, Physical Activity, Diet",2026,true,4219,8386392,50.3077
+T10011,"Literature: history, themes, analysis",2026,true,1423,8386392,16.9680
+T10012,Genetic diversity and population structure,2026,true,4039,8386392,48.1614
+T10013,Asymmetric Synthesis and Catalysis,2026,true,1526,8386392,18.1961
+T10014,Plant Stress Responses and Tolerance,2026,true,8032,8386392,95.7742
+T10015,Genomics and Phylogenetic Studies,2026,true,5043,8386392,60.1331
+T10016,Adsorption and biosorption for pollutant removal,2026,true,10940,8386392,130.4494
+T10017,Geology and Paleoclimatology Research,2026,true,2642,8386392,31.5034
+T10018,Advancements in Battery Materials,2026,true,10467,8386392,124.8093
+T10019,Corporate Finance and Governance,2026,true,8844,8386392,105.4566
+T10020,Quantum Information and Cryptography,2026,true,9708,8386392,115.7590
+T10021,EFL/ESL Teaching and Learning,2026,true,25894,8386392,308.7621
+T10022,Semiconductor Quantum Structures and Devices,2026,true,961,8386392,11.4590
+T10023,Schizophrenia research and treatment,2026,true,6258,8386392,74.6209
+T10024,TiO2 Photocatalysis and Solar Cells,2026,true,3130,8386392,37.3224
+T10025,Black Holes and Theoretical Physics,2026,true,11910,8386392,142.0158
+T10026,"Galaxies: Formation, Evolution, Phenomena",2026,true,8550,8386392,101.9509
+T10027,"Diabetes, Cardiovascular Risks, and Lipoproteins",2026,true,5645,8386392,67.3114
+T10028,Topic Modeling,2026,true,21117,8386392,251.8008
+T10029,Climate variability and models,2026,true,7830,8386392,93.3655
+T10030,Electrocatalysts for Energy Conversion,2026,true,15179,8386392,180.9956
+T10031,T-cell and B-cell Immunology,2026,true,3053,8386392,36.4042
+T10032,Marine Plankton and Biogeochemistry,2026,true,3427,8386392,40.8638
+T10033,Concrete and Cement Materials Research,2026,true,10705,8386392,127.6473
+T10034,"Syntax, Semantics, Linguistic Variation",2026,true,9499,8386392,113.2668
+T10035,Phytochemicals and Antioxidant Activities,2026,true,4639,8386392,55.3158
+T10036,Advanced Neural Network Applications,2026,true,18951,8386392,225.9732
+T10037,Physics of Superconductivity and Magnetism,2026,true,3686,8386392,43.9522
+T10038,Tuberculosis Research and Epidemiology,2026,true,9788,8386392,116.7129
+T10039,"Stellar, planetary, and galactic studies",2026,true,7641,8386392,91.1119
+T10040,Adaptive Control of Nonlinear Systems,2026,true,3073,8386392,36.6427
+T10041,COVID-19 Clinical Research Studies,2026,true,2731,8386392,32.5647
+T10042,Neural and Behavioral Psychology Studies,2026,true,3441,8386392,41.0308
+T10043,Substance Abuse Treatment and Outcomes,2026,true,7603,8386392,90.6588
+T10044,Protein Structure and Dynamics,2026,true,4443,8386392,52.9787
+T10045,Organic Electronics and Photovoltaics,2026,true,2901,8386392,34.5918
+T10046,Stability and Control of Uncertain Systems,2026,true,2471,8386392,29.4644
+T10047,Financial Markets and Investment Strategies,2026,true,14374,8386392,171.3967
+T10048,Particle physics theoretical and experimental studies,2026,true,12206,8386392,145.5453
+T10049,Magnetic properties of thin films,2026,true,4229,8386392,50.4269
+T10050,Multi-Criteria Decision Making,2026,true,6943,8386392,82.7889
+T10051,Asthma and respiratory diseases,2026,true,6163,8386392,73.4881
+T10052,Medical Image Segmentation Techniques,2026,true,6154,8386392,73.3808
+T10053,International Relations and Foreign Policy,2026,true,9523,8386392,113.5530
+T10054,Parallel Computing and Optimization Techniques,2026,true,5618,8386392,66.9895
+T10055,Diverse Aspects of Tourism Research,2026,true,14843,8386392,176.9891
+T10056,Neurotransmitter Receptor Influence on Behavior,2026,true,1859,8386392,22.1669
+T10057,Face and Expression Recognition,2026,true,476,8386392,5.6759
+T10058,Entrepreneurship Studies and Influences,2026,true,12095,8386392,144.2217
+T10059,Bone Tissue Engineering Materials,2026,true,5524,8386392,65.8686
+T10060,Smoking Behavior and Cessation,2026,true,7004,8386392,83.5162
+T10061,Algebraic Geometry and Number Theory,2026,true,8366,8386392,99.7568
+T10062,MicroRNA in disease regulation,2026,true,2599,8386392,30.9907
+T10063,Nanoparticle-Based Drug Delivery,2026,true,7811,8386392,93.1390
+T10064,Complex Network Analysis Techniques,2026,true,3543,8386392,42.2470
+T10065,Atrial Fibrillation Management and Outcomes,2026,true,7563,8386392,90.1818
+T10066,Gut microbiota and health,2026,true,13022,8386392,155.2754
+T10067,Stochastic processes and financial applications,2026,true,4451,8386392,53.0741
+T10068,Technology Adoption and User Behaviour,2026,true,11847,8386392,141.2646
+T10069,Antenna Design and Analysis,2026,true,3722,8386392,44.3814
+T10070,Political Conflict and Governance,2026,true,2647,8386392,31.5630
+T10071,Bone health and osteoporosis research,2026,true,4356,8386392,51.9413
+T10072,Science Education and Pedagogy,2026,true,9826,8386392,117.1660
+T10073,Hepatocellular Carcinoma Treatment and Prognosis,2026,true,6226,8386392,74.2393
+T10074,Carbon Nanotubes in Composites,2026,true,1023,8386392,12.1983
+T10075,Atmospheric chemistry and aerosols,2026,true,4679,8386392,55.7928
+T10076,Plant-Microbe Interactions and Immunity,2026,true,8517,8386392,101.5574
+T10077,Neuroscience and Neuropharmacology Research,2026,true,2297,8386392,27.3896
+T10078,Advanced Photocatalysis Techniques,2026,true,15380,8386392,183.3923
+T10079,Nanoparticles: synthesis and applications,2026,true,7862,8386392,93.7471
+T10080,Energy Efficient Wireless Sensor Networks,2026,true,1542,8386392,18.3869
+T10081,"Auditing, Earnings Management, Governance",2026,true,9302,8386392,110.9178
+T10082,HIV/AIDS Research and Interventions,2026,true,7526,8386392,89.7406
+T10083,Graphene research and applications,2026,true,2443,8386392,29.1305
+T10084,Musculoskeletal pain and rehabilitation,2026,true,6255,8386392,74.5851
+T10085,Parkinson's Disease Mechanisms and Treatments,2026,true,6948,8386392,82.8485
+T10086,Alzheimer's disease research and treatments,2026,true,6801,8386392,81.0957
+T10087,Archaeology and ancient environmental studies,2026,true,2304,8386392,27.4731
+T10088,Thermochemical Biomass Conversion Processes,2026,true,5769,8386392,68.7900
+T10089,Avian ecology and behavior,2026,true,6497,8386392,77.4707
+T10090,ZnO doping and properties,2026,true,1692,8386392,20.1755
+T10091,Malaria Research and Control,2026,true,5171,8386392,61.6594
+T10092,Organometallic Complex Synthesis and Catalysis,2026,true,1404,8386392,16.7414
+T10093,Nuclear physics research studies,2026,true,4149,8386392,49.4730
+T10094,Epilepsy research and treatment,2026,true,7124,8386392,84.9471
+T10095,Cosmology and Gravitation Theories,2026,true,27890,8386392,332.5626
+T10096,Metal-Organic Frameworks: Synthesis and Applications,2026,true,5386,8386392,64.2231
+T10097,Luminescence Properties of Advanced Materials,2026,true,3695,8386392,44.0595
+T10098,Ruminant Nutrition and Digestive Physiology,2026,true,5878,8386392,70.0897
+T10099,GaN-based semiconductor devices and materials,2026,true,2612,8386392,31.1457
+T10100,Metaheuristic Optimization Algorithms Research,2026,true,3973,8386392,47.3744
+T10101,Cloud Computing and Resource Management,2026,true,8508,8386392,101.4501
+T10102,scientometrics and bibliometrics research,2026,true,9491,8386392,113.1714
+T10103,Reading and Literacy Development,2026,true,7327,8386392,87.3677
+T10104,Nanofluid Flow and Heat Transfer,2026,true,3977,8386392,47.4221
+T10105,Osteoarthritis Treatment and Mechanisms,2026,true,5468,8386392,65.2009
+T10106,Autism Spectrum Disorder Research,2026,true,10019,8386392,119.4673
+T10107,Ferroelectric and Piezoelectric Materials,2026,true,3094,8386392,36.8931
+T10108,Electoral Systems and Political Participation,2026,true,6657,8386392,79.3786
+T10109,Paleontology and Stratigraphy of Fossils,2026,true,3710,8386392,44.2383
+T10110,earthquake and tectonic studies,2026,true,3315,8386392,39.5283
+T10111,Remote Sensing in Agriculture,2026,true,5869,8386392,69.9824
+T10112,HIV Research and Treatment,2026,true,1897,8386392,22.6200
+T10113,Dental materials and restorations,2026,true,9181,8386392,109.4750
+T10114,"Balance, Gait, and Falls Prevention",2026,true,5883,8386392,70.1494
+T10115,Corporate Social Responsibility Reporting,2026,true,14908,8386392,177.7642
+T10116,Sperm and Testicular Function,2026,true,5824,8386392,69.4458
+T10117,Advanced Combustion Engine Technologies,2026,true,3825,8386392,45.6096
+T10118,SARS-CoV-2 and COVID-19 Research,2026,true,3673,8386392,43.7971
+T10119,Sustainability and Climate Change Governance,2026,true,2627,8386392,31.3246
+T10120,Bacterial Genetics and Biotechnology,2026,true,2542,8386392,30.3110
+T10121,Building Energy and Comfort Optimization,2026,true,7812,8386392,93.1509
+T10122,Toxic Organic Pollutants Impact,2026,true,2166,8386392,25.8276
+T10123,DNA Repair Mechanisms,2026,true,1585,8386392,18.8997
+T10124,Prostate Cancer Diagnosis and Treatment,2026,true,4753,8386392,56.6751
+T10125,Advanced Wireless Communication Techniques,2026,true,1144,8386392,13.6411
+T10126,"Logic, programming, and type systems",2026,true,4074,8386392,48.5787
+T10127,"Banking stability, regulation, efficiency",2026,true,7750,8386392,92.4116
+T10128,Global trade and economics,2026,true,4628,8386392,55.1846
+T10129,Glioma Diagnosis and Treatment,2026,true,7298,8386392,87.0219
+T10130,Mathematics Education and Teaching Techniques,2026,true,7762,8386392,92.5547
+T10131,Gold and Silver Nanoparticles Synthesis and Applications,2026,true,3259,8386392,38.8606
+T10132,Advanced ceramic materials synthesis,2026,true,3299,8386392,39.3375
+T10133,News Media Framing and Political Communication,2026,true,4896,8386392,58.3803
+T10134,Inflammatory Bowel Disease,2026,true,8278,8386392,98.7075
+T10135,Insect-Plant Interactions and Control,2026,true,4615,8386392,55.0296
+T10136,Statistical Methods and Inference,2026,true,3262,8386392,38.8963
+T10137,Multiple Sclerosis Research Studies,2026,true,5762,8386392,68.7065
+T10138,Network Traffic and Congestion Control,2026,true,1395,8386392,16.6341
+T10139,Heavy metals in environment,2026,true,7373,8386392,87.9162
+T10140,Food composition and properties,2026,true,6393,8386392,76.2306
+T10141,Probiotics and Fermented Foods,2026,true,7835,8386392,93.4252
+T10142,Formal Methods in Verification,2026,true,1889,8386392,22.5246
+T10143,Chronic Obstructive Pulmonary Disease (COPD) Research,2026,true,6568,8386392,78.3174
+T10144,Blood Pressure and Hypertension Studies,2026,true,7734,8386392,92.2208
+T10145,Consumer Behavior in Brand Consumption and Identification,2026,true,4081,8386392,48.6622
+T10146,Cervical Cancer and HPV Research,2026,true,6102,8386392,72.7607
+T10147,Antibiotic Resistance in Bacteria,2026,true,8345,8386392,99.5064
+T10148,Advanced MIMO Systems Optimization,2026,true,1036,8386392,12.3533
+T10149,Anthropological Studies and Insights,2026,true,859,8386392,10.2428
+T10150,Antifungal resistance and susceptibility,2026,true,4629,8386392,55.1966
+T10151,Hepatitis C virus research,2026,true,1350,8386392,16.0975
+T10152,Animal Nutrition and Physiology,2026,true,7730,8386392,92.1731
+T10153,"Education, sociology, and vocational training",2026,true,512,8386392,6.1051
+T10154,Customer Service Quality and Loyalty,2026,true,9718,8386392,115.8782
+T10155,Nitric Oxide and Endothelin Effects,2026,true,830,8386392,9.8970
+T10156,"LGBTQ Health, Identity, and Policy",2026,true,5667,8386392,67.5738
+T10157,Sports Performance and Training,2026,true,12339,8386392,147.1312
+T10158,Cancer Immunotherapy and Biomarkers,2026,true,11601,8386392,138.3312
+T10159,Ionosphere and magnetosphere dynamics,2026,true,3542,8386392,42.2351
+T10160,Seismic Performance and Analysis,2026,true,6335,8386392,75.5390
+T10161,Rock Mechanics and Modeling,2026,true,5448,8386392,64.9624
+T10162,Online and Blended Learning,2026,true,4170,8386392,49.7234
+T10163,Metal complexes synthesis and properties,2026,true,2424,8386392,28.9040
+T10164,Quality and Supply Management,2026,true,2903,8386392,34.6156
+T10165,Classical Antiquity Studies,2026,true,3984,8386392,47.5055
+T10166,Mosquito-borne diseases and control,2026,true,5985,8386392,71.3656
+T10167,Influenza Virus Research Studies,2026,true,3711,8386392,44.2503
+T10168,COVID-19 and Mental Health,2026,true,2253,8386392,26.8649
+T10169,Protein Kinase Regulation and GTPase Signaling,2026,true,705,8386392,8.4065
+T10170,Retinal Diseases and Treatments,2026,true,5692,8386392,67.8719
+T10171,Biofuel production and bioconversion,2026,true,2441,8386392,29.1067
+T10172,Cardiac Valve Diseases and Treatments,2026,true,7971,8386392,95.0468
+T10173,Computational Fluid Dynamics and Aerodynamics,2026,true,3411,8386392,40.6730
+T10174,Animal Behavior and Reproduction,2026,true,2251,8386392,26.8411
+T10175,Advanced DC-DC Converters,2026,true,3522,8386392,41.9966
+T10176,Mesenchymal stem cell research,2026,true,2246,8386392,26.7815
+T10177,Palliative Care and End-of-Life Issues,2026,true,6625,8386392,78.9970
+T10178,Cancer survivorship and care,2026,true,6817,8386392,81.2864
+T10179,Supercapacitor Materials and Fabrication,2026,true,7251,8386392,86.4615
+T10180,Analytical chemistry methods development,2026,true,3685,8386392,43.9402
+T10181,Natural Language Processing Techniques,2026,true,5196,8386392,61.9575
+T10182,Child and Adolescent Psychosocial and Emotional Development,2026,true,5654,8386392,67.4187
+T10183,Breast Cancer Treatment Studies,2026,true,5949,8386392,70.9363
+T10184,Plant Molecular Biology Research,2026,true,3445,8386392,41.0785
+T10185,Lymphoma Diagnosis and Treatment,2026,true,4347,8386392,51.8340
+T10186,Nursing education and management,2026,true,5415,8386392,64.5689
+T10187,Radio Frequency Integrated Circuit Design,2026,true,874,8386392,10.4216
+T10188,Advanced machining processes and optimization,2026,true,4927,8386392,58.7499
+T10189,Anesthesia and Pain Management,2026,true,9078,8386392,108.2468
+T10190,Air Quality and Health Impacts,2026,true,5373,8386392,64.0681
+T10191,Robotics and Sensor-Based Localization,2026,true,3709,8386392,44.2264
+T10192,Catalytic Processes in Materials Science,2026,true,3347,8386392,39.9099
+T10193,Coronary Interventions and Diagnostics,2026,true,4179,8386392,49.8307
+T10194,Nonlinear Partial Differential Equations,2026,true,4676,8386392,55.7570
+T10195,Antimicrobial Resistance in Staphylococcus,2026,true,2313,8386392,27.5804
+T10196,Pain Mechanisms and Treatments,2026,true,3350,8386392,39.9457
+T10197,Membrane Separation Technologies,2026,true,5051,8386392,60.2285
+T10198,Heart Failure Treatment and Management,2026,true,6821,8386392,81.3341
+T10199,Wildlife Ecology and Conservation,2026,true,4868,8386392,58.0464
+T10200,Rheumatoid Arthritis Research and Therapies,2026,true,3866,8386392,46.0985

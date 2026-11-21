@@ -1,0 +1,5 @@
+series,label,year,partial,count,base,share_per_100k,count_all_types,base_all_types,share_all_types_per_100k
+moral-injury,"""moral injury""",2023,false,196,2716,7216.4948,196,2716,7216.4948
+moral-injury,"""moral injury""",2024,false,189,2620,7213.7405,189,2620,7213.7405
+moral-injury,"""moral injury""",2025,false,220,3443,6389.7764,220,3443,6389.7764
+moral-injury,"""moral injury""",2026,true,391,4958,7886.2445,391,4958,7886.2445

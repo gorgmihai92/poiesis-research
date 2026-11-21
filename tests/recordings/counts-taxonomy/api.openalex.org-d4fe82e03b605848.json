@@ -1,0 +1,10 @@
+{
+ "url": "https://api.openalex.org/works?filter=publication_year%3A2025%2Ctype%3Aarticle%7Cpreprint%7Creview&group_by=primary_topic.id&per-page=200&cursor=Imh0dHBzOi8vb3BlbmFsZXgub3JnL1QxMDIwMCI%3D",
+ "method": "GET",
+ "status": 401,
+ "fetched": "2026-11-21T20:55:14Z",
+ "body": "",
+ "refused": "key",
+ "detail": "needs a key",
+ "message": "api.openalex.org: API key required for cursor paging. Set OPENALEX_API_KEY (free: https://openalex.org/settings/api)."
+}

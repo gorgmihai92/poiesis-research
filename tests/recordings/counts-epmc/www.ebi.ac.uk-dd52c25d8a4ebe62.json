@@ -1,0 +1,7 @@
+{
+ "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=%28TITLE_ABS%3Amoral+OR+TITLE_ABS%3Amorality%29+AND+%28TITLE_ABS%3A%22moral+injury%22%29+AND+PUB_YEAR%3A2024&resultType=idlist&pageSize=1&format=json",
+ "method": "GET",
+ "status": 200,
+ "fetched": "2026-11-21T20:56:18Z",
+ "body": "{\"version\":\"6.9\",\"hitCount\":189,\"nextCursorMark\":\"AoIIQID1Uig1MTgzMTYzNA==\",\"nextPageUrl\":\"https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=%28TITLE_ABS%3Amoral+OR+TITLE_ABS%3Amorality%29+AND+%28TITLE_ABS%3A%22moral+injury%22%29+AND+PUB_YEAR%3A2024&cursorMark=AoIIQID1Uig1MTgzMTYzNA%3D%3D&resultType=idlist&pageSize=1&format=json\",\"request\":{\"queryString\":\"(TITLE_ABS:moral OR TITLE_ABS:morality) AND (TITLE_ABS:\\\"moral injury\\\") AND PUB_YEAR:2024\",\"resultType\":\"idlist\",\"cursorMark\":\"*\",\"pageSize\":1,\"sort\":\"\",\"synonym\":false},\"resultList\":{\"result\":[{\"id\":\"39514259\",\"source\":\"MED\",\"pmid\":\"39514259\"}]}}"
+}
