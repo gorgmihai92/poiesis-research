@@ -339,6 +339,9 @@ def fetch(url: str, data: bytes | None = None, headers: dict | None = None, trie
         if entry is None:
             _event(host, "refused", detail="not in the recording")
             raise ReplayMissing(f"{clean_url(url)}: not in the recording at {LAYER.replay}. Record it again; replay never uses the network.")
+        if entry.get("refused"):  # the database refused when this was recorded: refuse the same way
+            _event(host, "refused", detail=entry.get("detail") or f"HTTP {entry['status']}")
+            raise {"budget": BudgetExhausted, "key": NeedsKey}.get(entry["refused"], Refused)(entry.get("message") or f"{host}: HTTP {entry['status']} (recorded)")
         _event(host, "replay", entry)
         return entry["status"], entry["body"]
 
@@ -360,6 +363,13 @@ def fetch(url: str, data: bytes | None = None, headers: dict | None = None, trie
             _write(_record_path(LAYER.record, host, digest), entry)
         _event(host, "network", entry)
         return status, text
+
+    def refuse(kind: str, status: int, detail: str, message: str) -> None:
+        """Note a refusal for the Coverage line and, when recording, keep it so a replay refuses the same way."""
+        _event(host, "refused", detail=detail)
+        if LAYER.record is not None:
+            _write(_record_path(LAYER.record, host, digest), {"url": clean_url(url), "method": "POST" if data else "GET", "status": status,
+                                                              "fetched": _now(), "body": "", "refused": kind, "detail": detail, "message": message})
 
     if host == OPENALEX_HOST and (seen := budget(host)) is not None and seen["remaining"] + 1e-9 < openalex_cost(url):
         _event(host, "refused", detail="daily budget used up")
@@ -399,19 +409,21 @@ def fetch(url: str, data: bytes | None = None, headers: dict | None = None, trie
                 LAYER.budget[host] = {"remaining": 0.0, "limit": (LAYER.budget.get(host) or {}).get("limit"), "reset_at": time.time() + left}
                 if (path := _budget_file(host)) is not None and host == OPENALEX_HOST:
                     _write(path, LAYER.budget[host])
-                _event(host, "refused", detail="daily budget used up")
+                message = _budget_message(host, left)
+                refuse("budget", e.code, "daily budget used up", message)
                 e.close()
-                raise BudgetExhausted(_budget_message(host, left)) from None
+                raise BudgetExhausted(message) from None
             if e.code in (401, 403) and host == OPENALEX_HOST and "key" in reason.lower():
-                _event(host, "refused", detail="needs a key")
+                message = f"{host}: {reason}. Set OPENALEX_API_KEY (free: https://openalex.org/settings/api)."
+                refuse("key", e.code, "needs a key", message)
                 e.close()
-                raise NeedsKey(f"{host}: {reason}. Set OPENALEX_API_KEY (free: https://openalex.org/settings/api).") from None
+                raise NeedsKey(message) from None
             if e.code in (429, 500, 502, 503, 504) and attempt < tries - 1:
                 # Respect the server's Retry-After when it gives one (short rate limits), capped at a minute.
                 _sleep(min(60.0, float(wait)) if wait and wait.replace(".", "", 1).isdigit() else delay)
                 delay *= 2
                 continue
-            _event(host, "refused", detail=f"HTTP {e.code}" + (f" {e.reason}" if e.reason else ""))
+            refuse("http", e.code, f"HTTP {e.code}" + (f" {e.reason}" if e.reason else ""), f"{host}: HTTP {e.code}" + (f" {reason}" if reason else ""))
             raise
         except (urllib.error.URLError, TimeoutError) as e:
             if attempt < tries - 1:

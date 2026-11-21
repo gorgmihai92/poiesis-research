@@ -1,0 +1,5 @@
+series,label,year,partial,count,base,share_per_100k,count_all_types,base_all_types,share_all_types_per_100k
+heat-stroke,"""heat stroke""",2023,false,112,4100,2731.7073,112,4100,2731.7073
+heat-stroke,"""heat stroke""",2024,false,131,4350,3011.4943,131,4350,3011.4943
+heat-stroke,"""heat stroke""",2025,false,158,4620,3419.9134,158,4620,3419.9134
+heat-stroke,"""heat stroke""",2026,true,97,3180,3050.3145,97,3180,3050.3145

@@ -1,0 +1,8 @@
+{
+ "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=%28TITLE_ABS%3Aheat+OR+TITLE_ABS%3Atemperature%29+AND+PUB_YEAR%3A2023&resultType=idlist&pageSize=1&format=json",
+ "method": "GET",
+ "status": 200,
+ "fetched": "2026-11-26T09:00:00Z",
+ "synthetic": "synthetic, for the test: written on 2026-11-26 in the shape of a Europe PMC answer; the count stands for nothing and was not asked of Europe PMC",
+ "body": "{\"hitCount\": 4100, \"resultList\": {\"result\": []}}"
+}

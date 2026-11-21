@@ -1,0 +1,25 @@
+series,label,year,partial,count,base,share_per_100k,count_all_types,base_all_types,share_all_types_per_100k
+solid-state-batteries,Solid-state batteries,2015,false,88,5905543,1.4901,169,9329446,1.8115
+solid-state-batteries,Solid-state batteries,2016,false,118,5868231,2.0108,282,9663337,2.9182
+solid-state-batteries,Solid-state batteries,2017,false,183,5610511,3.2617,275,9566723,2.8745
+solid-state-batteries,Solid-state batteries,2018,false,306,5640916,5.4247,444,9588718,4.6304
+solid-state-batteries,Solid-state batteries,2019,false,419,5933163,7.0620,693,10077060,6.8770
+solid-state-batteries,Solid-state batteries,2020,false,623,6326533,9.8474,885,10663113,8.2996
+solid-state-batteries,Solid-state batteries,2021,false,738,6055747,12.1868,933,10239438,9.1118
+solid-state-batteries,Solid-state batteries,2022,false,944,5677549,16.6269,1257,9835396,12.7804
+solid-state-batteries,Solid-state batteries,2023,false,1201,6089930,19.7211,1551,10694968,14.5021
+solid-state-batteries,Solid-state batteries,2024,false,1446,6651317,21.7401,2040,10998453,18.5481
+solid-state-batteries,Solid-state batteries,2025,false,1996,7849714,25.4277,2679,14616961,18.3280
+solid-state-batteries,Solid-state batteries,2026,true,2119,8386392,25.2671,2771,19150232,14.4698
+quantum-computing,Quantum computing,2015,false,623,5905543,10.5494,1042,9329446,11.1689
+quantum-computing,Quantum computing,2016,false,691,5868231,11.7753,1165,9663337,12.0559
+quantum-computing,Quantum computing,2017,false,832,5610511,14.8293,1444,9566723,15.0940
+quantum-computing,Quantum computing,2018,false,1177,5640916,20.8654,1957,9588718,20.4094
+quantum-computing,Quantum computing,2019,false,1374,5933163,23.1580,2441,10077060,24.2233
+quantum-computing,Quantum computing,2020,false,1856,6326533,29.3368,3128,10663113,29.3348
+quantum-computing,Quantum computing,2021,false,2491,6055747,41.1345,4039,10239438,39.4455
+quantum-computing,Quantum computing,2022,false,2828,5677549,49.8102,4491,9835396,45.6616
+quantum-computing,Quantum computing,2023,false,3666,6089930,60.1977,6033,10694968,56.4097
+quantum-computing,Quantum computing,2024,false,5160,6651317,77.5786,8618,10998453,78.3565
+quantum-computing,Quantum computing,2025,false,8120,7849714,103.4433,13611,14616961,93.1179
+quantum-computing,Quantum computing,2026,true,9532,8386392,113.6603,14854,19150232,77.5656
