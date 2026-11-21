@@ -19,7 +19,8 @@ source was read.
    Changing one after seeing the numbers makes a new series, saved next to the first.
 2. **A search:** `python3 -I $S/counts.py '"<phrase>" OR "<phrase>"' --label "<name>" --from <year>`. One search
    per series; phrases in double quotes. It looks in titles and abstracts.
-   - Within a field instead of all works: add `--base '<search for the field>'`.
+   - Within a field instead of all works: add `--base '<search for the field>'`. Every series, a topic too, is
+     then counted within that field, above the line as below it.
    - A topic of the OpenAlex taxonomy: `--topic T<id>`.
    - Every topic at once: `--taxonomy --from <year>`. Past the first 200 topics OpenAlex asks for a free key
      (`OPENALEX_API_KEY`). Without one the script saves those 200, says the scan is incomplete and exits with
@@ -54,5 +55,6 @@ source was read.
 ## Save
 `counts.py` writes `research/data/<name>.csv` (one row per series and year), `<name>.types.csv` (every document
 type, so another choice can be recomputed without a new request) and `<name>.meta.json` (the query, the database,
-the date, the types, the script and its Coverage line). Add one line per series to `research/README.md`, with the
-database and the date.
+the date, the types, the script and its Coverage line). The default name is the first series and the date
+fetched. The same command run again writes the same files; a different command never overwrites them and gets
+`-2`, `-3` and so on. Add one line per series to `research/README.md`, with the database and the date.

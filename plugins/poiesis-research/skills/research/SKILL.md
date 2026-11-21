@@ -100,6 +100,8 @@ means "unknown", said in the report, never an error.
 Added in 2.4.0. Everything above is unchanged.
 - In a note: **Read**, how much of the source was read (full text, part of the text, abstract only, title only).
   Quote lines under "Quotes" are `- "exact words" (p. N)`; `verify_quotes.py` checks them against the source's text.
+  Its exit code is 1 when a quote is not found or is on the wrong page; with `--strict`, also when a quote could
+  not be checked because the source's text is not there.
 - `research/maps/<date>-<claim>.md`: an evidence map. Its table has one row per study and these columns, in this
   order: Citation, DOI, Verified, Read, What it says, Open copy, Population, What was varied, Compared with, What
   was measured, Setting, Design, Key number, Side, Group. The first six are the same in every table of sources;

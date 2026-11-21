@@ -92,8 +92,26 @@ def openalex_table(filters: list[str], y0: int, y1: int) -> dict[int, dict[str, 
 
 
 def search_filter(query: str, base: str | None) -> str:
-    """Title and abstract only, as the lab's recorded run did. OpenAlex stems words unless they are quoted."""
+    """Title and abstract only, as the lab's recorded run did. OpenAlex stems words, inside double quotes too:
+    quotes keep the words together as a phrase, and an unstemmed search is a separate `.exact` form."""
     return "title_and_abstract.search:" + (f"({base}) AND ({query})" if base else query)
+
+
+def free_name(folder: Path, name: str, command: list[str]) -> str:
+    """A default file name that does not overwrite another run's series: the same command gets its own files
+    again (a run that stopped is run again), and a different command gets the name with -2, -3 and so on."""
+    candidate, n = name, 1
+    while (folder / f"{candidate}.meta.json").is_file():
+        try:
+            before = json.loads((folder / f"{candidate}.meta.json").read_text(encoding="utf-8"))
+            same = before.get("script", {}).get("command") == command
+        except (OSError, ValueError, AttributeError):
+            same = False
+        if same:
+            break
+        n += 1
+        candidate = f"{name}-{n}"
+    return candidate
 
 
 def topic_id(value: str) -> str:
@@ -246,6 +264,8 @@ def main(argv: list[str] | None = None) -> int:
     modes = bool(a.query) + bool(a.topic) + a.taxonomy
     if modes != 1:
         p.error("give searches, or --topic, or --taxonomy (one of the three)")
+    if a.taxonomy and a.base:
+        p.error("--base does not combine with --taxonomy: the taxonomy is counted in all works of the chosen types")
     chosen = a.types or ",".join(DEFAULT_TYPES)
     types = ALL if chosen.strip().lower() == "all" else tuple(sorted(t.strip() for t in chosen.split(",") if t.strip()))
     if a.db == "epmc":
@@ -286,6 +306,8 @@ def main(argv: list[str] | None = None) -> int:
     files.save(complete=not files.meta.get("stopped"), coverage=sc.coverage_line())
     files.close()
     report(a, files, out, types, database)
+    if box.get("renamed_from") and not a.json:
+        print(f"Another run's files already have the name {box['renamed_from']}, so this series is kept under a new name. --name sets one.")
     return 0 if files.meta["complete"] else 2  # 2: saved, and marked incomplete
 
 
@@ -296,7 +318,8 @@ def run_series(a, years: range, types: tuple[str, ...], meta: dict, box: dict) -
         base_table = openalex_table(base_filters, y0, y1)
         base, base_all = select(base_table, types, years), select(base_table, ALL, years)
         meta["base"] = {"what": f"works of those types matching: {a.base}" if a.base else "all works of those types", "filter": ",".join([f"publication_year:{y0}-{y1}", *base_filters])}
-        meta["search_field"] = "title and abstract (title_and_abstract.search); words are stemmed unless quoted"
+        meta["search_field"] = ("title and abstract (title_and_abstract.search); words are stemmed, inside double quotes too "
+                                "(seen on 2026-11-21: a quoted singular and its plural gave the same counts); quotes keep the words together")
     else:
         base_table = None
         base = base_all = Counts(ALL, epmc_series(None, a.base, years))
@@ -312,7 +335,10 @@ def run_series(a, years: range, types: tuple[str, ...], meta: dict, box: dict) -
     for (kind, value), label in zip(wanted, labels):
         if kind == "topic":
             name = label or (topic_name(value) if a.db == "openalex" else value)
-            series_meta.append({"id": value, "label": name, "topic": value, "filter": f"primary_topic.id:{value}"})
+            # Within a base, the topic's works are counted within that base too: the two sides of a share must
+            # be the same set of works, apart from the series itself.
+            within = f",{search_filter(a.base, None)}" if a.base else ""
+            series_meta.append({"id": value, "label": name, "topic": value, "filter": f"primary_topic.id:{value}{within}"})
         else:
             name = label or value
             where = {"filter": search_filter(value, a.base)} if a.db == "openalex" else {"query": " AND ".join(f"({epmc_query(x)})" for x in (a.base, value) if x)}
@@ -322,7 +348,10 @@ def run_series(a, years: range, types: tuple[str, ...], meta: dict, box: dict) -
         raise SystemExit("two series would get the same name: give each one a --label")
     meta["series"] = series_meta
 
-    name = a.name or f"{ids[0]}-{meta['fetched']}"
+    default = f"{ids[0]}-{meta['fetched']}"
+    name = a.name or free_name(a.out, default, meta["script"]["command"])
+    if name != default and not a.name:
+        box["renamed_from"] = default
     files = box["files"] = Files(a.out, name, HEADER, meta, types_file=base_table is not None)
     if base_table is not None:
         files.add([], [["_base", y, t, n] for y in years for t, n in sorted(base_table.get(y, {}).items())])
@@ -355,7 +384,11 @@ def run_taxonomy(a, years: range, types: tuple[str, ...], meta: dict, box: dict)
                 meta.update(fetched=fetched[:10], partial_years=[y for y in years if is_partial(y, fetched)],
                             base={"what": "all works of those types that year, with or without a topic"},
                             series=[{"id": "taxonomy", "label": "every OpenAlex topic (a work counts under its primary topic)", "filter": "group_by=primary_topic.id"}])
-                files = box["files"] = Files(a.out, a.name or f"taxonomy-{years[0]}-{years[-1]}-{meta['fetched']}", TAXONOMY_HEADER, meta, types_file=False)
+                default = f"taxonomy-{years[0]}-{years[-1]}-{meta['fetched']}"
+                name = a.name or free_name(a.out, default, meta["script"]["command"])
+                if name != default and not a.name:
+                    box["renamed_from"] = default
+                files = box["files"] = Files(a.out, name, TAXONOMY_HEADER, meta, types_file=False)
             partial = "true" if is_partial(year, fetched) else "false"
             topics.update(tid for tid, _, _ in page)
             files.meta["topics"] = {"fetched": len(topics), "documented": TOPICS_DOCUMENTED}
