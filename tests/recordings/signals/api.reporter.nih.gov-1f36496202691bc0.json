@@ -1,0 +1,8 @@
+{
+ "url": "https://api.reporter.nih.gov/v2/projects/search",
+ "method": "POST",
+ "status": 200,
+ "fetched": "2026-11-21T21:08:24Z",
+ "body": "{\"meta\": {\"total\": 73, \"offset\": 0, \"limit\": 1}, \"results\": [{\"project_num\": \"1F32MH139145-01\"}]}",
+ "request_body": "{\"criteria\": {\"advanced_text_search\": {\"operator\": \"and\", \"search_field\": \"projecttitle,terms,abstracttext\", \"search_text\": \"\\\"brain-computer interface\\\"\"}, \"fiscal_years\": [2024]}, \"offset\": 0, \"limit\": 1, \"sort_field\": \"project_start_date\", \"sort_order\": \"desc\", \"include_fields\": [\"ProjectNum\"]}"
+}

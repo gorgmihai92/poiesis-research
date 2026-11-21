@@ -9,8 +9,9 @@
 - **Evidence:** documentation (D) and observation (O) · read and run on 2026-11-21, with no key and no email.
 - **Read:** Crossref "Access and authentication" in full. arXiv API Terms of Use, the section "Rate limits", and
   the lines of the User's Manual on `search_query`, `id_list`, `max_results` and `sortBy`. Semantic Scholar's API
-  product page, the paragraphs on rate limits. Europe PMC's documentation was **not read**: its pages answered
-  automated requests with a challenge page (HTTP 403).
+  product page, the paragraphs on rate limits. Europe PMC's "Developer resources" page and the list of modules
+  on its "Articles RESTful API" page, both read in a browser: they answer automated requests with a challenge
+  page (HTTP 403). Europe PMC's search syntax guide was not read.
 
 ## What it says
 
@@ -38,7 +39,11 @@
   `citingPaper.` fields. The lab plan records 429 answers earlier the same day. For one closed paper the abstract
   was withheld by the publisher.
 
-### Europe PMC (O only)
+### Europe PMC (D, O)
+- The two pages read state no rate limit. They say the RESTful API gives access to open-access content and to
+  metadata, and that automated bulk download of other content is not permitted.
+- The API has modules this plugin does not use yet, among them `fields` (the list of search fields) and
+  `profile` (hit counts by publication type and source).
 - Observed: the REST API answered every request: a search by `DOI:"…"`, a free-text search, a count with
   `TITLE_ABS:"…" AND PUB_YEAR:2024` and `resultType=idlist`, and the `citations` and `references` of one record,
   the first with `pageSize=1000`.
@@ -57,4 +62,4 @@
   sciences first, with open-access links), then arXiv (preprints in its own fields, no citation counts).
 - A record from Crossref shows "open copy unknown", never "closed": Crossref does not know.
 - arXiv's typed DOI is kept apart from the DOI arXiv registers for the preprint, and is looked up before use.
-- Europe PMC's limits are unknown to this plugin until its documentation is read.
+- Europe PMC states no rate limit on the pages read; the plugin keeps the spacing of the recorded run.

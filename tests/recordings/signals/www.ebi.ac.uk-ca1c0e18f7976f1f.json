@@ -1,0 +1,7 @@
+{
+ "url": "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=TITLE_ABS%3A%22brain-computer+interface%22+AND+FIRST_PDATE%3A%5B2026-05-21+TO+2026-11-21%5D&resultType=idlist&pageSize=1&format=json",
+ "method": "GET",
+ "status": 200,
+ "fetched": "2026-11-21T21:08:14Z",
+ "body": "{\"hitCount\": 320, \"resultList\": {\"result\": []}}"
+}

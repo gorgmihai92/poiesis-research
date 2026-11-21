@@ -1,0 +1,7 @@
+{
+ "url": "https://huggingface.co/api/datasets?search=EEG&sort=downloads&direction=-1&limit=3",
+ "method": "GET",
+ "status": 200,
+ "fetched": "2026-11-21T21:08:32Z",
+ "body": "[{\"id\": \"Haitao999/things-eeg\", \"createdAt\": \"2026-03-18T11:10:59.000Z\", \"downloads\": 214580, \"likes\": 6}, {\"id\": \"HABSteam/multimodal-eeg-emotion\", \"createdAt\": \"2026-10-30T14:58:43.000Z\", \"downloads\": 15108, \"likes\": 40}, {\"id\": \"aspire-osu/maestro-eeg-dataset\", \"createdAt\": \"2026-05-03T21:38:39.000Z\", \"downloads\": 12734, \"likes\": 2}]"
+}
