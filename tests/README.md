@@ -25,6 +25,9 @@ This folder is not part of the plugin, so it is not installed with it.
 - `recordings/` holds whole answers saved by `counts.py --record` and `signals.py --record`, one file per request,
   with the address it was asked at (never a key) and the date. `--replay` reads them back.
 - `texts/` holds a short text and notes written for the quote tests.
+- `recordings/counts-epmc` is synthetic, for the test: eight answers written on 2026-11-26 in the shape Europe PMC
+  answers, each marked `"synthetic"`. Their counts stand for nothing, and `expected/counts-epmc.csv` is what
+  `counts.py --replay` saves from them.
 
 The share test also reads `fixtures/trend-scan/` in the Poiesis Lab notebook, which is outside this repository. Set
 `POIESIS_LAB` to the notebook's folder; without it that one test is skipped and says so.
