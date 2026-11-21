@@ -1,0 +1,52 @@
+{
+ "version": "6.9",
+ "hitCount": 127,
+ "request": {
+  "id": "21937195",
+  "source": "MED",
+  "offSet": 0,
+  "pageSize": 3
+ },
+ "citationList": {
+  "citation": [
+   {
+    "source": "MED",
+    "id": "42600213",
+    "citationType": "journal article",
+    "title": "Restoring sub-tidal seagrass at scale: A comparative analysis of seeding and transplantation technologies.",
+    "authorString": "Larsen JS, Pedersen S, Liniger J.",
+    "journalAbbreviation": "J Environ Manage",
+    "pubYear": 2026,
+    "volume": "415",
+    "pageInfo": "130666",
+    "citedByCount": 0
+   },
+   {
+    "source": "MED",
+    "id": "42620678",
+    "citationType": "review-article; review; journal article",
+    "title": "Lower-limb biomechanical alterations across movement tasks in individuals with chronic ankle instability: An umbrella review of systematic reviews and meta-analyses.",
+    "authorString": "Xuan B, Sun D, Song Y, Li F, Zhou Z, Wang Z, Zhu J, Chen K, Zhao R, Wang D, Chen D, Janicijevic D, Jemni M, Gu Y.",
+    "journalAbbreviation": "Mechanobiol Med",
+    "pubYear": 2026,
+    "volume": "4",
+    "issue": "3",
+    "pageInfo": "100206",
+    "citedByCount": 2
+   },
+   {
+    "source": "MED",
+    "id": "42393681",
+    "citationType": "research-article; journal article",
+    "title": "Advancing evidence-informed policy: outcomes of the global research agenda on knowledge translation.",
+    "authorString": "Chapman E, Kolt B, Boaz A, Terry RF, Mandil A, Sharma T, Patiño-Lugo DF, Kuchenmüller T.",
+    "journalAbbreviation": "Health Res Policy Syst",
+    "pubYear": 2026,
+    "volume": "24",
+    "issue": "1",
+    "pageInfo": "80",
+    "citedByCount": 2
+   }
+  ]
+ }
+}

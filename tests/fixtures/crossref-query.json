@@ -1,0 +1,349 @@
+{
+ "status": "ok",
+ "message-type": "work-list",
+ "message-version": "1.0.0",
+ "message": {
+  "facets": {},
+  "total-results": 527711,
+  "items": [
+   {
+    "publisher": "Elsevier BV",
+    "license": [
+     {
+      "start": {
+       "date-parts": [
+        [
+         2024,
+         2,
+         1
+        ]
+       ],
+       "date-time": "2024-02-01T00:00:00Z",
+       "timestamp": 1706745600000
+      },
+      "content-version": "tdm",
+      "delay-in-days": 0,
+      "URL": "https://www.elsevier.com/tdm/userlicense/1.0/"
+     },
+     {
+      "start": {
+       "date-parts": [
+        [
+         2024,
+         2,
+         1
+        ]
+       ],
+       "date-time": "2024-02-01T00:00:00Z",
+       "timestamp": 1706745600000
+      },
+      "content-version": "tdm",
+      "delay-in-days": 0,
+      "URL": "https://www.elsevier.com/legal/tdmrep-license"
+     },
+     {
+      "start": {
+       "date-parts": [
+        [
+         2024,
+         2,
+         1
+        ]
+       ],
+       "date-time": "2024-02-01T00:00:00Z",
+       "timestamp": 1706745600000
+      },
+      "content-version": "stm-asf",
+      "delay-in-days": 0,
+      "URL": "https://doi.org/10.15223/policy-017"
+     },
+     {
+      "start": {
+       "date-parts": [
+        [
+         2024,
+         2,
+         1
+        ]
+       ],
+       "date-time": "2024-02-01T00:00:00Z",
+       "timestamp": 1706745600000
+      },
+      "content-version": "stm-asf",
+      "delay-in-days": 0,
+      "URL": "https://doi.org/10.15223/policy-037"
+     },
+     {
+      "start": {
+       "date-parts": [
+        [
+         2024,
+         2,
+         1
+        ]
+       ],
+       "date-time": "2024-02-01T00:00:00Z",
+       "timestamp": 1706745600000
+      },
+      "content-version": "stm-asf",
+      "delay-in-days": 0,
+      "URL": "https://doi.org/10.15223/policy-012"
+     },
+     {
+      "start": {
+       "date-parts": [
+        [
+         2024,
+         2,
+         1
+        ]
+       ],
+       "date-time": "2024-02-01T00:00:00Z",
+       "timestamp": 1706745600000
+      },
+      "content-version": "stm-asf",
+      "delay-in-days": 0,
+      "URL": "https://doi.org/10.15223/policy-029"
+     },
+     {
+      "start": {
+       "date-parts": [
+        [
+         2024,
+         2,
+         1
+        ]
+       ],
+       "date-time": "2024-02-01T00:00:00Z",
+       "timestamp": 1706745600000
+      },
+      "content-version": "stm-asf",
+      "delay-in-days": 0,
+      "URL": "https://doi.org/10.15223/policy-004"
+     }
+    ],
+    "DOI": "10.1016/j.copsyc.2023.101737",
+    "type": "journal-article",
+    "is-referenced-by-count": 47,
+    "title": [
+     "Teaching lateral reading: Interventions to help people read like fact checkers"
+    ],
+    "author": [
+     {
+      "ORCID": "https://orcid.org/0000-0002-8925-1468",
+      "authenticated-orcid": false,
+      "given": "Sarah",
+      "family": "McGrew",
+      "sequence": "first",
+      "affiliation": [],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     }
+    ],
+    "container-title": [
+     "Current Opinion in Psychology"
+    ],
+    "issued": {
+     "date-parts": [
+      [
+       2024,
+       2
+      ]
+     ]
+    }
+   },
+   {
+    "publisher": "SAGE Publications",
+    "license": [
+     {
+      "start": {
+       "date-parts": [
+        [
+         2023,
+         10,
+         27
+        ]
+       ],
+       "date-time": "2023-10-27T00:00:00Z",
+       "timestamp": 1698364800000
+      },
+      "content-version": "unspecified",
+      "delay-in-days": 0,
+      "URL": "https://creativecommons.org/licenses/by/4.0/"
+     },
+     {
+      "start": {
+       "date-parts": [
+        [
+         2023,
+         10,
+         27
+        ]
+       ],
+       "date-time": "2023-10-27T00:00:00Z",
+       "timestamp": 1698364800000
+      },
+      "content-version": "tdm",
+      "delay-in-days": 0,
+      "URL": "https://journals.sagepub.com/page/policies/text-and-data-mining-license"
+     }
+    ],
+    "abstract": "<jats:p>Shortened for the test fixture.</jats:p>",
+    "DOI": "10.1177/00936502231206419",
+    "type": "journal-article",
+    "is-referenced-by-count": 96,
+    "title": [
+     "Checking the Fact-Checkers: The Role of Source Type, Perceived Credibility, and Individual Differences in Fact-Checking Effectiveness"
+    ],
+    "author": [
+     {
+      "ORCID": "https://orcid.org/0000-0002-0032-4430",
+      "authenticated-orcid": false,
+      "given": "Xingyu",
+      "family": "Liu",
+      "sequence": "first",
+      "affiliation": [
+       {
+        "name": "University of California, Santa Barbara, USA"
+       }
+      ],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     },
+     {
+      "given": "Li",
+      "family": "Qi",
+      "sequence": "additional",
+      "affiliation": [
+       {
+        "name": "University of California, Santa Barbara, USA"
+       }
+      ],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     },
+     {
+      "given": "Laurent",
+      "family": "Wang",
+      "sequence": "additional",
+      "affiliation": [
+       {
+        "name": "University of California, Santa Barbara, USA"
+       }
+      ],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     },
+     {
+      "given": "Miriam J.",
+      "family": "Metzger",
+      "sequence": "additional",
+      "affiliation": [
+       {
+        "name": "University of California, Santa Barbara, USA"
+       }
+      ],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     }
+    ],
+    "container-title": [
+     "Communication Research"
+    ],
+    "issued": {
+     "date-parts": [
+      [
+       2023,
+       10,
+       27
+      ]
+     ]
+    }
+   },
+   {
+    "publisher": "Informa UK Limited",
+    "license": [
+     {
+      "start": {
+       "date-parts": [
+        [
+         2022,
+         5,
+         29
+        ]
+       ],
+       "date-time": "2022-05-29T00:00:00Z",
+       "timestamp": 1653782400000
+      },
+      "content-version": "vor",
+      "delay-in-days": 0,
+      "URL": "http://creativecommons.org/licenses/by-nc-nd/4.0/"
+     }
+    ],
+    "DOI": "10.1080/17512786.2022.2080102",
+    "type": "journal-article",
+    "is-referenced-by-count": 30,
+    "title": [
+     "The Influence of Media Trust and Normative Role Expectations on the Credibility of Fact Checkers"
+    ],
+    "author": [
+     {
+      "ORCID": "https://orcid.org/0000-0002-2034-4367",
+      "authenticated-orcid": false,
+      "given": "Florian",
+      "family": "Primig",
+      "sequence": "first",
+      "affiliation": [
+       {
+        "name": "Free University of Berlin, Berlin, Germany"
+       }
+      ],
+      "role": [
+       {
+        "vocabulary": "crossref",
+        "role": "author"
+       }
+      ]
+     }
+    ],
+    "container-title": [
+     "Journalism Practice"
+    ],
+    "issued": {
+     "date-parts": [
+      [
+       2022,
+       5,
+       29
+      ]
+     ]
+    }
+   }
+  ],
+  "items-per-page": 3,
+  "query": {
+   "start-index": 0,
+   "search-terms": null
+  }
+ }
+}

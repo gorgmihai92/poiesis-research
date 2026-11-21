@@ -1,0 +1,167 @@
+{
+ "status": "ok",
+ "message-type": "work",
+ "message-version": "1.0.0",
+ "message": {
+  "reference-count": 20,
+  "publisher": "Association for Computing Machinery (ACM)",
+  "issue": "1",
+  "short-container-title": [
+   "SIGIR Forum"
+  ],
+  "published-print": {
+   "date-parts": [
+    [
+     2025,
+     6
+    ]
+   ]
+  },
+  "abstract": "<jats:p>Shortened for the test fixture. <jats:italic>Artificial Research Intelligence</jats:italic> (ARI).</jats:p>",
+  "DOI": "10.1145/3769733.3769747",
+  "type": "journal-article",
+  "page": "1-20",
+  "source": "Crossref",
+  "is-referenced-by-count": 7,
+  "title": [
+   "Evaluating Sakana's AI Scientist: Bold Claims, Mixed Results, and a Promising Future?"
+  ],
+  "prefix": "10.1145",
+  "volume": "59",
+  "author": [
+   {
+    "given": "Joeran",
+    "family": "Beel",
+    "sequence": "first",
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Min-Yen",
+    "family": "Kan",
+    "sequence": "additional",
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   },
+   {
+    "given": "Moritz",
+    "family": "Baumgart",
+    "sequence": "additional",
+    "role": [
+     {
+      "vocabulary": "crossref",
+      "role": "author"
+     }
+    ]
+   }
+  ],
+  "member": "320",
+  "published-online": {
+   "date-parts": [
+    [
+     2025,
+     10,
+     10
+    ]
+   ]
+  },
+  "reference": [
+   {
+    "key": "e_1_2_1_1_1",
+    "volume-title": "International Workshop on Recommender Systems for Sustainability and Social Good (RecSoGood) at the 18th ACM Conference on Recommender Systems (ACM RecSys)",
+    "author": "Baumgart Moritz",
+    "year": "2024",
+    "unstructured": "Moritz Baumgart, Lukas Wegmeth, Tobias Vente, and Joeran Beel. e-fold cross-validation for recommender-system evaluation. In International Workshop on Recommender Systems for Sustainability and Social Good (RecSoGood) at the 18th ACM Conference on Recommender Systems (ACM RecSys), 2024."
+   },
+   {
+    "key": "e_1_2_1_2_1",
+    "volume-title": "Our use of ai-tools for writing research papers",
+    "author": "Beel Joeran",
+    "year": "2024",
+    "unstructured": "Joeran Beel. Our use of ai-tools for writing research papers. In Intelligent Systems Group, Blog, 2024."
+   },
+   {
+    "key": "e_1_2_1_3_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.31219/osf.io/5ru2g"
+   },
+   {
+    "key": "e_1_2_1_4_1",
+    "doi-asserted-by": "publisher",
+    "DOI": "10.31219/osf.io/exw3j"
+   },
+   {
+    "key": "e_1_2_1_5_1",
+    "volume-title": "YouTube",
+    "author": "Berman Matthew",
+    "year": "2024",
+    "unstructured": "Matthew Berman. \"ai scientist\" can discover new science! (self-improving ai = agi). YouTube, 2024. URL https://www.youtube.com/watch?v=LTM_3EUwUmE."
+   },
+   {
+    "key": "e_1_2_1_6_1",
+    "volume-title": "Parallelizing stochastic gradient descent for least squares regression: mini-batching, averaging, and model misspecification. Journal of machine learning research, 18(223):1–42",
+    "author": "Jain Prateek",
+    "year": "2018",
+    "unstructured": "Prateek Jain, Sham M Kakade, Rahul Kidambi, Praneeth Netrapalli, and Aaron Sidford. Parallelizing stochastic gradient descent for least squares regression: mini-batching, averaging, and model misspecification. Journal of machine learning research, 18(223):1–42, 2018."
+   }
+  ],
+  "container-title": [
+   "ACM SIGIR Forum"
+  ],
+  "original-title": [],
+  "language": "en",
+  "score": 1,
+  "subtitle": [],
+  "short-title": [],
+  "issued": {
+   "date-parts": [
+    [
+     2025,
+     6
+    ]
+   ]
+  },
+  "references-count": 20,
+  "journal-issue": {
+   "issue": "1",
+   "published-print": {
+    "date-parts": [
+     [
+      2025,
+      6
+     ]
+    ]
+   }
+  },
+  "alternative-id": [
+   "10.1145/3769733.3769747"
+  ],
+  "URL": "https://doi.org/10.1145/3769733.3769747",
+  "ISSN": [
+   "0163-5840"
+  ],
+  "issn-type": [
+   {
+    "value": "0163-5840",
+    "type": "print"
+   }
+  ],
+  "subject": [],
+  "published": {
+   "date-parts": [
+    [
+     2025,
+     6
+    ]
+   ]
+  }
+ }
+}

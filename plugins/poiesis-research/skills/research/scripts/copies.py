@@ -6,6 +6,9 @@
 Open copies are those OpenAlex or Semantic Scholar know of: publisher open access, university repositories,
 author manuscripts, preprints. With --download DIR the first real PDF is saved as DIR/<slug>.pdf.
 When there is no open copy, the work's page is given (library, author, or purchase).
+
+When OpenAlex refuses, Europe PMC, Crossref and arXiv are asked for the work and for an open copy. The last line,
+"Coverage", names the databases that answered: "no open copy" means none of those knew of one.
 """
 import argparse
 import sys
@@ -26,7 +29,12 @@ def slug(w: dict) -> str:
 
 
 def open_pdfs(doi: str) -> tuple[dict, list[str]]:
-    raw = sc.openalex_work(doi) or {}
+    try:
+        raw = sc.openalex_work(doi) or {}
+        refused = False
+    except sc.REFUSALS as e:
+        print(f"(OpenAlex unavailable: {e})", file=sys.stderr)
+        raw, refused = {}, True
     w = sc.norm_openalex(raw) if raw else {**sc.empty(), "doi": doi}
     urls = [loc["pdf_url"] for loc in raw.get("locations", []) if loc.get("is_oa") and loc.get("pdf_url")]
     try:
@@ -35,6 +43,14 @@ def open_pdfs(doi: str) -> tuple[dict, list[str]]:
             urls.append(s2["oa_pdf"])
     except Exception:
         pass  # Semantic Scholar busy: OpenAlex's locations are enough
+    if refused:  # the databases that answer in OpenAlex's place: an open copy first, then the record itself
+        arxiv = ("arxiv",) if doi.lower().startswith("10.48550/arxiv.") else ()
+        for name in arxiv + ("epmc", "crossref"):
+            other = sc.ask(sc.FALLBACKS[name][1], doi)
+            if other:
+                w = sc.merge(w, other) if w.get("title") else {**other, "doi": doi}
+                if other.get("oa_pdf") and other["oa_pdf"] not in urls:
+                    urls.append(other["oa_pdf"])
     return w, urls
 
 
@@ -57,7 +73,9 @@ def main() -> int:
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--doi", action="append", required=True)
     p.add_argument("--download", type=Path, help="save open PDFs here")
+    sc.add_request_args(p)
     a = p.parse_args()
+    sc.apply_request_args(a)
 
     got = 0
     for doi in a.doi:
@@ -79,4 +97,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(sc.finish(main))

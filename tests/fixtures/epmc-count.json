@@ -1,0 +1,15 @@
+{
+ "version": "6.9",
+ "hitCount": 597,
+ "request": {
+  "queryString": "TITLE_ABS:\"quantum computing\" AND PUB_YEAR:2024",
+  "resultType": "idlist",
+  "cursorMark": "*",
+  "pageSize": 1,
+  "sort": "",
+  "synonym": false
+ },
+ "resultList": {
+  "result": []
+ }
+}
