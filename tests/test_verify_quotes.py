@@ -92,6 +92,15 @@ class Matching(unittest.TestCase):
         self.assertEqual(vq.find("it starts on this page and ends on the next one", self.pages, (1, 1)), ("FOUND", "p. 1"))
         self.assertEqual(vq.find("it starts on this page and ends on the next one", self.pages, None), ("FOUND", "across two pages"))
 
+    def test_a_quote_wholly_on_the_page_after_the_cited_one_is_the_wrong_page(self):
+        """Found by the lab's review of 2026-11-21: one page early was accepted as FOUND."""
+        self.assertEqual(vq.find("Nothing relevant here", self.pages, (2, 2)), ("WRONG PAGE", "cited p. 2, found on p. 3"))
+        self.assertEqual(vq.find("Nothing relevant here", self.pages, (1, 2)), ("WRONG PAGE", "cited p. 1–2, found on p. 3"))
+        self.assertEqual(vq.find("Nothing relevant here", self.pages, (3, 3))[0], "FOUND")
+        # A quote that starts on the cited page and ends on the next is still found there.
+        self.assertEqual(vq.find("it starts on this page and ends on the next one", self.pages, (1, 1)), ("FOUND", "p. 1"))
+        self.assertEqual(vq.find("it starts on this page and ends on the next one", self.pages, (2, 2))[0], "WRONG PAGE")
+
     def test_the_wrong_page_is_reported_with_the_right_one(self):
         self.assertEqual(vq.find("The system marked all twelve ideas as novel", self.pages, (3, 3)), ("WRONG PAGE", "cited p. 3, found on p. 2"))
 
@@ -137,6 +146,17 @@ class Notes(unittest.TestCase):
         code, out = run([str(self.tmp / "research" / "notes")])
         self.assertEqual(code, 0)
         self.assertIn("NO TEXT    closed-2020-paper.md · 1 quote not checked", out)
+
+    def test_strict_fails_when_quotes_could_not_be_checked(self):
+        """A gate that reads only the exit code must not pass notes nobody checked."""
+        self.note("closed-2020-paper", "# A closed paper (Someone, 2020)\n- **File:** none (reference only)\n\n## Quotes\n- \"words nobody can check here\" (p. 3)\n")
+        self.note("no-quotes-2021", "# A note with no quotes (Someone, 2021)\n")
+        code, out = run([str(self.tmp / "research" / "notes")])
+        self.assertEqual(code, 0)
+        code, out = run([str(self.tmp / "research" / "notes"), "--strict"])
+        self.assertEqual(code, 1)
+        self.assertIn("NO TEXT    closed-2020-paper.md", out)
+        self.assertIn("1 quote in 1 note could not be checked", out)
 
     def test_the_text_is_found_from_the_file_line_or_by_the_note_s_name_in_papers(self):
         (self.tmp / "research" / "papers" / "wu-2025-sources.txt").write_text(TEXT, encoding="utf-8")
@@ -210,6 +230,21 @@ class References(unittest.TestCase):
         self.assertIn("NO NOTE    line 1 · [@nobody2021made] · not in the bibliography and no note with this name", out)
         self.assertIn("4 references in 2026-11-21-report.md: 3 have a note, 1 do not", out)
         self.assertIn("bibliography.json", out)
+
+    def test_a_texere_link_to_a_place_in_a_pdf_is_not_a_reference_to_a_note(self):
+        """Found by the lab's review of 2026-11-21: Texere's link to the PDF was listed as a reference with no note."""
+        index = self.tmp / "Support" / "Texere" / "Bibliography"
+        index.mkdir(parents=True)
+        (index / "bibliography.json").write_text(json.dumps([{"id": "hiltunen2008future", "obsidianPath": "1. References/hiltunen2008future.md", "reading-status": "read"}]),
+                                                 encoding="utf-8")
+        code, out = self.check("#claim A future sign has three dimensions [@hiltunen2008future, p. 249] [[hiltunen2008future.pdf#page=4&annotation=123R|PDF]]\n"
+                               "A figure: ![[figure-1.png]] and a note that is missing: [[no-such-note]].\n")
+        self.assertEqual(code, 1)
+        self.assertEqual(out.count("NO NOTE"), 1, out)
+        self.assertIn("[[no-such-note]]", out)
+        self.assertNotIn(".pdf", out)
+        self.assertNotIn(".png", out)
+        self.assertIn("2 references in 2026-11-21-report.md: 1 have a note, 1 do not", out)
 
     def test_what_is_shown_as_code_is_an_example_not_a_reference(self):
         code, out = self.check("Cite as `[@key, p. N]`, or by `https://doi.org/10.1234/example`.\n```\n[@another2020key] and [[some-note]]\n```\n")

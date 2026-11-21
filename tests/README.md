@@ -29,5 +29,6 @@ This folder is not part of the plugin, so it is not installed with it.
   answers, each marked `"synthetic"`. Their counts stand for nothing, and `expected/counts-epmc.csv` is what
   `counts.py --replay` saves from them.
 
-The share test also reads `fixtures/trend-scan/` in the Poiesis Lab notebook, which is outside this repository. Set
-`POIESIS_LAB` to the notebook's folder; without it that one test is skipped and says so.
+The share test also reads `fixtures/trend-scan/` in the Poiesis Lab notebook, which is outside this repository. It
+looks in the folder `POIESIS_LAB` names, then in `~/Poiesis Lab`. Where neither holds the notebook, that one test is
+skipped and says so.

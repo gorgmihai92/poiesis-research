@@ -67,9 +67,12 @@
   records, sit in an expansion corpus added in November 2025 and are returned only with `corpus=all` ("Expansion
   corpus").
 
-### Search and years (D)
+### Search and years (D, O)
 - A works `search` matches titles, abstracts, full text and keywords, with stemming. Searches scoped to title and
   abstract, and exact forms without stemming, are separate ("Searching").
+- Observed by the lab's review on 2026-11-21: in `title_and_abstract.search` the quoted phrases "solid-state
+  battery" and "solid-state batteries", and the two joined by OR, gave the same counts (1,446 works in 2024, 1,996
+  in 2025). Double quotes keep the words together; they do not turn stemming off. One phrase was tried.
 - The current year is still filling in, so its count is partial ("Tracking trends over time").
 
 ## What it means for the plugin

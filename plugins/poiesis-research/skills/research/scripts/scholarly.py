@@ -142,6 +142,18 @@ def clean_url(url: str) -> str:
     return urllib.parse.urlunsplit(parts._replace(query=urllib.parse.urlencode(query)))
 
 
+def scrub(text: str, url: str = "") -> str:
+    """The text without the request's secrets: the key and email parameters of its address and the keys in the
+    environment, plain and percent-encoded. An answer can repeat the address it was asked at, or a key from a
+    header, and nothing of that kind is stored or passed on."""
+    found = [v for k, v in urllib.parse.parse_qsl(urllib.parse.urlsplit(url).query) if k.lower() in SECRETS]
+    found += [os.environ.get(name, "") for name in ("OPENALEX_API_KEY", "S2_API_KEY")]
+    for secret in sorted({s for s in found if len(s) >= 4}, key=len, reverse=True):
+        for form in {secret, urllib.parse.quote(secret, safe=""), urllib.parse.quote_plus(secret)}:
+            text = text.replace(form, "REDACTED")
+    return text
+
+
 def _digest(url: str, data: bytes | None) -> str:
     return hashlib.sha256(("POST" if data else "GET").encode() + b"\n" + clean_url(url).encode() + b"\n" + (data or b"")).hexdigest()
 
@@ -354,9 +366,10 @@ def fetch(url: str, data: bytes | None = None, headers: dict | None = None, trie
             return entry["status"], entry["body"]
 
     def keep(status: int, text: str) -> tuple[int, str]:
+        text = scrub(text, url)
         entry = {"url": clean_url(url), "method": "POST" if data else "GET", "status": status, "fetched": _now(), "body": text}
         if data:
-            entry["request_body"] = data.decode("utf-8", "replace")
+            entry["request_body"] = scrub(data.decode("utf-8", "replace"), url)
         if LAYER.cache_dir is not None:
             _write(_cache_path(host, digest), entry)
         if LAYER.record is not None:
@@ -366,6 +379,7 @@ def fetch(url: str, data: bytes | None = None, headers: dict | None = None, trie
 
     def refuse(kind: str, status: int, detail: str, message: str) -> None:
         """Note a refusal for the Coverage line and, when recording, keep it so a replay refuses the same way."""
+        detail, message = scrub(detail, url), scrub(message, url)
         _event(host, "refused", detail=detail)
         if LAYER.record is not None:
             _write(_record_path(LAYER.record, host, digest), {"url": clean_url(url), "method": "POST" if data else "GET", "status": status,
@@ -414,7 +428,7 @@ def fetch(url: str, data: bytes | None = None, headers: dict | None = None, trie
                 e.close()
                 raise BudgetExhausted(message) from None
             if e.code in (401, 403) and host == OPENALEX_HOST and "key" in reason.lower():
-                message = f"{host}: {reason}. Set OPENALEX_API_KEY (free: https://openalex.org/settings/api)."
+                message = scrub(f"{host}: {reason}. Set OPENALEX_API_KEY (free: https://openalex.org/settings/api).", url)
                 refuse("key", e.code, "needs a key", message)
                 e.close()
                 raise NeedsKey(message) from None
@@ -1017,7 +1031,6 @@ def brief(w: dict, head: str = "") -> str:
 
 def main() -> int:
     import argparse
-    import shutil
 
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("what", choices=["cache"])
@@ -1026,13 +1039,24 @@ def main() -> int:
     if LAYER.cache_dir is None:
         print("The cache is off (POIESIS_RESEARCH_CACHE=off).")
         return 0
-    files = [f for f in LAYER.cache_dir.glob("*/*.json") if f.parent.name not in ("budget", "pace")] if LAYER.cache_dir.is_dir() else []
-    size = sum(f.stat().st_size for f in files)
-    print(f"Cache: {LAYER.cache_dir} · {len(files)} answers · {size / 1e6:.1f} MB · an answer is used for {LAYER.max_age / 3600:g} hours")
+    # Only what this layer wrote counts as the cache: answers named by their hash, and its budget and pacing
+    # files. Anything else in the folder is someone else's and is never removed.
+    present = [f for f in LAYER.cache_dir.rglob("*") if f.is_file()] if LAYER.cache_dir.is_dir() else []
+    answers = [f for f in present if f.parent.parent == LAYER.cache_dir and re.fullmatch(r"[0-9a-f]{64}\.json", f.name)]
+    state = [f for f in present if f.parent.parent == LAYER.cache_dir
+             and ((f.parent.name == "budget" and f.name.endswith((".key.json", ".nokey.json"))) or (f.parent.name == "pace" and f.suffix == ".lock"))]
+    others = len(present) - len(answers) - len(state)
+    size = sum(f.stat().st_size for f in answers)
+    print(f"Cache: {LAYER.cache_dir} · {len(answers)} answers · {size / 1e6:.1f} MB · an answer is used for {LAYER.max_age / 3600:g} hours")
     print("Change the folder with POIESIS_RESEARCH_CACHE=<folder>, or turn the cache off with POIESIS_RESEARCH_CACHE=off.")
-    if a.clear and LAYER.cache_dir.is_dir():
-        shutil.rmtree(LAYER.cache_dir)
-        print("Cleared.")
+    if a.clear:
+        for f in answers + state:
+            f.unlink(missing_ok=True)
+        for folder in sorted({f.parent for f in answers + state}):
+            with contextlib.suppress(OSError):
+                folder.rmdir()  # only when nothing else is in it
+        print(f"Cleared {len(answers)} answer{'' if len(answers) == 1 else 's'}."
+              + (f" {others} other file{'' if others == 1 else 's'} in the folder {'was' if others == 1 else 'were'} left alone." if others else ""))
     return 0
 
 
