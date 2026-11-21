@@ -4,6 +4,7 @@
 - **File:** `../../papers/<section>/<slug>.pdf` (or "none, reference only")
 - **Licence:** <open (which) / closed: local only>
 - **Evidence:** <review / empirical / analytical> · <method and sample, if empirical>
+- **Read:** <full text / part of the text: which pages / abstract only / title only> · <YYYY-MM-DD>
 
 ## What it says
 - <claim> (p. N)

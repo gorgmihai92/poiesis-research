@@ -4,7 +4,7 @@
 - **File:** none (reference only)
 - **Licence:** © Elsevier: closed.
 - **Evidence:** analytical (a method and worked examples) · **abstract only**.
-- **Read:** the abstract, from Europe PMC, on 2026-11-21. The full text was not read.
+- **Read:** abstract only, from Europe PMC, on 2026-11-21. The full text was not read.
 
 ## What it says (from the abstract)
 - Evidence on a sector is often scattered across databases, websites and grey literature, and the lack of an

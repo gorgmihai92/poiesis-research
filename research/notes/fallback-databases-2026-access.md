@@ -7,7 +7,7 @@
 - **File:** none (documentation changes; every statement below carries the date read)
 - **Licence:** not applicable.
 - **Evidence:** documentation (D) and observation (O) · read and run on 2026-11-21, with no key and no email.
-- **Read:** Crossref "Access and authentication" in full. arXiv API Terms of Use, the section "Rate limits", and
+- **Read:** documentation, on 2026-11-21. Crossref "Access and authentication" in full. arXiv API Terms of Use, the section "Rate limits", and
   the lines of the User's Manual on `search_query`, `id_list`, `max_results` and `sortBy`. Semantic Scholar's API
   product page, the paragraphs on rate limits. Europe PMC's "Developer resources" page and the list of modules
   on its "Articles RESTful API" page, both read in a browser: they answer automated requests with a challenge

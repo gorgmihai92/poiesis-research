@@ -6,9 +6,9 @@
 - **Licence:** the owner's own data.
 - **Evidence:** observation (O) · two runs of the plugins on 2026-11-17, recorded as files, and the lab plan's
   account of them, written on 2026-11-21.
-- **Read:** `fixtures/README.md` and `lab/plan.md` in full; `fixtures/trend-scan/openalex.json` and the first row
-  of the two challenge files by script, on 2026-11-21. The numbers below marked "recomputed" were computed again
-  from `openalex.json` on that day. The agents' raw reports were not saved, so they were not read.
+- **Read:** observation: `fixtures/README.md` and `lab/plan.md` in full; `fixtures/trend-scan/openalex.json` and
+  the first row of the two challenge files by script, on 2026-11-21. The numbers below marked "recomputed" were
+  computed again from `openalex.json` on that day. The agents' raw reports were not saved, so they were not read.
 
 ## What it says
 

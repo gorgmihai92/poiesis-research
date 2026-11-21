@@ -6,9 +6,9 @@
 - **Licence:** arXiv non-exclusive licence: local only.
 - **Evidence:** empirical · yearly publication counts in three Web of Science citation indexes, 2001–2020,
   collected on 15 October 2021 (p. 3).
-- **Read:** the abstract, introduction, data and indicators (p. 2–5) and the main findings, discussion and first
-  lines of the limitations (p. 18–20), on 2026-11-21. Not read: the results sections (p. 6–17) and the rest of the
-  limitations.
+- **Read:** part of the text: the abstract, introduction, data and indicators (p. 2–5) and the main findings,
+  discussion and first lines of the limitations (p. 18–20), on 2026-11-21. Not read: the results sections
+  (p. 6–17) and the rest of the limitations.
 
 ## What it says
 - Growth in a field's publication counts can be an artefact of the growth of the database itself (p. 2, 19).

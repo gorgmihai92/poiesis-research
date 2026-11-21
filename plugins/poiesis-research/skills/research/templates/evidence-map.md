@@ -8,12 +8,12 @@
 
 ## Studies
 
-| Study | DOI | Population | What was varied | Compared with | What was measured | Setting | Design | Key number | Read | Group | Open copy |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| <First author Year> | <10.xxxx/…> | <who or what, how many> | <the condition that differs> | <the comparison, or none> | <the outcome and its instrument> | <where and how> | <experiment, survey, …> | <as the source states it (p. N)> | <full text / abstract / title only> | <1> | <yes / no / unknown> |
+| Citation | DOI | Verified | Read | What it says | Open copy | Population | What was varied | Compared with | What was measured | Setting | Design | Key number | Side | Group |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| <authors, year, title, venue> | <10.xxxx/…> | <by DOI in …> | <full text / part of the text / abstract only / title only> | <the finding, in one sentence> | <yes / no / unknown> | <who or what, how many> | <the condition that differs> | <the comparison, or none> | <the outcome and its instrument> | <where and how> | <experiment, survey, …> | <as the source states it (p. N)> | <for / against / mixed> | <1> |
 
 No cell contains a vertical bar. A cell the source does not fill says "not stated"; a study read by title only has
-"not read" in the cells from Population to Key number.
+"not read" from "What it says" to "Key number". Rows an agent returned are copied as they are.
 
 ## No study found for
 - <population × what was varied × what was measured>: none found by this search (<which databases answered>)
