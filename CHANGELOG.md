@@ -18,7 +18,8 @@ gets the same ones, followed by a Coverage line. One request parameter is no lon
   comparison, what was measured, the setting, how it was verified and how much was read. Saved in
   `research/maps/` from `templates/evidence-map.md`.
 - **Quotes and references.** `verify_quotes.py` looks for every quote of a note in the source's extracted text, on
-  the page given, and with `--references` lists a report's references that have no note.
+  the page given, and with `--references` lists a report's references that have no note. `--strict` also fails
+  when a quote could not be checked because the source's text is not there.
 - **Signals.** `signals.py`, `playbooks/signals.md`, `templates/signal.md` and the `signal-scout` agent: what
   arXiv, Europe PMC, NIH RePORTER, OpenAIRE, Hacker News, Wikimedia pageviews and Hugging Face show about a
   subject in a recent window. A signal note holds the observation only, with an id (`SG-001`), in

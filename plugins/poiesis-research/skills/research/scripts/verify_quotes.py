@@ -11,6 +11,7 @@ for in the text `extract_text.py` wrote for the note's source (the note's **File
 quotation marks and ligatures are ignored, because PDF text mangles them. One line per quote:
 FOUND, WRONG PAGE (the words are in the source, on another page), NOT FOUND, or NO TEXT (the source's text is not
 on this machine, so nothing was checked). An ellipsis splits a quote into parts that must all be there, in order.
+A quote may run onto the next page, but it has to start on the page the note gives.
 
 A quote that is found shows the words are in the source. It does not show that a claim built on them follows.
 
@@ -19,7 +20,9 @@ looked up in the notes folder (and in a Texere bibliography when there is one). 
 note. "Author Year" mentions that match no note are listed as leads: they are a guess from the text, so they do
 not change the exit code.
 
-Exit code 1 when a quote is not found or is on the wrong page, or when a reference has no note.
+Exit code 1 when a quote is not found or is on the wrong page, or when a reference has no note. NO TEXT does not
+fail by itself: add --strict to fail when any quote could not be checked, which a gate that reads only the exit
+code needs.
 """
 import argparse
 import json
@@ -35,6 +38,7 @@ QUOTE_LINE = re.compile(r"^\s*[-*+]\s+[" + QUOTE_MARKS + r"](.+)$")
 PAGE = re.compile(r"\bpp?\.\s*(\d+)(?:\s*[-–—]\s*(\d+))?")
 MARKER = re.compile(r"^\[p\. (\d+)\]\s*$", re.M)
 ELLIPSIS = re.compile(r"\s*\[?(?:…|\.\.\.)\]?\s*")
+NOT_A_NOTE = re.compile(r"\.(pdf|png|jpe?g|gif|svg|webp|bmp|mp3|mp4|m4a|wav|mov|csv|json|canvas|base|xlsx?|docx?|pptx?|txt|html?|zip)$", re.I)
 MONTHS = {"january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december",
           "table", "figure", "fig", "section", "chapter", "since", "until", "from", "before", "after", "between", "during", "around", "about", "early", "late",
           "version", "edition", "spring", "summer", "autumn", "winter", "fall"}
@@ -82,31 +86,47 @@ def find(quote: str, pages: dict[int, str], span: tuple[int, int] | None) -> tup
     if not parts:
         return "NOT FOUND", "nothing to look for"
 
-    def inside(text: str) -> bool:
-        at = 0
-        for part in parts:
+    def start_of(text: str) -> int:
+        """Where the quote begins in a text, with all its parts in order; -1 when it is not there."""
+        start = at = text.find(parts[0])
+        if start < 0:
+            return -1
+        at += len(parts[0])
+        for part in parts[1:]:
             at = text.find(part, at)
             if at < 0:
-                return False
+                return -1
             at += len(part)
-        return True
+        return start
 
     numbers = sorted(pages)
     short = f" (short: {sum(map(len, parts))} letters, a weak check)" if sum(map(len, parts)) < 20 else ""
+    cited = "" if span is None else f"cited p. {span[0]}" + ("" if span[0] == span[1] else f"–{span[1]}")
     if span is not None and numbers != [0]:
-        cited = "".join(pages.get(n, "") for n in range(span[0], span[1] + 2))  # a quote can run onto the next page
-        if inside(cited):
-            return "FOUND", f"p. {span[0]}" + ("" if span[0] == span[1] else f"–{span[1]}") + short
+        own = "".join(pages.get(n, "") for n in range(span[0], span[1] + 1))
+        # A quote can run onto the next page, but it starts on a cited one.
+        if 0 <= start_of(own + pages.get(span[1] + 1, "")) < len(own):
+            return "FOUND", cited.removeprefix("cited ") + short
     whole = "".join(pages[n] for n in numbers)
-    if not inside(whole):
+    start = start_of(whole)
+    if start < 0:
         return "NOT FOUND", "not in the source's text"
     if numbers == [0]:
         return "FOUND", "the text has no page markers" + short
-    where = next((n for n in numbers if inside(pages[n])), None)
-    place = f"p. {where}" if where is not None else "across two pages"
+    where = next((n for n in numbers if start_of(pages[n]) >= 0), None)
+    if where is None:  # it crosses a page break: name the page it starts on
+        seen = 0
+        for n in numbers:
+            seen += len(pages[n])
+            if start < seen:
+                first = n
+                break
+        if span is None:
+            return "FOUND", "across two pages" + short
+        return "WRONG PAGE", f"{cited}, found starting on p. {first}"
     if span is None:
-        return "FOUND", place + short
-    return "WRONG PAGE", f"cited p. {span[0]}" + ("" if span[0] == span[1] else f"–{span[1]}") + f", found on {place}"
+        return "FOUND", f"p. {where}" + short
+    return "WRONG PAGE", f"{cited}, found on p. {where}"
 
 
 def source_text(note: Path, text: str, papers: list[Path]) -> Path | None:
@@ -123,9 +143,10 @@ def source_text(note: Path, text: str, papers: list[Path]) -> Path | None:
     return next((c for c in candidates if c.suffix == ".txt" and c.is_file()), None)
 
 
-def check_quotes(paths: list[Path], papers: list[Path]) -> int:
+def check_quotes(paths: list[Path], papers: list[Path], strict: bool = False) -> int:
     notes = sorted(f for x in paths for f in ([x] if x.is_file() else x.rglob("*.md")))
     counts: dict[str, int] = {}
+    unchecked = 0  # quotes in notes whose source text is not here
 
     def say(status: str, note: Path, detail: str) -> None:
         counts[status] = counts.get(status, 0) + 1
@@ -140,6 +161,7 @@ def check_quotes(paths: list[Path], papers: list[Path]) -> int:
         source = source_text(note, text, papers)
         if source is None:
             say("NO TEXT", note, f"{len(quotes)} quote{'' if len(quotes) == 1 else 's'} not checked: the source's text is not here")
+            unchecked += len(quotes)
             continue
         pages = pages_of(source.read_text(encoding="utf-8", errors="replace"))
         for line, quote, span in quotes:
@@ -147,7 +169,11 @@ def check_quotes(paths: list[Path], papers: list[Path]) -> int:
             shown = quote if len(quote) <= 70 else quote[:67] + "…"
             say(status, note, f'line {line} · {where} · "{shown}"')
     print("\n" + (" · ".join(f"{k}: {v}" for k, v in sorted(counts.items())) or "No notes."))
-    return 1 if counts.get("NOT FOUND") or counts.get("WRONG PAGE") else 0
+    if unchecked:
+        n = counts["NO TEXT"]
+        print(f"{unchecked} quote{'' if unchecked == 1 else 's'} in {n} note{'' if n == 1 else 's'} could not be checked: "
+              "the source's text is not on this machine." + (" With --strict that fails." if strict else " Add --strict to make that fail."))
+    return 1 if counts.get("NOT FOUND") or counts.get("WRONG PAGE") or (strict and unchecked) else 0
 
 
 # --- References ------------------------------------------------------------------------------
@@ -212,6 +238,8 @@ def check_references(report: Path, notes: Path, bibliography: Path | None) -> in
             else:
                 missing.append((n, target, "the linked note does not exist"))
         for target in re.findall(r"\[\[([^\]|#]+)", line):
+            if NOT_A_NOTE.search(target.strip()):
+                continue  # a link to a PDF, an image or a data file (Texere links each annotation to its place in the PDF)
             if Path(target.strip()).name.lower().removesuffix(".md") in lib["names"]:
                 found += 1
             else:
@@ -258,6 +286,7 @@ def main() -> int:
     p.add_argument("--references", type=Path, help="a report: list its references that have no note")
     p.add_argument("--notes", type=Path, default=Path("research/notes"), help="the notes folder for --references (default research/notes)")
     p.add_argument("--bibliography", type=Path, help="a Texere bibliography.json (default: found from the report's folder)")
+    p.add_argument("--strict", action="store_true", help="also fail when a quote could not be checked because its source's text is not here")
     a = p.parse_args()
     if a.references:
         if not a.references.is_file():
@@ -265,7 +294,7 @@ def main() -> int:
         return check_references(a.references, a.notes, a.bibliography or texere_index(a.references.resolve().parent))
     if not a.paths:
         p.error("give notes to check, or --references REPORT")
-    return check_quotes(a.paths, a.papers)
+    return check_quotes(a.paths, a.papers, a.strict)
 
 
 if __name__ == "__main__":
