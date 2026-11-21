@@ -1,7 +1,7 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "poiesis-research",
-  "description": "Research for any project: literature, evidence and funding, from sources that can be checked.",
+  "description": "Research for any project: literature, evidence, funding, yearly counts, signals and prior art, from sources that can be checked.",
   "owner": {
     "name": "George Mihai",
     "email": "hi@georgemihai.com"
@@ -9,8 +9,8 @@
   "plugins": [
     {
       "name": "poiesis-research",
-      "description": "Research for any project from sources that can be checked: the literature on a topic, the evidence behind a claim, and EU and Romanian grants. One skill with three playbooks and the paper-scout, evidence-scout and funding-scout agents.",
-      "version": "2.3.3",
+      "description": "Research for any project from sources that can be checked: the literature on a topic, the evidence behind a claim, EU and Romanian grants, yearly counts, signals and prior art. One skill with six playbooks and the paper-scout, evidence-scout, funding-scout and signal-scout agents.",
+      "version": "2.4.0",
       "author": {
         "name": "George Mihai",
         "email": "hi@georgemihai.com"

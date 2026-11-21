@@ -211,6 +211,11 @@ class References(unittest.TestCase):
         self.assertIn("4 references in 2026-11-21-report.md: 3 have a note, 1 do not", out)
         self.assertIn("bibliography.json", out)
 
+    def test_what_is_shown_as_code_is_an_example_not_a_reference(self):
+        code, out = self.check("Cite as `[@key, p. N]`, or by `https://doi.org/10.1234/example`.\n```\n[@another2020key] and [[some-note]]\n```\n")
+        self.assertEqual(code, 0, out)
+        self.assertIn("0 references", out)
+
     def test_an_email_address_is_not_read_as_a_citation(self):
         code, out = self.check("Write to someone@example.org about it.\n")
         self.assertEqual(code, 0, out)
