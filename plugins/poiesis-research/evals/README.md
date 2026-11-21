@@ -24,5 +24,10 @@ Every case asks for one run (`runs: 1`), so a first pass is six runs with the pl
 judges. `--runs 3` gives a steadier score. The cases need only the read-only tools they list; the prompt carries
 everything the task needs, because each run starts in an empty folder.
 
+Before the first run, sign the Claude command line in once with `claude auth login`. It uses your Claude
+subscription unless you pass `--console`. The runs are separate `claude` sessions, so a sign-in in the desktop app
+does not reach them. The cost the command prints is an estimate at list price.
+
 The format follows the blank case that `claude plugin eval init --bare` writes and the reference in the Claude
-Code documentation ("Test plugins with evals"), read on 2026-11-21. These cases have not been run yet.
+Code documentation ("Test plugins with evals"), read on 2026-11-21. No case has been run yet. One attempt on
+2026-11-21 stopped at sign-in, before any run; the case it tried, `share-same-types`, loaded with its four graders.
