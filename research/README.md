@@ -17,3 +17,22 @@ The sources behind the rules in `skills/research/rules.md` ("Where these rules c
   Closed.
 - **Non-academic sources:** [Wineburg & McGrew 2019](notes/wineburg-2019-lateral-reading.md), lateral reading.
   Closed, abstract only.
+
+Added for 2.4.0. Each note's **Read** line says how much of the source was read.
+
+- **Quotes and references:** [Wu et al. 2025](notes/wu-2025-llm-cited-sources-support.md), 50% to 90% of answers
+  not fully supported by the sources cited; full text, CC BY-NC-ND, local only.
+  [Chelli et al. 2024](notes/chelli-2024-hallucinated-references.md), 28.6% to 91.4% of references invented; full
+  text of the accepted manuscript, local only.
+- **Calling something new:** [Beel, Kan & Baumgart 2025](notes/beel-2025-ai-scientist-novelty.md), 12 of 12 ideas
+  marked new by a keyword search; full text of the preprint, local only.
+- **Counting:** [Liu, Ni & Hu 2024](notes/liu-2024-database-expansion.md), counts and the database's own growth;
+  part of the text, local only. [OpenAlex documentation](notes/openalex-2026-api-documentation.md), read
+  2026-11-21. [Two recorded runs](notes/poiesis-lab-2026-recorded-runs.md), observations.
+- **The evidence table:** [Robinson, Saldanha & Mckoy 2011](notes/robinson-2011-research-gaps-framework.md) and
+  [Snilstveit et al. 2016](notes/snilstveit-2016-evidence-gap-maps.md). Closed, abstracts only.
+- **Signals:** [The Futures Toolkit 2024](notes/go-science-2024-futures-toolkit.md), the horizon-scanning section;
+  Open Government Licence. [Seven signal sources](notes/signal-sources-2026-access.md), access rules read
+  2026-11-21.
+- **Requests:** [Crossref, Europe PMC, arXiv and Semantic Scholar](notes/fallback-databases-2026-access.md),
+  access rules read 2026-11-21.

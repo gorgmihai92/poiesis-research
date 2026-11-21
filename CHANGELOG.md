@@ -1,5 +1,43 @@
 # Changelog
 
+## 2.4.0
+Everything is added: no path or field of 2.3.3 was renamed or removed, and a script that got its answers before
+gets the same ones, followed by a Coverage line. One request parameter is no longer sent (see "Removed").
+- **Requests.** Every script that asks a database goes through one layer in `scholarly.py`: answers are cached on
+  disk as they arrive (a day, in `~/.cache/poiesis-research/`; `--fresh` asks again), requests to one host are
+  spaced as its documentation asks, and the OpenAlex budget is read from the response headers, so a spent budget
+  stops before the next paid request. Crossref, Europe PMC and arXiv answer when OpenAlex or Semantic Scholar
+  refuses. Each script ends with a **Coverage** line naming the databases that answered and the ones that refused
+  (on stderr with `--json`). `search.py` takes `--db crossref|epmc|arxiv|all`.
+- **Counts.** `counts.py` and `playbooks/trends.md`: yearly counts for a search, within a base search, for a topic
+  or for the whole OpenAlex topic taxonomy, with the same document types above and below the line of every share
+  and the unfinished year marked. Saved in `research/data/` as CSV with a metadata file: query, database, date,
+  types, script. `--db epmc` counts in Europe PMC. `--record` and `--replay` save and replay answers. Without a
+  key the taxonomy scan stops at 200 topics and says so. It reports counts and shares; it does not judge trends.
+- **Evidence table.** `playbooks/evidence.md` asks for one row per study: population, what was varied, the
+  comparison, what was measured, the setting, how it was verified and how much was read. Saved in
+  `research/maps/` from `templates/evidence-map.md`.
+- **Quotes and references.** `verify_quotes.py` looks for every quote of a note in the source's extracted text, on
+  the page given, and with `--references` lists a report's references that have no note.
+- **Signals.** `signals.py`, `playbooks/signals.md`, `templates/signal.md` and the `signal-scout` agent: what
+  arXiv, Europe PMC, NIH RePORTER, OpenAIRE, Hacker News, Wikimedia pageviews and Hugging Face show about a
+  subject in a recent window. A signal note holds the observation only, with an id (`SG-001`), in
+  `research/signals/`.
+- **Prior art.** `playbooks/prior-art.md`: before anything is called new, the nearest existing works and what
+  differs.
+- **Agents.** `paper-scout` and `evidence-scout` return one row per source in fixed columns (citation, DOI, how it
+  was verified, how much was read, what it says, open copy) and a short summary; the 400-word limit is gone. They
+  read the project's bibliography first and give the DOI, never the address of a copy.
+- **Texere.** In a vault with `Support/Texere/Bibliography/bibliography.json` the skill reads it as the index of
+  the library (`library.py`), cites as `[@key, p. N]`, and never writes in Texere's folders.
+- **Notes.** A **Read** line says how much of a source was read. Eleven new notes in `research/notes`.
+- **Removed:** the `mailto` parameter is no longer sent. OpenAlex ignores it since February 2026, and no email
+  address goes into any request.
+- **Not checked in this version:** requests with an OpenAlex or Semantic Scholar key (none was available), the
+  taxonomy scan past 200 topics, and a real Texere bibliography (the reader was tested on one built from its
+  description).
+- Tests in `tests/`, run with `python3 -I -m unittest discover -s tests`; eval cases in the plugin's `evals/`.
+
 ## 2.3.3
 - Suggestions of another Poiesis plugin, from the skill or its agents, give the plugin's link and name the skill or
   agent to use.
