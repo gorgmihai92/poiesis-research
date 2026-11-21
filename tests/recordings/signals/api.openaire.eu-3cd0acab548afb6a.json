@@ -1,0 +1,7 @@
+{
+ "url": "https://api.openaire.eu/graph/v1/projects?sortBy=startDate+DESC&search=%22brain-computer+interface%22&pageSize=3",
+ "method": "GET",
+ "status": 200,
+ "fetched": "2026-11-21T21:08:28Z",
+ "body": "{\"header\": {\"numFound\": 231, \"page\": 1, \"pageSize\": 3}, \"results\": [{\"id\": \"nsf_________::b2dede4d07fff054599e9e510549a5ec\", \"title\": \"SHF: Small: A Ubiquitous Brain-Computer Interface for Supplementing Cognitive and Motor Functions\", \"startDate\": \"2025-07-01\", \"code\": \"2452012\", \"granted\": {\"currency\": \"USD\", \"totalCost\": 0.0, \"fundedAmount\": 497881.0}, \"fundings\": [{\"shortName\": \"NSF\", \"name\": \"National Science Foundation\"}]}, {\"id\": \"ta0_________::8037f2d5a2167559151b9a50e18c4f0f\", \"title\": \"Displaceable medical device enabling effective and affordable cortex-controlled robotic neurorehabilitation of walking motor disorders\", \"startDate\": \"2025-01-01\", \"code\": \"FW12010370\", \"granted\": {\"currency\": null, \"totalCost\": 0.0, \"fundedAmount\": 0.0}, \"fundings\": [{\"shortName\": \"TA0\", \"name\": \"Technology Agency of the Czech Republic\"}]}, {\"id\": \"nih_________::0cecc7af393890ad96b6b7c3d0f1054e\", \"title\": \"Brain-computer interface (BCI)-based identification of color vision deficiencies (CVDs) related to Parkinson’s Disease (PD)\", \"startDate\": \"2024-08-06\", \"code\": \"1R21EB036221-01\", \"granted\": {\"currency\": \"USD\", \"totalCost\": 0.0, \"fundedAmount\": 204000.0}, \"fundings\": [{\"shortName\": \"NIH\", \"name\": \"National Institutes of Health\"}]}]}"
+}

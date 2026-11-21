@@ -1,0 +1,7 @@
+{
+ "url": "https://hn.algolia.com/api/v1/search_by_date?query=%22brain-computer+interface%22&tags=story&hitsPerPage=3&numericFilters=created_at_i%3E1779321600%2Ccreated_at_i%3C1795305599",
+ "method": "GET",
+ "status": 200,
+ "fetched": "2026-11-21T21:08:28Z",
+ "body": "{\"nbHits\": 14, \"hits\": [{\"title\": \"Playing GTA VI with a brain computer interface\", \"url\": \"https://twitter.com/neuralink/status/2123890949029818800\", \"points\": 1, \"num_comments\": 0, \"created_at\": \"2026-11-21T14:27:57Z\", \"objectID\": \"50589555\"}, {\"title\": \"Apple to Support Brain-Implant Control of Its Devices (2025)\", \"url\": \"https://www.wsj.com/tech/apple-brain-computer-interface-9ec69919\", \"points\": 1, \"num_comments\": 1, \"created_at\": \"2026-10-23T14:06:06Z\", \"objectID\": \"50209241\"}, {\"title\": \"China Starts Clinical Trial for New 128-Channel Implantable BCI\", \"url\": \"https://chinaminutes.com/2026/05/19/china-128-channel-brain-computer-interface-trial/\", \"points\": 2, \"num_comments\": 0, \"created_at\": \"2026-10-14T21:00:38Z\", \"objectID\": \"50095178\"}]}"
+}

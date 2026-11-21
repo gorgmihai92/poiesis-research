@@ -1,0 +1,7 @@
+{
+ "url": "https://api.openaire.eu/graph/v2/researchProducts?type=publication&fromPublicationDate=2026-05-21&toPublicationDate=2026-11-21&sortBy=publicationDate+DESC&search=%22brain-computer+interface%22&pageSize=3",
+ "method": "GET",
+ "status": 200,
+ "fetched": "2026-11-21T21:08:27Z",
+ "body": "{\"header\": {\"numFound\": 565, \"page\": 1, \"pageSize\": 3}, \"results\": [{\"id\": \"doi_________::12b60f0710c24e3299ed28115a707068\", \"mainTitle\": \"Fusing minds and machines: A next-generation review of information-driven brain-computer interface technologies for precision healthcare\", \"publicationDate\": \"2026-11-01\", \"publisher\": \"Elsevier BV\", \"pids\": [{\"scheme\": \"doi\", \"value\": \"10.1016/j.cosrev.2026.101028\"}]}, {\"id\": \"doi_________::cb2a90c754634558a9a9c44e68778590\", \"mainTitle\": \"#377 Brain computer interface treatment for motor rehabilitation in Parkinson’s disease\", \"publicationDate\": \"2026-11-01\", \"publisher\": \"Elsevier BV\", \"pids\": [{\"scheme\": \"doi\", \"value\": \"10.1016/j.clinph.2026.2112278\"}]}, {\"id\": \"doi_dedup___::1706f5843f60eb9c2cb45c6ae221a603\", \"mainTitle\": \"Efficient FPGA accelerator for low-power high-speed BCI motor imagery classification using novel deep learning\", \"publicationDate\": \"2026-11-01\", \"publisher\": \"Elsevier BV\", \"pids\": [{\"scheme\": \"doi\", \"value\": \"10.1016/j.neunet.2026.109105\"}, {\"scheme\": \"pmid\", \"value\": \"42250530\"}]}]}"
+}

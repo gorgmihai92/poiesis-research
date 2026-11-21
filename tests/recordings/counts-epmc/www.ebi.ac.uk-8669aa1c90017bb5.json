@@ -3,5 +3,5 @@
  "method": "GET",
  "status": 200,
  "fetched": "2026-11-21T20:56:06Z",
- "body": "{\"version\":\"6.9\",\"hitCount\":3443,\"nextCursorMark\":\"AoIIQJPtsSg1MzAzMDg0NQ==\",\"nextPageUrl\":\"https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=%28TITLE_ABS%3Amoral+OR+TITLE_ABS%3Amorality%29+AND+PUB_YEAR%3A2025&cursorMark=AoIIQJPtsSg1MzAzMDg0NQ%3D%3D&resultType=idlist&pageSize=1&format=json\",\"request\":{\"queryString\":\"(TITLE_ABS:moral OR TITLE_ABS:morality) AND PUB_YEAR:2025\",\"resultType\":\"idlist\",\"cursorMark\":\"*\",\"pageSize\":1,\"sort\":\"\",\"synonym\":false},\"resultList\":{\"result\":[{\"id\":\"PPR1025488\",\"source\":\"PPR\"}]}}"
+ "body": "{\"hitCount\": 3443, \"resultList\": {\"result\": []}}"
 }
