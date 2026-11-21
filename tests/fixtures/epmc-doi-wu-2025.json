@@ -1,0 +1,168 @@
+{
+ "version": "6.9",
+ "hitCount": 1,
+ "request": {
+  "queryString": "DOI:\"10.1038/s41467-025-58551-6\"",
+  "resultType": "core",
+  "cursorMark": "*",
+  "pageSize": 3,
+  "sort": "",
+  "synonym": false
+ },
+ "resultList": {
+  "result": [
+   {
+    "id": "40240349",
+    "source": "MED",
+    "pmid": "40240349",
+    "pmcid": "PMC12003634",
+    "doi": "10.1038/s41467-025-58551-6",
+    "title": "An automated framework for assessing how well LLMs cite relevant medical references.",
+    "authorString": "Wu K, Wu E, Wei K, Zhang A, Casasola A, Nguyen T, Riantawan S, Shi P, Ho D, Zou J.",
+    "authorList": {
+     "author": [
+      {
+       "fullName": "Wu K",
+       "lastName": "Wu",
+       "firstName": "Kevin",
+       "initials": "K"
+      },
+      {
+       "fullName": "Wu E",
+       "lastName": "Wu",
+       "firstName": "Eric",
+       "initials": "E"
+      },
+      {
+       "fullName": "Wei K",
+       "lastName": "Wei",
+       "firstName": "Kevin",
+       "initials": "K"
+      },
+      {
+       "fullName": "Zhang A",
+       "lastName": "Zhang",
+       "firstName": "Angela",
+       "initials": "A"
+      },
+      {
+       "fullName": "Casasola A",
+       "lastName": "Casasola",
+       "firstName": "Allison",
+       "initials": "A"
+      },
+      {
+       "fullName": "Nguyen T",
+       "lastName": "Nguyen",
+       "firstName": "Teresa",
+       "initials": "T"
+      },
+      {
+       "fullName": "Riantawan S",
+       "lastName": "Riantawan",
+       "firstName": "Sith",
+       "initials": "S"
+      },
+      {
+       "fullName": "Shi P",
+       "lastName": "Shi",
+       "firstName": "Patricia",
+       "initials": "P"
+      },
+      {
+       "fullName": "Ho D",
+       "lastName": "Ho",
+       "firstName": "Daniel",
+       "initials": "D"
+      },
+      {
+       "fullName": "Zou J",
+       "lastName": "Zou",
+       "firstName": "James",
+       "initials": "J"
+      }
+     ]
+    },
+    "journalInfo": {
+     "issue": "1",
+     "volume": "16",
+     "journalIssueId": 3920965,
+     "dateOfPublication": "2025 Apr",
+     "monthOfPublication": 4,
+     "yearOfPublication": 2025,
+     "journal": {
+      "medlineAbbreviation": "Nat Commun",
+      "title": "Nature communications",
+      "essn": "2041-1723",
+      "issn": "2041-1723",
+      "nlmid": "101528555",
+      "isoabbreviation": "Nat Commun"
+     },
+     "printPublicationDate": "2025-04-01"
+    },
+    "pubYear": "2025",
+    "pageInfo": "3615",
+    "abstractText": "<h4>Objective</h4>Shortened for the test fixture.<h4>Results</h4>Shortened for the test fixture.",
+    "publicationStatus": "epublish",
+    "language": "eng",
+    "pubModel": "Electronic",
+    "pubTypeList": {
+     "pubType": [
+      "research-article",
+      "Journal Article"
+     ]
+    },
+    "fullTextUrlList": {
+     "fullTextUrl": [
+      {
+       "availability": "Subscription required",
+       "availabilityCode": "S",
+       "documentStyle": "doi",
+       "site": "DOI",
+       "url": "https://doi.org/10.1038/s41467-025-58551-6"
+      },
+      {
+       "availability": "Open access",
+       "availabilityCode": "OA",
+       "documentStyle": "html",
+       "site": "Europe_PMC",
+       "url": "https://europepmc.org/articles/PMC12003634"
+      },
+      {
+       "availability": "Open access",
+       "availabilityCode": "OA",
+       "documentStyle": "pdf",
+       "site": "Europe_PMC",
+       "url": "https://europepmc.org/articles/PMC12003634?pdf=render"
+      }
+     ]
+    },
+    "isOpenAccess": "Y",
+    "inEPMC": "Y",
+    "inPMC": "Y",
+    "citedByCount": 36,
+    "hasReferences": "Y",
+    "hasTextMinedTerms": "Y",
+    "hasDbCrossReferences": "N",
+    "hasPDF": "Y",
+    "hasBook": "N",
+    "hasSuppl": "Y",
+    "hasLabsLinks": "Y",
+    "hasData": "Y",
+    "license": "cc by-nc-nd",
+    "authMan": "N",
+    "epmcAuthMan": "N",
+    "nihAuthMan": "N",
+    "hasTMAccessionNumbers": "N",
+    "dateOfCompletion": "2025-04-16",
+    "dateOfCreation": "2025-04-16",
+    "dateOfRevision": "2025-04-19",
+    "electronicPublicationDate": "2025-04-16",
+    "firstPublicationDate": "2025-04-16",
+    "firstIndexDate": "2025-04-18",
+    "fullTextReceivedDate": "2025-11-28",
+    "hasEvaluations": "N"
+   }
+  ]
+ }
+}
