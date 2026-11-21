@@ -61,6 +61,8 @@ DATABASES = {
     "huggingface.co": "Hugging Face",
 }
 SECRETS = {"api_key", "apikey", "mailto", "token", "access_token"}  # never written to disk or shown
+# One of them as an answer may repeat it: api_key=…, or api_key%3D… inside another address.
+_AS_PARAMETER = r"(?<![A-Za-z_-])((?i:" + "|".join(sorted(SECRETS, key=len, reverse=True)) + r")(?:=|%3[Dd]))"
 CACHE_HOURS = 24.0
 
 
@@ -145,12 +147,19 @@ def clean_url(url: str) -> str:
 def scrub(text: str, url: str = "") -> str:
     """The text without the request's secrets: the key and email parameters of its address and the keys in the
     environment, plain and percent-encoded. An answer can repeat the address it was asked at, or a key from a
-    header, and nothing of that kind is stored or passed on."""
+    header, and nothing of that kind is stored or passed on.
+
+    A value of 8 characters or more is removed wherever it stands. A shorter one is a placeholder ("test"):
+    removing it everywhere would damage the answer itself, so it is removed only where it stands as a parameter
+    of an address (api_key=test)."""
     found = [v for k, v in urllib.parse.parse_qsl(urllib.parse.urlsplit(url).query) if k.lower() in SECRETS]
     found += [os.environ.get(name, "") for name in ("OPENALEX_API_KEY", "S2_API_KEY")]
-    for secret in sorted({s for s in found if len(s) >= 4}, key=len, reverse=True):
+    for secret in sorted({s for s in found if s}, key=len, reverse=True):
         for form in {secret, urllib.parse.quote(secret, safe=""), urllib.parse.quote_plus(secret)}:
-            text = text.replace(form, "REDACTED")
+            if len(secret) >= 8:
+                text = text.replace(form, "REDACTED")
+            else:
+                text = re.sub(_AS_PARAMETER + re.escape(form) + r"(?![A-Za-z0-9_.~%+-])", r"\1REDACTED", text)
     return text
 
 
@@ -438,13 +447,14 @@ def fetch(url: str, data: bytes | None = None, headers: dict | None = None, trie
                 delay *= 2
                 continue
             refuse("http", e.code, f"HTTP {e.code}" + (f" {e.reason}" if e.reason else ""), f"{host}: HTTP {e.code}" + (f" {reason}" if reason else ""))
+            e.url = e.filename = clean_url(url)  # the error that travels on names the address without its key
             raise
         except (urllib.error.URLError, TimeoutError) as e:
             if attempt < tries - 1:
                 _sleep(delay)
                 delay *= 2
                 continue
-            _event(host, "refused", detail=f"no connection ({getattr(e, 'reason', e)})")
+            _event(host, "refused", detail=scrub(f"no connection ({getattr(e, 'reason', e)})", url))
             raise
     return 404, ""
 
@@ -1045,7 +1055,8 @@ def main() -> int:
     answers = [f for f in present if f.parent.parent == LAYER.cache_dir and re.fullmatch(r"[0-9a-f]{64}\.json", f.name)]
     state = [f for f in present if f.parent.parent == LAYER.cache_dir
              and ((f.parent.name == "budget" and f.name.endswith((".key.json", ".nokey.json"))) or (f.parent.name == "pace" and f.suffix == ".lock"))]
-    others = len(present) - len(answers) - len(state)
+    kept = sorted(str(f.relative_to(LAYER.cache_dir)) for f in present if f not in answers and f not in state)
+    others = len(kept)
     size = sum(f.stat().st_size for f in answers)
     print(f"Cache: {LAYER.cache_dir} · {len(answers)} answers · {size / 1e6:.1f} MB · an answer is used for {LAYER.max_age / 3600:g} hours")
     print("Change the folder with POIESIS_RESEARCH_CACHE=<folder>, or turn the cache off with POIESIS_RESEARCH_CACHE=off.")
@@ -1056,7 +1067,8 @@ def main() -> int:
             with contextlib.suppress(OSError):
                 folder.rmdir()  # only when nothing else is in it
         print(f"Cleared {len(answers)} answer{'' if len(answers) == 1 else 's'}."
-              + (f" {others} other file{'' if others == 1 else 's'} in the folder {'was' if others == 1 else 'were'} left alone." if others else ""))
+              + (f" {others} other file{'' if others == 1 else 's'} in the folder {'was' if others == 1 else 'were'} left alone: "
+                 + ", ".join(kept[:5]) + (f" and {others - 5} more" if others > 5 else "") + "." if others else ""))
     return 0
 
 

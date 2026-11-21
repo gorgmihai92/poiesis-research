@@ -250,8 +250,23 @@ class StoppingHalfway(LayerCase):
         self.run_script(counts, ['"solid-state battery"', "--from", "2024", "--to", "2025", "--out", str(self.tmp / "out")])
         field = json.loads(next((self.tmp / "out").glob("*.meta.json")).read_text())["search_field"]
         self.assertNotIn("unless quoted", field)
-        self.assertIn("stemmed", field)
+        self.assertIn("stems words, inside double quotes too", field)
         self.assertIn("title_and_abstract.search", field)
+
+    def test_the_metadata_names_the_documented_exception_to_stemming(self):
+        """Seen on 2026-11-21: "theory of mind" and "theories of mind", both quoted, gave different counts."""
+        self.use([("api.openalex.org", self.table(40))])
+        self.run_script(counts, ['"theory of mind"', "--from", "2024", "--to", "2025", "--out", str(self.tmp / "out")])
+        field = json.loads(next((self.tmp / "out").glob("*.meta.json")).read_text())["search_field"]
+        self.assertIn("a short quoted phrase that holds a stop word", field)
+        self.assertIn("matched as typed", field)
+
+    def test_the_europe_pmc_metadata_says_what_was_seen_not_more(self):
+        self.use([("europepmc", Answer(json.dumps({"hitCount": 7})))])
+        self.run_script(counts, ["possum", "--db", "epmc", "--from", "2024", "--to", "2025", "--out", str(self.tmp / "out")])
+        field = json.loads(next((self.tmp / "out").glob("*.meta.json")).read_text())["search_field"]
+        self.assertNotIn("no stemming", field)  # a rule of the database that nobody read
+        self.assertIn("on 2026-11-21 a singular and its plural gave different counts", field)
 
     def test_a_second_run_with_other_series_does_not_overwrite_the_first(self):
         self.use([("api.openalex.org", self.table(40))])

@@ -101,6 +101,16 @@ class Matching(unittest.TestCase):
         self.assertEqual(vq.find("it starts on this page and ends on the next one", self.pages, (1, 1)), ("FOUND", "p. 1"))
         self.assertEqual(vq.find("it starts on this page and ends on the next one", self.pages, (2, 2))[0], "WRONG PAGE")
 
+    def test_the_lab_review_s_case_one_page_early(self):
+        pages = vq.pages_of("[p. 4]\nNothing relevant is written on this page at all.\n[p. 5]\nThe effect was 37 percent larger in the second "
+                            "cohort than in the first.\n[p. 6]\nEnd.\n")
+        quote = "The effect was 37 percent larger in the second cohort"
+        self.assertEqual(vq.find(quote, pages, (4, 4)), ("WRONG PAGE", "cited p. 4, found on p. 5"))
+        self.assertEqual(vq.find(quote, pages, (5, 5)), ("FOUND", "p. 5"))
+        self.assertEqual(vq.find(quote, pages, (4, 5)), ("FOUND", "p. 4–5"))
+        self.assertEqual(vq.find(quote, pages, (3, 3)), ("WRONG PAGE", "cited p. 3, found on p. 5"))
+        self.assertEqual(vq.find(quote, pages, (6, 6)), ("WRONG PAGE", "cited p. 6, found on p. 5"))
+
     def test_the_wrong_page_is_reported_with_the_right_one(self):
         self.assertEqual(vq.find("The system marked all twelve ideas as novel", self.pages, (3, 3)), ("WRONG PAGE", "cited p. 3, found on p. 2"))
 
@@ -245,6 +255,16 @@ class References(unittest.TestCase):
         self.assertNotIn(".pdf", out)
         self.assertNotIn(".png", out)
         self.assertIn("2 references in 2026-11-21-report.md: 1 have a note, 1 do not", out)
+
+    def test_the_lab_review_s_case_a_texere_line(self):
+        index = self.tmp / "Support" / "Texere" / "Bibliography"
+        index.mkdir(parents=True)
+        (index / "bibliography.json").write_text(json.dumps([{"id": "smith2020", "obsidianPath": "1. References/smith2020.md", "reading-status": "read"}]), encoding="utf-8")
+        code, out = self.check("# Report\n\nA claim [@smith2020, p. 4] [[smith2020.pdf#page=4&annotation=12R|PDF]].\n")
+        self.assertEqual(code, 0, out)
+        self.assertNotIn("NO NOTE", out)
+        self.assertIn("1 references in 2026-11-21-report.md: 1 have a note, 0 do not", out)
+        self.assertIn("1 link to a file that is not a note was not checked", out)
 
     def test_what_is_shown_as_code_is_an_example_not_a_reference(self):
         code, out = self.check("Cite as `[@key, p. N]`, or by `https://doi.org/10.1234/example`.\n```\n[@another2020key] and [[some-note]]\n```\n")
