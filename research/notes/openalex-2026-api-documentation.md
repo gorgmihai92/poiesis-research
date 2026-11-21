@@ -7,7 +7,8 @@
 - **Evidence:** documentation (D) and observation (O) · read and run on 2026-11-21, with no API key.
 - **Read:** documentation, on 2026-11-21. In full: Pricing, Example costs, Authentication, Error handling, Group, Page through results, Work
   types, Topics, Expansion corpus, Tracking trends over time, Counting, Deprecations. In part: Searching and
-  Filter (the lines on search fields, Boolean operators and the OR limit).
+  Filter (the lines on search fields, Boolean operators and the OR limit; in Searching also the sections "Text
+  processing", "Exact (unstemmed) search" and "Phrase matching").
 
 ## What it says
 
@@ -68,11 +69,22 @@
   corpus").
 
 ### Search and years (D, O)
-- A works `search` matches titles, abstracts, full text and keywords, with stemming. Searches scoped to title and
-  abstract, and exact forms without stemming, are separate ("Searching").
+- A works `search` matches titles, abstracts, full text and keywords. Words are stemmed, so a plural also finds
+  its singular, and stop words are removed. A search without stemming is a separate form, `search.exact`; most
+  search filters have a `.search.exact` form too. Searches scoped to title and abstract are separate as well
+  ("Searching": "Text processing", "Exact (unstemmed) search").
+- Double quotes search for a phrase. One case is set apart: in title and abstract searches, stop words count
+  inside a short quoted phrase (four words or fewer besides the stop words), and such a phrase is matched as
+  typed, without stemming ("Searching": "Phrase matching").
 - Observed by the lab's review on 2026-11-21: in `title_and_abstract.search` the quoted phrases "solid-state
   battery" and "solid-state batteries", and the two joined by OR, gave the same counts (1,446 works in 2024, 1,996
-  in 2025). Double quotes keep the words together; they do not turn stemming off. One phrase was tried.
+  in 2025).
+- Observed on 2026-11-21 at 22:00 UTC, in the same field, counting articles, reviews and preprints: "heat pump"
+  and "heat pumps", both quoted, gave the same counts (2,571 in 2024, 2,998 in 2025). "theory of mind" gave 688
+  and 1,096; "theories of mind" gave 19 and 40.
+- The documentation and the observations agree. Quotes keep the words together and do not turn stemming off; a
+  short quoted phrase that holds a stop word is the exception and is matched as typed. Tried: two phrases with no
+  stop word and one with a stop word. Not tried: longer phrases, the `.exact` forms, other fields.
 - The current year is still filling in, so its count is partial ("Tracking trends over time").
 
 ## What it means for the plugin
@@ -80,6 +92,8 @@
   stops with what it has saved when the budget is spent, and it no longer sends `mailto`.
 - `counts.py` asks for one grouped request per series, by year and type, so the same types can be counted above
   and below the line. It records the types, the search field, the corpus and the date in the series' metadata.
+- A series for a quoted phrase counts its plural too, unless the phrase holds a stop word: then it counts the
+  phrase as typed, and another form of it is another series. The metadata's `search_field` says so.
 - The taxonomy mode pages through `group_by=primary_topic.id`. Without a key it gets one page and says so.
 - A series fetched before October 2026 and one fetched after are not comparable by topic, and type counts move
   while works are being retyped. The series carries its date so nobody compares across them unknowingly.
@@ -87,3 +101,4 @@
 ## Quotes
 - "Without a key you get $0.10/day" ("Example costs")
 - "The current year is still filling in, so its count is partial." ("Tracking trends over time")
+- "Those words are then matched as typed, without stemming." ("Searching")

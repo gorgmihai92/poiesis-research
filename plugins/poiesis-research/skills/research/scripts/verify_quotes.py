@@ -217,6 +217,7 @@ def check_references(report: Path, notes: Path, bibliography: Path | None) -> in
     lib = library(notes, bibliography)
     text = report.read_text(encoding="utf-8")
     found, missing, leads = 0, [], []
+    files = 0  # links to PDFs, images and data files: they are not notes, so they are not checked
     fenced = False
     for n, line in enumerate(text.splitlines(), 1):
         if line.lstrip().startswith("```"):
@@ -239,7 +240,8 @@ def check_references(report: Path, notes: Path, bibliography: Path | None) -> in
                 missing.append((n, target, "the linked note does not exist"))
         for target in re.findall(r"\[\[([^\]|#]+)", line):
             if NOT_A_NOTE.search(target.strip()):
-                continue  # a link to a PDF, an image or a data file (Texere links each annotation to its place in the PDF)
+                files += 1  # Texere links each annotation to its place in the PDF
+                continue
             if Path(target.strip()).name.lower().removesuffix(".md") in lib["names"]:
                 found += 1
             else:
@@ -267,7 +269,8 @@ def check_references(report: Path, notes: Path, bibliography: Path | None) -> in
             print(f"MENTION    line {n} · {who} · no note with this author and year (a guess from the text: check by hand)")
     where = f"{notes}" + (f" and {bibliography}" if bibliography and bibliography.is_file() else "")
     print(f"\n{found + len(missing)} references in {report.name}: {found} have a note, {len(missing)} do not"
-          f"{f'; {len(seen)} author-year mentions to check by hand' if seen else ''}. Looked in {where}.")
+          f"{f'; {len(seen)} author-year mentions to check by hand' if seen else ''}. Looked in {where}."
+          + (f" {files} link{' to a file that is not a note was' if files == 1 else 's to files that are not notes were'} not checked." if files else ""))
     return 1 if missing else 0
 
 
