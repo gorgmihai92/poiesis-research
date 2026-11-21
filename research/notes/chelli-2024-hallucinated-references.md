@@ -7,8 +7,8 @@
   article as CC BY.
 - **Evidence:** empirical · 471 references returned by three language models for 11 systematic reviews on rotator
   cuff pathology (p. 11).
-- **Read:** the published abstract, and the accepted manuscript p. 7–14 in full, on 2026-11-21. Not read: the
-  tables, figures and appendix. The manuscript was not compared line by line with the published article.
+- **Read:** full text of the accepted manuscript (p. 7–14) and the published abstract, on 2026-11-21. Not read:
+  the tables, figures and appendix. The manuscript was not compared line by line with the published article.
 
 ## What it says
 - A reference counted as hallucinated when two of these three were wrong: title, first author, year (p. 10).

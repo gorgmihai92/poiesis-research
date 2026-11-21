@@ -5,7 +5,7 @@
 - **File:** none (documentation changes; every statement below carries the date read)
 - **Licence:** the documentation says every OpenAlex record is CC0 ("Pricing").
 - **Evidence:** documentation (D) and observation (O) · read and run on 2026-11-21, with no API key.
-- **Read:** in full: Pricing, Example costs, Authentication, Error handling, Group, Page through results, Work
+- **Read:** documentation, on 2026-11-21. In full: Pricing, Example costs, Authentication, Error handling, Group, Page through results, Work
   types, Topics, Expansion corpus, Tracking trends over time, Counting, Deprecations. In part: Searching and
   Filter (the lines on search fields, Boolean operators and the OR limit).
 

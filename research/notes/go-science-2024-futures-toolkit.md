@@ -6,9 +6,9 @@
 - **File:** none here (the page is open to read)
 - **Licence:** © Crown copyright 2024, Open Government Licence v3.0: steps can be adapted with attribution.
 - **Evidence:** practitioner guidance · not a study of whether the method works.
-- **Read:** the section "Horizon-Scanning" in full, and the glossary entries Scan, Trend, Driver, Driver Mapping,
-  Horizon Scanning and Natural Agenda, on 2026-11-21. Not read: the other eleven tools, the pathways, the case
-  study bank and the resource bank.
+- **Read:** part of the text: the section "Horizon-Scanning" in full, and the glossary entries Scan, Trend,
+  Driver, Driver Mapping, Horizon Scanning and Natural Agenda, on 2026-11-21. Not read: the other eleven tools,
+  the pathways, the case study bank and the resource bank.
 
 ## What it says
 - Horizon scanning is the systematic collection of insights on emerging trends and weak signals of change

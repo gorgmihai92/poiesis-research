@@ -28,13 +28,18 @@ Every script ends with a "Coverage" line: the databases that answered and the on
 the report needs them.
 
 ## Evidence table
-One row per study the verdict rests on. The middle columns are the elements that describe a study (population,
-intervention, comparison, outcome, setting: Robinson et al. 2011), in plain words.
+One row per study the verdict rests on. The first six columns are the same in every table this plugin makes for
+sources. The next five describe the study (population, intervention, comparison, outcome, setting: Robinson et
+al. 2011), in plain words.
 
 | Column | What goes in it |
 |---|---|
-| Study | first author and year |
-| DOI | the DOI; "none" when the work has none |
+| Citation | authors, year, title, venue |
+| DOI | the DOI itself; "none" when the work has none. Never the address of a page or of a copy |
+| Verified | how the study and its DOI were confirmed, naming the databases; "not verified" when nobody looked |
+| Read | full text, part of the text, abstract only, or title only |
+| What it says | the finding in one sentence, from what was read |
+| Open copy | yes, no or unknown, as the search line shows it |
 | Population | who or what was studied, and how many |
 | What was varied | the intervention, exposure or condition that differs between groups or cases |
 | Compared with | the comparison or control; "none" when the study has no comparison |
@@ -42,24 +47,27 @@ intervention, comparison, outcome, setting: Robinson et al. 2011), in plain word
 | Setting | where and how: country, language, lab or field, the task or the material |
 | Design | meta-analysis, experiment, survey, corpus study, case study … |
 | Key number | the effect size or agreement as the source states it, with its page |
-| Read | full text, abstract, or title only |
+| Side | for, against or mixed, towards the claim |
 | Group | the independent group the study belongs to (step 6) |
-| Open copy | yes, no or unknown, as the search line shows it |
 
 - A cell says what the source says. Write "not stated" when the part you read does not say it. Never fill a cell
   from what such studies usually do.
-- **Read** is per study. A row filled from an abstract says "abstract" and its key number has no page. A study
-  known by title only has its Study, DOI and Read cells filled and the rest "not read".
+- **Read** is per study. A row filled from an abstract says "abstract only" and its key number has no page. A
+  study known by title only has "not read" from "What it says" to "Key number".
+- **Verified** is per study too. A DOI copied from a preprint's record or recalled from memory is "not verified"
+  until a database or the DOI registry returns that title for it (`search.py --doi <DOI> --db all`).
 - No cell contains a `|`. A link to a note is written `[[note-name]]`, without an alias.
-- A new column goes at the end, after Open copy.
+- A new column goes at the end, after Group.
+- Rows an agent returned are copied as they are. Do not retype, shorten or reword a cell or the verdict.
 
 ## Report
 - **Verdict:** supported / mixed / not supported / not studied, and how close the evidence is to the project's
   setting. Give the count as independent groups ("6 studies from 3 groups"), not papers.
 - **Searched:** the queries for and against the claim, the studies followed forward, and the databases that
   answered (the Coverage lines).
-- **Studies,** strongest first: the evidence table. It carries what this report always gave (design and sample,
-  key number, open or closed, group) and what each study varied, compared and measured.
+- **Studies,** strongest first: the evidence table. It carries what this report always gave (citation, DOI,
+  design and sample, key number, open or closed, group) and adds how each study was verified, how much of it was
+  read, and what it varied, compared and measured.
 - **Against:** replications that failed, critiques, null results, and what they found; "none found" when the
   search for them came back empty.
 - **Datasets** the project could test itself against.
