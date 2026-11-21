@@ -50,6 +50,10 @@
 - Observed: a record says whether it is open access and lists full-text links. A citing work carries a title,
   authors, a year and a citation count, and no DOI or abstract.
 - Observed: the recorded run of 2026-11-17 spaced its requests 0.35 seconds apart and was not refused.
+- Observed on 2026-11-21 at 22:01 UTC, counts with `TITLE_ABS:… AND PUB_YEAR:…`: a singular and its plural gave
+  different counts, quoted ("heat pump": 95 in 2024 and 161 in 2025; "heat pumps": 59 and 105) and not quoted
+  (possum: 52 and 55; possums: 33 and 17). In this field words were matched as typed. Two pairs were tried; the
+  search syntax guide was not read, so this is what was seen and not a rule of the database.
 
 ## What it means for the plugin
 - Pacing per host in `scholarly.py`: arXiv 3.1 seconds, Crossref 1.05 seconds for a query and 0.25 for a DOI
