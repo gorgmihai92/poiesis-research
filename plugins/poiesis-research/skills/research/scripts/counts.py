@@ -93,7 +93,9 @@ def openalex_table(filters: list[str], y0: int, y1: int) -> dict[int, dict[str, 
 
 def search_filter(query: str, base: str | None) -> str:
     """Title and abstract only, as the lab's recorded run did. OpenAlex stems words, inside double quotes too:
-    quotes keep the words together as a phrase, and an unstemmed search is a separate `.exact` form."""
+    quotes keep the words together as a phrase. Its documentation names one exception, a short quoted phrase that
+    holds a stop word ("theory of mind"), which is matched as typed. An unstemmed search is a separate `.exact`
+    form. See the note `openalex-2026-api-documentation` in the plugin's repository."""
     return "title_and_abstract.search:" + (f"({base}) AND ({query})" if base else query)
 
 
@@ -318,13 +320,15 @@ def run_series(a, years: range, types: tuple[str, ...], meta: dict, box: dict) -
         base_table = openalex_table(base_filters, y0, y1)
         base, base_all = select(base_table, types, years), select(base_table, ALL, years)
         meta["base"] = {"what": f"works of those types matching: {a.base}" if a.base else "all works of those types", "filter": ",".join([f"publication_year:{y0}-{y1}", *base_filters])}
-        meta["search_field"] = ("title and abstract (title_and_abstract.search); words are stemmed, inside double quotes too "
-                                "(seen on 2026-11-21: a quoted singular and its plural gave the same counts); quotes keep the words together")
+        meta["search_field"] = ("title and abstract (title_and_abstract.search). OpenAlex stems words, inside double quotes too: on "
+                                "2026-11-21 \"heat pump\" and \"heat pumps\" gave the same counts. Its documentation names one exception, "
+                                "seen the same day: a short quoted phrase that holds a stop word (\"theory of mind\") is matched as typed.")
     else:
         base_table = None
         base = base_all = Counts(ALL, epmc_series(None, a.base, years))
         meta["base"] = {"what": f"records matching: {a.base}" if a.base else "all records", "query": epmc_query(a.base) if a.base else "PUB_YEAR only"}
-        meta["search_field"] = "title and abstract (TITLE_ABS), unless the query names its own fields; no stemming"
+        meta["search_field"] = ("title and abstract (TITLE_ABS), unless the query names its own fields. Words are matched as typed: on "
+                                "2026-11-21 a singular and its plural gave different counts, quoted and not.")
     fetched = sc.last_fetched() or sc._now()
     meta["fetched"] = fetched[:10]
     meta["partial_years"] = [y for y in years if is_partial(y, fetched)]

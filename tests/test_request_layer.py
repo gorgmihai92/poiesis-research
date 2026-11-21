@@ -105,6 +105,89 @@ class Secrets(LayerCase):
         finally:
             del os.environ["S2_API_KEY"]
 
+    def test_the_lab_review_s_case_a_key_from_the_environment_repeated_in_the_answer(self):
+        os.environ["OPENALEX_API_KEY"] = "PROBE-KEY-123"
+        try:
+            body = json.dumps({"meta": {"self": "https://api.openalex.org/works?search=kelp&api_key=PROBE-KEY-123"}, "results": []})
+            self.use([("api.openalex.org", Answer(body))])
+            sc.configure(record=self.tmp / "rec")
+            sc.openalex_search("kelp")
+            stored = "".join(f.read_text() for f in self.tmp.rglob("*.json"))
+            self.assertNotIn("PROBE-KEY-123", stored)
+            self.assertNotIn("PROBE-KEY-123", sc.coverage_line())
+        finally:
+            del os.environ["OPENALEX_API_KEY"]
+
+    def refused_with_the_key_in_its_answer(self, status: int, error: type) -> None:
+        os.environ["OPENALEX_API_KEY"] = "PROBE-KEY-123"
+        try:
+            self.use([("api.openalex.org", Answer(json.dumps({"error": "this API key is blocked", "message": "key PROBE-KEY-123 is blocked", "reason": "PROBE-KEY-123"}), status))])
+            sc.configure(record=self.tmp / "rec")
+            with self.assertRaises(error) as c:
+                sc.openalex_search("kelp")
+            e = c.exception
+            for where in (str(e), repr(e), str(getattr(e, "url", "")), str(getattr(e, "filename", "")), sc.coverage_line(), json.dumps(sc.LAYER.events)):
+                self.assertNotIn("PROBE-KEY-123", where)
+            self.assertNotIn("PROBE-KEY-123", "".join(f.read_text() for f in self.tmp.rglob("*.json")))
+            if isinstance(e, urllib.error.HTTPError):
+                e.close()
+        finally:
+            del os.environ["OPENALEX_API_KEY"]
+
+    def test_a_refusal_that_repeats_the_key_does_not_carry_it_anywhere(self):
+        """The error that travels on is urllib's own: it named the address it was raised for, key included."""
+        self.refused_with_the_key_in_its_answer(400, urllib.error.HTTPError)
+
+    def test_a_refusal_for_the_key_itself_does_not_carry_it_either(self):
+        self.refused_with_the_key_in_its_answer(403, sc.NeedsKey)
+
+    def script_output_when_openalex_answers(self, status: int) -> str:
+        import search
+        os.environ["OPENALEX_API_KEY"] = "PROBE-KEY-123"
+        try:
+            self.use([("api.openalex.org", Answer(json.dumps({"error": "API key required for PROBE-KEY-123", "reason": "key PROBE-KEY-123"}), status)),
+                      ("semanticscholar", Answer(json.dumps({"data": []}))), ("api.crossref.org", Answer(json.dumps({"message": {"items": []}})))])
+            code, out, err = self.run_script(search, ["kelp", "--brief"])
+        finally:
+            del os.environ["OPENALEX_API_KEY"]
+        self.assertNotIn("PROBE-KEY-123", out + err)
+        return out
+
+    def test_a_script_prints_no_key_when_the_database_asks_for_one(self):
+        self.assertIn("OpenAlex refused (needs a key)", self.script_output_when_openalex_answers(401))
+
+    def test_a_script_prints_no_key_when_the_database_refuses(self):
+        self.assertIn("OpenAlex refused (HTTP 400", self.script_output_when_openalex_answers(400))
+
+    def test_a_short_value_is_not_treated_as_a_key(self):
+        """A placeholder such as "test" must not be cut out of every answer that holds the word."""
+        os.environ["OPENALEX_API_KEY"] = "test"
+        try:
+            self.use([("api.openalex.org", Answer(json.dumps({"results": [{"title": "A test of tests"}]})))])
+            got = sc.get(f"{OA}?filter=a")
+            self.assertEqual(got["results"][0]["title"], "A test of tests")
+        finally:
+            del os.environ["OPENALEX_API_KEY"]
+
+    def test_a_short_value_is_still_removed_where_the_answer_repeats_the_address(self):
+        os.environ["OPENALEX_API_KEY"] = "test"
+        try:
+            body = ('{"meta": {"self": "https://api.openalex.org/works?filter=a\\u0026api_key=test", "next": "/works?api_key=test&page=2", '
+                    '"other": "/works?api_key=testing"}, "results": [{"title": "A test of tests"}]}')
+            self.use([("api.openalex.org", Answer(body))])
+            sc.configure(record=self.tmp / "rec")
+            got = sc.openalex({"filter": "a"})
+            self.assertEqual(got["meta"]["self"], "https://api.openalex.org/works?filter=a&api_key=REDACTED")
+            self.assertEqual(got["meta"]["next"], "/works?api_key=REDACTED&page=2")
+            self.assertEqual(got["meta"]["other"], "/works?api_key=testing")  # another value, not ours
+            self.assertEqual(got["results"][0]["title"], "A test of tests")
+            stored = "".join(f.read_text() for f in self.tmp.rglob("*.json"))
+            self.assertNotIn("api_key=test&", stored)
+            self.assertNotIn("api_key=test\\", stored)
+            self.assertNotIn('api_key=test"', stored)
+        finally:
+            del os.environ["OPENALEX_API_KEY"]
+
     def test_an_answer_with_no_secret_in_it_is_kept_as_it_came(self):
         body = '{"results": [{"title": "a  title with  two spaces", "n": 1.50}]}'
         self.use([("api.openalex.org", Answer(body))])
@@ -148,6 +231,8 @@ class ClearingTheCache(LayerCase):
         self.assertFalse((cache / "api.crossref.org").exists())  # a folder the cache emptied is removed
         self.assertIn("Cleared 2 answers", said)
         self.assertIn("3 other files in the folder were left alone", said)
+        for name in ("my-notes.txt", "mine/keep.json", "api.openalex.org/something-else.json"):
+            self.assertIn(name, said)  # it says which ones
 
     def test_after_clearing_the_next_request_asks_again(self):
         net = self.use([("api.openalex.org", Answer("{}"))])
