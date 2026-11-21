@@ -1,0 +1,64 @@
+"brain-computer interface" · window 2026-05-21 to 2026-11-21 · asked 2026-11-21
+
+arXiv (preprint server) · preprints with the words anywhere in the record, submitted 2026-05-21 to 2026-11-21
+  in the window: 157 · all dates: 1,561
+  - 2026-11-18 · GALA: Gallery-Level Alignment for Real-Life Vision Decoding from EEG · https://arxiv.org/abs/2611.24206
+  - 2026-11-18 · Stabilizing Neural-to-Image Retrieval with Frequency-Domain Priors and Adaptive Supervision · https://arxiv.org/abs/2611.24163
+  - 2026-11-18 · SIRAZ: Sparse Inter-Layer Residual Aggregation for Zero-Shot Visual Neural Decoding · https://arxiv.org/abs/2611.23991
+  Limits: physics, mathematics, computer science and nearby fields; it gives no citations or views
+
+Europe PMC (journal and preprint index) · records with the words in the title or abstract, first published 2026-05-21 to 2026-11-21
+  preprints in the window: 48 · all records in the window: 320 · preprints, all dates: 469 · all records, all dates: 6,666
+  - 2026-11-18 · Effects of closed-loop BCI-triggered iTBS over the DLPFC on upper-limb Motor and cognitive recovery after stroke: a randomized controlled trial · Research Square · https://doi.org/10.21203/rs.3.rs-11452392/v1
+  - 2026-11-17 · An Emotion Recognition from EEG Using Spiking Neural Encoding and Attention-Driven Graph-LSTM Networks · Research Square · https://doi.org/10.21203/rs.3.rs-8465044/v1
+  - 2026-11-06 · Probing EEG Foundation Model Attention Maps for Lightweight Interpretable Emotion Recognition · bioRxiv · https://doi.org/10.64898/2026.11.05.764629
+  Limits: life sciences first; the items listed are preprints, newest first
+
+NIH RePORTER (funder) · projects funded by the US National Institutes of Health with the words in the title, terms or abstract
+  fiscal years 2025–2026: 137 · fiscal year 2024: 73 · fiscal year 2025: 71 · fiscal year 2026: 66
+  - 2026-09-30 · An articulatory brain-computer interface approach for restoring expressive communication to people with paralysis · UNIVERSITY OF CALIFORNIA AT DAVIS · NIDCD · award $43,752 in fiscal year 2026 · https://reporter.nih.gov/project-details/11385167
+  - 2026-09-16 · Microscale Spatial and Temporal Dynamics Of Premotor And Motor Cortex For Enabling Brain Computer Interface Based Motor Restoration Of Arm and Hand Function · UNIVERSITY OF PENNSYLVANIA · NINDS · award $616,474 in fiscal year 2026 · https://reporter.nih.gov/project-details/11449504
+  - 2026-09-14 · Performance-Driven Adaptation to Maximise Efficiency of Electroencephalography-based Brain-Computer Interfaces · DUKE UNIVERSITY · NINDS · award $1,552,943 in fiscal year 2026 · https://reporter.nih.gov/project-details/11347340
+  Limits: one funder, one country, biomedical; a project counts once in each fiscal year it is funded
+
+OpenAIRE (funder and publication index) · funded projects (all dates) and publications dated 2026-05-21 to 2026-11-21, with the words in the record
+  publications in the window: 565 · projects, all dates: 231
+  - 2025-07-01 · SHF: Small: A Ubiquitous Brain-Computer Interface for Supplementing Cognitive and Motor Functions · NSF · funded USD 497,881 · project 2452012
+  - 2025-01-01 · Displaceable medical device enabling effective and affordable cortex-controlled robotic neurorehabilitation of walking motor disorders · TA0 · project FW12010370
+  - 2024-08-06 · Brain-computer interface (BCI)-based identification of color vision deficiencies (CVDs) related to Parkinson’s Disease (PD) · NIH · funded USD 204,000 · project 1R21EB036221-01
+  - 2026-11-01 · Fusing minds and machines: A next-generation review of information-driven brain-computer interface technologies for precision healthcare · Elsevier BV · https://doi.org/10.1016/j.cosrev.2026.101028
+  - 2026-11-01 · #377 Brain computer interface treatment for motor rehabilitation in Parkinson’s disease · Elsevier BV · https://doi.org/10.1016/j.clinph.2026.2112278
+  - 2026-11-01 · Efficient FPGA accelerator for low-power high-speed BCI motor imagery classification using novel deep learning · Elsevier BV · https://doi.org/10.1016/j.neunet.2026.109105
+  Limits: projects from the funders OpenAIRE collects (the EU, national funders, NSF and others); 60 requests an hour without a token
+
+Hacker News (news and discussion) · stories with the words, posted 2026-05-21 to 2026-11-21 (newest first), and the most visible story of all dates
+  stories in the window: 14 · stories, all dates: 302
+  - 2026-11-21 · Playing GTA VI with a brain computer interface · https://twitter.com/neuralink/status/2123890949029818800 · 1 points, 0 comments · https://news.ycombinator.com/item?id=50589555
+  - 2026-10-23 · Apple to Support Brain-Implant Control of Its Devices (2025) · https://www.wsj.com/tech/apple-brain-computer-interface-9ec69919 · 1 points, 1 comments · https://news.ycombinator.com/item?id=50209241
+  - 2026-10-14 · China Starts Clinical Trial for New 128-Channel Implantable BCI · https://chinaminutes.com/2026/05/19/china-128-channel-brain-computer-interface-trial/ · 2 points, 0 comments · https://news.ycombinator.com/item?id=50095178
+  - 2021-04-04 · Human use of high-bandwidth wireless brain-computer interface · https://www.brown.edu/news/2021-03-31/braingate-wireless · 284 points, 210 comments · most visible of all dates · https://news.ycombinator.com/item?id=26690126
+  Limits: one English-language technology forum; points and comments are as of the day asked
+
+Wikimedia pageviews (encyclopedia traffic) · monthly views by people (not bots) of the en.wikipedia article "Brain–computer interface"
+  views in 2026-10: 10,362 · views in 2025-10: 15,545 · most in one month (2025-03): 20,919 · months read: 24
+  - 2026-05 · 12,705 views
+  - 2026-06 · 11,448 views
+  - 2026-07 · 9,772 views
+  - 2026-08 · 9,671 views
+  - 2026-09 · 10,679 views
+  - 2026-10 · 10,362 views
+  Limits: one article in one language; a spike can be one news event
+
+Hugging Face (code and model hub) · models and datasets whose name holds "EEG": how many, how many were created 2026-05-21 to 2026-11-21, and the most downloaded
+  models created in the window: 100 or more · models with the word in their name: 100 or more · datasets created in the window: 100 or more · datasets with the word in their name: 100 or more
+  - 2026-01-06 · braindecode/eegpt-pretrained · model · 4,427 downloads, 3 likes · https://huggingface.co/braindecode/eegpt-pretrained
+  - 2026-09-27 · PierreGtch/eeg-fm-masking_jepa_r9cm_L2 · model · 2,955 downloads, 0 likes · https://huggingface.co/PierreGtch/eeg-fm-masking_jepa_r9cm_L2
+  - 2026-06-16 · braindecode/eegdino-medium-pretrained · model · 1,248 downloads, 1 likes · https://huggingface.co/braindecode/eegdino-medium-pretrained
+  - 2026-03-18 · Haitao999/things-eeg · dataset · 214,580 downloads, 6 likes · https://huggingface.co/datasets/Haitao999/things-eeg
+  - 2026-10-30 · HABSteam/multimodal-eeg-emotion · dataset · 15,108 downloads, 40 likes · https://huggingface.co/datasets/HABSteam/multimodal-eeg-emotion
+  - 2026-05-03 · aspire-osu/maestro-eeg-dataset · dataset · 12,734 downloads, 2 likes · https://huggingface.co/datasets/aspire-osu/maestro-eeg-dataset
+  Limits: the search reads names, not descriptions; counts stop at 100; downloads and likes are as the Hub reports them on the day asked
+
+7 of 7 sources answered, of 7 kinds: code and model hub, encyclopedia traffic, funder, funder and publication index, journal and preprint index, news and discussion, preprint server.
+
+Coverage (2026-11-21): arXiv answered (2 requests, of which 2 from a recording); Europe PMC answered (4 requests, of which 4 from a recording); NIH RePORTER answered (4 requests, of which 4 from a recording); OpenAIRE answered (2 requests, of which 2 from a recording); Hacker News answered (2 requests, of which 2 from a recording); Wikimedia pageviews answered (1 request, of which 1 from a recording); Hugging Face answered (4 requests, of which 4 from a recording).
