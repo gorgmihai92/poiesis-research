@@ -90,7 +90,21 @@ class Matching(unittest.TestCase):
 
     def test_a_quote_that_runs_onto_the_next_page_is_found_from_its_first_page(self):
         self.assertEqual(vq.find("it starts on this page and ends on the next one", self.pages, (1, 1)), ("FOUND", "p. 1"))
-        self.assertEqual(vq.find("it starts on this page and ends on the next one", self.pages, None), ("FOUND", "across two pages"))
+        self.assertEqual(vq.find("it starts on this page and ends on the next one", self.pages, None), ("FOUND", "p. 1–2"))
+
+    def test_an_elided_quote_wholly_on_the_next_page_is_the_wrong_page(self):
+        """Found by the second review: the quote's first words also stand on the cited page."""
+        pages = vq.pages_of("[p. 4]\nWe find the same in the pilot. Nothing else.\n[p. 5]\nWe find that the effect was 37 percent larger in the second cohort.\n[p. 6]\nEnd.\n")
+        self.assertEqual(vq.find("We find … the effect was 37 percent larger", pages, (4, 4)), ("WRONG PAGE", "cited p. 4, found on p. 5"))
+        self.assertEqual(vq.find("We find … the effect was 37 percent larger", pages, (5, 5)), ("FOUND", "p. 5"))
+        self.assertEqual(vq.find("We find the same … Nothing else", pages, (4, 4)), ("FOUND", "p. 4"))
+
+    def test_a_quote_that_runs_past_the_next_page_names_the_pages_it_is_on(self):
+        pages = vq.pages_of("[p. 4]\nThe quote starts on this page and\n[p. 5]\n\n[p. 6]\ncontinues after a page with a figure only.\n")
+        quote = "The quote starts on this page and continues after a page with a figure only"
+        self.assertEqual(vq.find(quote, pages, (4, 4)), ("WRONG PAGE", "cited p. 4, found on p. 4–6"))
+        self.assertEqual(vq.find(quote, pages, (4, 6)), ("FOUND", "p. 4–6"))
+        self.assertEqual(vq.find(quote, pages, None), ("FOUND", "p. 4–6"))
 
     def test_a_quote_wholly_on_the_page_after_the_cited_one_is_the_wrong_page(self):
         """Found by the lab's review of 2026-11-21: one page early was accepted as FOUND."""
@@ -129,6 +143,11 @@ class Matching(unittest.TestCase):
     def test_curly_quotes_and_a_page_range_are_read(self):
         note = '## Quotes\n- “often answer wrongly” (pp. 2–3)\n- "no page given here"\n* «alt marks» (p. 7)\nA line "with a quote" inside is not a quote line.\n'
         self.assertEqual(vq.quotes_of(note), [(2, "often answer wrongly", (2, 3)), (3, "no page given here", None), (4, "alt marks", (7, 7))])
+
+    def test_a_page_range_written_short_is_read_as_the_range_it_means(self):
+        """Found by the second review: (pp. 249–51) was read as pages 249 to 51."""
+        self.assertEqual(vq.quotes_of('- "a future sign has three dimensions" (pp. 249–51)\n- "another one" (p. 1198-9)\n- "a third" (pp. 12–14)\n'),
+                         [(1, "a future sign has three dimensions", (249, 251)), (2, "another one", (1198, 1199)), (3, "a third", (12, 14))])
 
     def test_a_text_without_page_markers_is_searched_whole(self):
         pages = vq.pages_of("systematic reviews are a lens through which evidence is viewed (applied)")
@@ -265,6 +284,24 @@ class References(unittest.TestCase):
         self.assertNotIn("NO NOTE", out)
         self.assertIn("1 references in 2026-11-21-report.md: 1 have a note, 0 do not", out)
         self.assertIn("1 link to a file that is not a note was not checked", out)
+
+    def test_a_link_to_any_other_kind_of_file_is_not_a_reference_to_a_note(self):
+        """Found by the second review: only the file types on a list were left out, and a table's escaped bar broke a link."""
+        code, out = self.check("![[plot.avif]] ![[talk.webm]] ![[figure-2.TIFF]] [[book.epub]] [[refs.bib]]\n"
+                               "| A claim | [[walters-2023-fabricated-citations.pdf\\|PDF]] | [[walters-2023-fabricated-citations\\|Walters]] |\n"
+                               "A note that is missing: [[no-such-note]]. A link that names the note's file: [[murad-2016-new-evidence-pyramid.md]].\n")
+        self.assertEqual(code, 1)
+        self.assertEqual(out.count("NO NOTE"), 1, out)
+        self.assertIn("[[no-such-note]]", out)
+        self.assertIn("3 references in 2026-11-21-report.md: 2 have a note, 1 do not", out)
+        self.assertIn("6 links to files that are not notes were not checked", out)
+
+    def test_a_note_whose_name_ends_like_a_file_is_still_looked_up(self):
+        (self.tmp / "research" / "notes" / "notes-on-index.html.md").write_text("# Notes on index.html\n", encoding="utf-8")
+        code, out = self.check("See [[notes-on-index.html]].\n")
+        self.assertEqual(code, 0, out)
+        self.assertIn("1 references in 2026-11-21-report.md: 1 have a note, 0 do not", out)
+        self.assertNotIn("not checked", out)
 
     def test_what_is_shown_as_code_is_an_example_not_a_reference(self):
         code, out = self.check("Cite as `[@key, p. N]`, or by `https://doi.org/10.1234/example`.\n```\n[@another2020key] and [[some-note]]\n```\n")

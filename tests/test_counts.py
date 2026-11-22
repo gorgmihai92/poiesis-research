@@ -288,6 +288,21 @@ class StoppingHalfway(LayerCase):
         self.assertIn(["first", "third"], searches)
         self.assertIn("kept under a new name", text)
 
+    def test_asking_again_fresh_or_as_json_writes_the_same_files(self):
+        """Found by the second review: "the same command" was the literal list of arguments."""
+        self.use([("api.openalex.org", self.table(40))])
+        out = self.tmp / "out"
+        asked = ["first", "second", "--from", "2024", "--to", "2025", "--out", str(out)]
+        self.run_script(counts, asked)
+        names = sorted(f.name for f in out.iterdir())
+        for again in (asked + ["--fresh"], asked + ["--json"], ["--to", "2025", "--from", "2024", "first", "second", "--out", str(out)]):
+            code, text, err = self.run_script(counts, again)
+            self.assertEqual(code, 0, err)
+            self.assertEqual(sorted(f.name for f in out.iterdir()), names, again)
+        code, text, err = self.run_script(counts, ["first", "third", "--from", "2024", "--to", "2025", "--out", str(out), "--json"])
+        self.assertIn("Another run's files already have the name", err)  # said beside the JSON, not inside it
+        json.loads(text)
+
     def test_the_same_command_again_writes_the_same_files(self):
         self.use([("api.openalex.org", self.table(40))])
         out = self.tmp / "out"

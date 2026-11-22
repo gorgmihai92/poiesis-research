@@ -56,5 +56,6 @@ source was read.
 `counts.py` writes `research/data/<name>.csv` (one row per series and year), `<name>.types.csv` (every document
 type, so another choice can be recomputed without a new request) and `<name>.meta.json` (the query, the database,
 the date, the types, the script and its Coverage line). The default name is the first series and the date
-fetched. The same command run again writes the same files; a different command never overwrites them and gets
-`-2`, `-3` and so on. Add one line per series to `research/README.md`, with the database and the date.
+fetched. A run that counts the same things writes the same files again; one that counts something else never
+overwrites them and gets `-2`, `-3` and so on. Add one line per series to `research/README.md`, with the database
+and the date.
