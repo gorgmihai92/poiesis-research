@@ -17,7 +17,7 @@ Everything is added: no path or field of 2.5.0 was renamed or removed, and the s
   --references` reading a note the same with it as without it.
 - **The block is a copy.** `SKILL.md` asks for a value in the block to change in the same edit as its label line,
   and for `status` to hold the label's first words only.
-- **Docs.** The READMEs name five products, with a Poiesis Foresight row; `SKILL.md` suggests poiesis-foresight,
+- **Docs.** The READMEs name five products, with a Poiesis Foresight row and `poiesis-studio` in the Design row; `SKILL.md` suggests poiesis-foresight,
   not poiesis-insight, for what is emerging.
 - **Not checked in this version:** how Obsidian shows the properties (no vault was opened), and any run on a topic.
 
