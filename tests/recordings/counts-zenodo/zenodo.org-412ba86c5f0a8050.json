@@ -1,0 +1,7 @@
+{
+ "url": "https://zenodo.org/api/records?q=%28%22design+anthropology%22%29+AND+publication_date%3A%5B2023-01-01+TO+2023-12-31%5D&size=1",
+ "method": "GET",
+ "status": 200,
+ "fetched": "2026-11-22T16:24:56Z",
+ "body": "{\"hits\": {\"total\": 2, \"hits\": [{\"id\": 8155052, \"doi\": \"10.1007/978-3-031-48044-7_20\", \"links\": {\"self_html\": \"https://zenodo.org/records/8155052\"}, \"metadata\": {\"title\": \"The Social Life of Algorithms: Tracing notions of algorithms beyond human-algorithm interactions\", \"publication_date\": \"2023-11-21\", \"resource_type\": {\"title\": \"Conference paper\", \"type\": \"publication\", \"subtype\": \"conferencepaper\"}, \"access_right\": \"open\", \"license\": {\"id\": \"cc-by-4.0\"}}}]}}"
+}
