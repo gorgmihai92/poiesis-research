@@ -1,3 +1,12 @@
+---
+type: funding-call
+plugin: poiesis-research
+date: <YYYY-MM-DD, the Checked line>
+topic: "<the project the call was looked up for>"
+id: "<the call id>"
+status: "<the Status word: open / forthcoming>"
+from: []
+---
 # <Call title> (<call id>)
 
 - **Programme:** <programme, funding body>
