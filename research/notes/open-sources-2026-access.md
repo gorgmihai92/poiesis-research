@@ -95,7 +95,8 @@
   free for many users.
 - A per-year count is documented two ways: `yearPublished` with `totalHits`, or `POST /v3/search/works/aggregate`
   with `"aggregations": ["yearPublished"]`. Whether either total is exact past 10,000 is not stated.
-- Observed (lab session): a keyless free-text query answered HTTP 500 with "abstract is not a searchable field".
+- Observed (lab session): a keyless free-text query answered HTTP 500 with "abstract is not a searchable field",
+  and `/v3/search/works/?q=…` without the trailing slash redirected to the address with it.
 - Observed: a keyless `title:"design anthropology"` with `limit=1` answered 200, the first work titled "Design
   Anthropology", and `totalHits` 2,683,661. That many works cannot all hold the phrase in their title, so the
   total was not a count of the phrase. Why was not found.
