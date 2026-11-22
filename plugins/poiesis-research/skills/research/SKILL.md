@@ -137,3 +137,11 @@ Added in 2.5.0. Everything above is unchanged.
   is named as `CORE refused (not asked: no key, …)`.
 - `search.py --json` works carry `doaj`, `osf`, `zenodo` and `core`: each database's own id, or null.
 - `research/data/<name>.meta.json` can have `database` DOAJ or Zenodo.
+
+Added in 2.6.0. Everything above is unchanged.
+- Every note, signal, evidence map and funding call starts with a block of Obsidian properties, as its template
+  shows: `type`, `plugin`, `date`, `topic`, `id`, `status` and `from`. Copy each value from the note's own lines
+  when the note is written; the label lines stay the record, and every script reads those, never the block. In
+  the block no line starts with `#`, text values are quoted, and `from` is a list of quoted links, one per line
+  (`  - "[[note-name]]"`), or `[]`. Never put a link in a heading or an **Id** line, or a link with an alias
+  (`[[a|b]]`) in a table. `verify_quotes.py` skips the block.
