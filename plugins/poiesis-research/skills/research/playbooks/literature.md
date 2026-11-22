@@ -40,15 +40,16 @@ sources, so rows can be copied from one report to the next without retyping:
 End with the Coverage line of each script: the databases that answered and the ones that refused. Before saying a
 work was not found, ask every database: `python3 -I $S/search.py "<title or query>" --db all --brief`.
 
-**Open sources**, for the humanities and social sciences, where journal databases cover less: one at a time with
-`--db doaj|osf|zenodo|core`, or all of them with `--db all`. Put phrases in double quotes.
+**Open sources**, added for the humanities and social sciences (their coverage was not measured): one at a time
+with `--db doaj|osf|zenodo|core`; `--db all` asks DOAJ, Zenodo and CORE, not OSF. Put phrases in double quotes.
 - DOAJ: articles in open-access journals. Without quotes its words match anywhere in a record, and the order it
   returns is not by relevance (seen once, on 2026-11-22).
 - OSF Preprints (SocArXiv, PsyArXiv…): the query must stand in the title, as one string. Use a short wording
   ("anthropology", not a sentence); a work named only in its abstract is not found there.
-- Zenodo: reports, datasets, software, slides and papers, every resource type together; the Kind column says
-  which. A match can be in the keywords only.
-- CORE: open full texts, with `CORE_API_KEY` set. Without it the Coverage line says CORE was not asked.
+- Zenodo: reports, datasets, software, slides and papers, every resource type together. `--brief` does not show
+  which: the full listing and `--json` give the type. A match can be in the keywords only.
+- CORE: works harvested from repositories and journals, with a download link when CORE has one, with
+  `CORE_API_KEY` set. Without it the Coverage line says CORE was not asked. Not yet tried with a key.
 A record from these sources has no citation count, and an OSF record no authors: fill them from the DOI
 (`search.py --doi`) before the row is kept.
 

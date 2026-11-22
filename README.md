@@ -69,8 +69,8 @@ It needs **Python 3**, which macOS and most Linux systems already have. It works
 free keys help (set them in your shell profile): `OPENALEX_API_KEY` ([openalex.org](https://openalex.org/settings/api);
 without it everyone on your network shares about 100 searches a day) and `S2_API_KEY`
 ([Semantic Scholar](https://www.semanticscholar.org/product/api); without it that database answers slowly). A
-third, `CORE_API_KEY` ([CORE](https://core.ac.uk/services/api)), lets it search CORE's open full texts; without it
-CORE is left out and the result says so. The plugin never sends your email address anywhere, and it does not
+third, `CORE_API_KEY` ([CORE](https://core.ac.uk/services/api)), lets it search CORE, which gathers works from
+repositories and journals; without it CORE is left out and the result says so. The plugin never sends your email address anywhere, and it does not
 create keys for you.
 
 Answers from the databases are kept for a day in `~/.cache/poiesis-research/`, outside your projects, so a search
@@ -78,9 +78,10 @@ that stopped halfway can be run again without asking twice. Set `POIESIS_RESEARC
 `off`. When OpenAlex's free budget for the day is used up, or Semantic Scholar is busy, Crossref, Europe PMC and
 arXiv answer in their place, and each result ends with a line that says which databases answered.
 
-For the humanities and social sciences, where journal databases cover less, four open sources can be asked too:
-DOAJ (open-access journals), OSF Preprints (SocArXiv, PsyArXiv and the others), Zenodo (reports, datasets,
-software) and CORE (open full texts). Ask for them by name, or for every database at once.
+For the humanities and social sciences, four open sources can be asked too: DOAJ (open-access journals), OSF
+Preprints (SocArXiv, PsyArXiv and the others; titles only), Zenodo (reports, datasets, software) and CORE (works
+from repositories, with a download link when it has one). Ask for them by name; asking every database at once
+includes all but OSF.
 
 ## Ask in plain language
 
@@ -112,7 +113,7 @@ at once, one part of a question each.
 | funding | `funding-scout` | EU Funding & Tenders Portal (Horizon Europe, Digital Europe, Creative Europe, Erasmus+, CERV, and calls EU projects open to SMEs); Ministry of Investments and European Projects, regional development agencies, UEFISCDI, AFIR |
 | trends | none: a script counts | OpenAlex, by year and by document type; Europe PMC, DOAJ or Zenodo as a second database |
 | signals | `signal-scout` | arXiv, Europe PMC, NIH RePORTER, OpenAIRE, Hacker News, Wikimedia pageviews, Hugging Face |
-| prior art | `paper-scout` | every database above for papers: OpenAlex, Semantic Scholar, Crossref, Europe PMC, arXiv, DOAJ, OSF Preprints, Zenodo, CORE |
+| prior art | `paper-scout` | every database above for papers: OpenAlex, Semantic Scholar, Crossref, Europe PMC, arXiv, DOAJ, Zenodo, CORE; OSF Preprints when asked |
 
 - **Literature, founders first.** It reads the bibliographies of the most-cited works on the topic. Works that
   most of them cite are the field's foundations, however old. Then it adds current work by citations and

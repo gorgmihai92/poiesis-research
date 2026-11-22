@@ -103,12 +103,18 @@
 ## What it means for the plugin
 - Pacing per host in `scholarly.py` (P, from the limits above): DOAJ 0.55 seconds, Zenodo 2.1 (the search limit),
   OSF 36.5 (100 an hour), CORE 6.1 (the lowest per-minute limit of the tiers a free key can have).
-- `search.py --db doaj|osf|zenodo|core`, and `--db all` asks them too. They are searched by query only; a DOI is
-  looked up in the other five databases (P).
+- `search.py --db doaj|osf|zenodo|core`; `--db all` asks DOAJ, Zenodo and CORE, and OSF only when named, because
+  it matches titles only and is paced 36.5 seconds (P). They are searched by query only; a DOI is looked up in the
+  other five databases (P).
+- The four were added for the owner's work in philosophy and design anthropology (P). How much of those fields
+  each one covers was not measured.
 - DOAJ is asked as typed (its default is AND). Zenodo's words are joined with AND before asking, so that both
   behave like the other databases (P). Phrases belong in double quotes in both.
 - OSF is asked with `filter[title]`, which matches the query as one string in titles only, observed and not on
   the documented list of filters. A subject named only in abstracts is not found there (O, P).
+- CORE is asked with CORE's documented default, free text, which answered 500 without a key; with a key it
+  was not tried, so a 500 is asked again once only (P). The address ends in a slash, where the one without it
+  redirected (lab session).
 - CORE is asked only with `CORE_API_KEY` set; without it the Coverage line says "CORE refused (not asked: no key,
   …)" (P, set by the owner on 2026-11-22). The keyless request above shows that CORE can answer without a key
   within 100 tokens a day; that was not chosen. CORE with a key was not tried: no key was available.

@@ -169,8 +169,8 @@ def epmc_query(q: str) -> str:
 
 
 # The databases counted one request per year: how a query is written, how a year is named, and the count.
-# OSF and CORE are not here: OSF's API filters titles only, and CORE's totals for a quoted phrase were not a phrase
-# count when tried (research/notes/open-sources-2026-access, 2026-11-22).
+# OSF and CORE are not here: OSF documents no title and no publication-date filter for preprints, and CORE's total
+# for a quoted phrase was not a phrase count when tried (research/notes/open-sources-2026-access, 2026-11-22).
 YEARLY = {
     "epmc": ("Europe PMC", epmc_query, lambda y: f"PUB_YEAR:{y}", lambda q: sc.epmc_count(q)),
     "doaj": ("DOAJ", lambda q: q, lambda y: f"bibjson.year:{y}", lambda q: sc.doaj_count(q)),
@@ -179,11 +179,11 @@ YEARLY = {
 SEARCH_FIELD = {
     "epmc": ("title and abstract (TITLE_ABS), unless the query names its own fields. Words are matched as typed: on "
              "2026-11-21 a singular and its plural gave different counts, quoted and not."),
-    "doaj": ("every field DOAJ searches by default, keywords too: on 2026-11-22 an article matched on its keywords alone. "
+    "doaj": ("the fields DOAJ searches by default, keywords among them: on 2026-11-22 an article matched on its keywords alone. "
              "Words are joined with AND (DOAJ's default). The year is the article's bibjson.year."),
-    "zenodo": ("every field Zenodo searches, keywords too, with words joined with AND (Zenodo's own default is OR). Every "
-               "resource type is counted (papers, reports, datasets, software, presentations…), the latest version of each "
-               "record. The year is the record's publication_date."),
+    "zenodo": ("any field, keywords too (Zenodo's search guide), with words joined with AND (Zenodo's own default is OR). Every "
+               "resource type is counted (papers, reports, datasets, software, presentations…). The year is the record's "
+               "publication_date."),
 }
 
 
