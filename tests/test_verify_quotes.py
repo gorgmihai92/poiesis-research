@@ -341,9 +341,6 @@ class References(unittest.TestCase):
         self.assertIn("0 references", out)
 
 
-if __name__ == "__main__":
-    unittest.main()
-
 
 PROPERTIES = (
     "---\n"
@@ -410,3 +407,18 @@ class PropertiesAtTheTop(unittest.TestCase):
         self.assertEqual(results[1][0], 0, results[1][1])
         self.assertEqual(results[1], results[0])
         self.assertIn("1 references in 2026-11-22-report.md: 1 have a note, 0 do not.", results[1][1])
+
+
+class AByteOrderMark(unittest.TestCase):
+    def test_a_note_that_starts_with_one_still_has_its_properties_skipped(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            notes = Path(tmp) / "notes"
+            notes.mkdir()
+            (notes / "bom-2025.md").write_text("\ufeff" + PROPERTIES + "# T (Bom, 2025)\n", encoding="utf-8")
+            code, out = run([str(notes)])
+        self.assertEqual(code, 0, out)
+        self.assertIn("NO QUOTES  bom-2025.md", out)
+
+
+if __name__ == "__main__":
+    unittest.main()

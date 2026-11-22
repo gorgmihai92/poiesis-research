@@ -9,10 +9,16 @@ Everything is added: no path or field of 2.5.0 was renamed or removed, and the s
   item, `- "[[note-name]]"`.
 - **`verify_quotes.py` skips the block.** A list item in it that starts with a quotation mark was read as a quote,
   and a `[[link]]` or DOI there as a reference with no note. Its lines are now blanked before reading, so line
-  numbers stay the same. Only a block on the very first line counts, and one that is never closed is not a block.
-- **Tests.** `test_verify_quotes.py` (four tests, which failed before the fix) and `test_templates.py`: the block in
-  each template, its rules, and `library.py`, `signals.py --next-id` and `verify_quotes.py --references` reading
-  a note the same with it as without it.
+  numbers stay the same. Only a block on the very first line counts (after a byte-order mark, if there is one),
+  and one that is never closed is not a block. A quote line inside the block is skipped without a word.
+- **Tests.** In `test_verify_quotes.py`, three tests that failed before the fix, one that guards it (a `---` further
+  down or never closed is not a block) and one for a note that starts with a byte-order mark; `test_templates.py`:
+  the block in each template, its rules, and `library.py`, `signals.py --next-id` and `verify_quotes.py
+  --references` reading a note the same with it as without it.
+- **The block is a copy.** `SKILL.md` asks for a value in the block to change in the same edit as its label line,
+  and for `status` to hold the label's first words only.
+- **Docs.** The READMEs name five products, with a Poiesis Foresight row; `SKILL.md` suggests poiesis-foresight,
+  not poiesis-insight, for what is emerging.
 - **Not checked in this version:** how Obsidian shows the properties (no vault was opened), and any run on a topic.
 
 ## 2.5.0

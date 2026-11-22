@@ -4,7 +4,7 @@ plugin: poiesis-research
 date: <YYYY-MM-DD, the day of the Read line>
 topic: "<the project's section, as in the note's folder>"
 id: "<the note's file name, without .md>"
-status: "<the Read level, as on the Read line: full text / part of the text / abstract only / title only>"
+status: "<the Read level alone, without pages or date: full text / part of the text / abstract only / title only>"
 from: []
 ---
 # <Title> (<Authors>, <Year>)
