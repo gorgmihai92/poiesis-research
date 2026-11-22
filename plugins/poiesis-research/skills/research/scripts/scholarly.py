@@ -20,6 +20,7 @@ import contextlib
 import datetime as dt
 import hashlib
 import html
+import http.client
 import json
 import os
 import re
@@ -441,11 +442,12 @@ def fetch(url: str, data: bytes | None = None, headers: dict | None = None, trie
             with _slot(host, url):
                 try:
                     res = _open(urllib.request.Request(url, data=data, headers={**UA, **(headers or {})}), 60)
-                except ValueError:
-                    # Python will not send a header or an address with a character it does not allow, and its
-                    # error names the value: the key, when the key is what it refused. Nothing of it is passed on.
+                except (ValueError, http.client.InvalidURL) as e:
+                    # Python would not send it: a character it does not allow in a header or an address, or a
+                    # proxy setting it cannot read. Its own words say which; they can name the key, which is cut.
+                    why = scrub(str(e), url)
                     _event(host, "refused", detail="the request could not be sent")
-                    raise Refused(f"{host}: the request could not be sent: its address or a key holds a character that is not allowed.") from None
+                    raise Refused(f"{host}: the request could not be sent: {why}") from None
                 with res:
                     text = res.read().decode("utf-8", "replace")
                     answered = res.headers
@@ -491,6 +493,7 @@ def fetch(url: str, data: bytes | None = None, headers: dict | None = None, trie
                 continue
             refuse("http", e.code, f"HTTP {e.code}" + (f" {e.reason}" if e.reason else ""), f"{host}: HTTP {e.code}" + (f" {reason}" if reason else ""))
             e.url = e.filename = clean_url(url)  # the error that travels on names the address without its key
+            e.msg = scrub(str(e.msg), url)  # and its status line, which a server can make repeat it
             raise
         except (urllib.error.URLError, TimeoutError) as e:
             if attempt < tries - 1:

@@ -38,7 +38,12 @@ QUOTE_LINE = re.compile(r"^\s*[-*+]\s+[" + QUOTE_MARKS + r"](.+)$")
 PAGE = re.compile(r"\bpp?\.\s*(\d+)(?:\s*[-–—]\s*(\d+))?")
 MARKER = re.compile(r"^\[p\. (\d+)\]\s*$", re.M)
 ELLIPSIS = re.compile(r"\s*\[?(?:…|\.\.\.)\]?\s*")
-FILE_LINK = re.compile(r"\.(?!md$)[A-Za-z][A-Za-z0-9]{1,4}$", re.I)  # a link that names a file of another kind: a PDF, an image, data
+# A link that names a file of another kind: a document, an image, a sound or a film, data. A name with another
+# ending ([[Node.js]], [[openalex.org]]) is taken for a note, so a missing one is reported.
+FILE_LINK = re.compile(r"\.(?:pdf|djvu|epub|mobi|docx?|odt|rtf|pptx?|odp|key|xlsx?|ods|numbers|pages"
+                       r"|png|jpe?g|gif|svg|webp|avif|bmp|tiff?|heic|ico"
+                       r"|mp3|m4a|wav|ogg|oga|flac|aac|opus|mp4|m4v|mov|webm|mkv|avi|ogv"
+                       r"|csv|tsv|json|jsonl|xml|ya?ml|bib|ris|txt|html?|canvas|base|excalidraw|ipynb|sqlite|db|parquet|zip|gz|tar)$", re.I)
 MONTHS = {"january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december",
           "table", "figure", "fig", "section", "chapter", "since", "until", "from", "before", "after", "between", "during", "around", "about", "early", "late",
           "version", "edition", "spring", "summer", "autumn", "winter", "fall"}
@@ -91,22 +96,26 @@ def find(quote: str, pages: dict[int, str], span: tuple[int, int] | None) -> tup
     if not parts:
         return "NOT FOUND", "nothing to look for"
 
-    def match(text: str) -> tuple[int, int] | None:
-        """Where the quote is in a text, all its parts in order: the start and the end of the tightest place, or
-        None. Tightest, because the first words of an elided quote often stand somewhere earlier too."""
-        best = None
+    def match(text: str, tight: bool = False) -> tuple[int, int] | None:
+        """Where the quote is in a text, all its parts in order, or None. Taking each part at its first place after
+        the one before finds a reading whenever one exists, in one pass: the earliest start. With `tight`, the parts
+        are then taken back from that reading's end, each at its last place before the next one: the shortest
+        reading, to name the pages it is on (an elided quote's first words often stand somewhere earlier too)."""
         at = text.find(parts[0])
-        while at >= 0:
-            end = at + len(parts[0])
-            for part in parts[1:]:
-                nxt = text.find(part, end)
-                if nxt < 0:
-                    return best  # the later parts do not follow this place, so they follow no later one either
-                end = nxt + len(part)
-            if best is None or end - at < best[1] - best[0]:
-                best = (at, end)
-            at = text.find(parts[0], at + 1)
-        return best
+        if at < 0:
+            return None
+        end = at + len(parts[0])
+        for part in parts[1:]:
+            nxt = text.find(part, end)
+            if nxt < 0:
+                return None
+            end = nxt + len(part)
+        if tight:
+            limit = end
+            for part in reversed(parts):
+                at = text.rfind(part, 0, limit)
+                limit = at
+        return at, end
 
     def page_at(offset: int) -> int:
         """The page a place in the whole text is on."""
@@ -120,22 +129,37 @@ def find(quote: str, pages: dict[int, str], span: tuple[int, int] | None) -> tup
     numbers = sorted(pages)
     short = f" (short: {sum(map(len, parts))} letters, a weak check)" if sum(map(len, parts)) < 20 else ""
     cited = "" if span is None else f"cited p. {span[0]}" + ("" if span[0] == span[1] else f"–{span[1]}")
-    if span is not None and numbers != [0]:
-        own = "".join(pages.get(n, "") for n in range(span[0], span[1] + 1))
-        # A quote can run onto the next page, but it starts on a cited one.
+    if numbers == [0]:
+        if match(pages[0]) is None:
+            return "NOT FOUND", "not in the source's text"
+        return "FOUND", "the text has no page markers" + short
+    own = "" if span is None else "".join(pages.get(n, "") for n in range(span[0], span[1] + 1))
+    # 1. Wholly on the cited pages.
+    if span is not None and match(own) is not None:
+        return "FOUND", cited.removeprefix("cited ") + short
+    def runs_on() -> bool:
+        """Starting on a cited page and running onto the next one."""
         got = match(own + pages.get(span[1] + 1, ""))
-        if got is not None and got[0] < len(own):
-            return "FOUND", cited.removeprefix("cited ") + short
-    got = match("".join(pages[n] for n in numbers))
+        return got is not None and got[0] < len(own)
+
+    # 2 and 3. Running on from a cited page, or wholly on one other page. A quote in one piece that runs on is where
+    # it was cited, even if the same words stand elsewhere too. An elided quote is taken from the page that holds it
+    # whole, because its first words alone can stand at the end of the cited page by chance.
+    elided = len(parts) > 1
+    if span is not None and not elided and runs_on():
+        return "FOUND", cited.removeprefix("cited ") + short
+    alone = next((n for n in numbers if match(pages[n]) is not None), None)
+    if alone is not None:
+        return ("FOUND", f"p. {alone}" + short) if span is None else ("WRONG PAGE", f"{cited}, found on p. {alone}")
+    if span is not None and elided and runs_on():
+        return "FOUND", cited.removeprefix("cited ") + short
+    # 4. Anywhere: name the pages it is on.
+    got = match("".join(pages[n] for n in numbers), tight=True)
     if got is None:
         return "NOT FOUND", "not in the source's text"
-    if numbers == [0]:
-        return "FOUND", "the text has no page markers" + short
     first, last = page_at(got[0]), page_at(got[1] - 1)
     where = f"p. {first}" if first == last else f"p. {first}–{last}"
-    if span is None:
-        return "FOUND", where + short
-    return "WRONG PAGE", f"{cited}, found on {where}"
+    return ("FOUND", where + short) if span is None else ("WRONG PAGE", f"{cited}, found on {where}")
 
 
 def source_text(note: Path, text: str, papers: list[Path]) -> Path | None:

@@ -99,6 +99,26 @@ class Matching(unittest.TestCase):
         self.assertEqual(vq.find("We find … the effect was 37 percent larger", pages, (5, 5)), ("FOUND", "p. 5"))
         self.assertEqual(vq.find("We find the same … Nothing else", pages, (4, 4)), ("FOUND", "p. 4"))
 
+    def test_an_elided_quote_on_the_cited_page_is_found_there_when_the_next_page_has_it_too(self):
+        """Found by the re-check: a tighter reading on the next page made a right citation the wrong page."""
+        pages = vq.pages_of("[p. 4]\nWe find that in the first cohort the effect was small.\n[p. 5]\nWe find the effect was small in the second cohort too.\n")
+        self.assertEqual(vq.find("We find … the effect was small", pages, (4, 4)), ("FOUND", "p. 4"))
+        self.assertEqual(vq.find("We find … the effect was small", pages, (5, 5)), ("FOUND", "p. 5"))
+
+    def test_a_quote_that_runs_on_from_the_cited_page_is_found_there_even_if_repeated_elsewhere(self):
+        """Seen on random texts by the second review: the same words stood whole on a later page."""
+        pages = vq.pages_of("[p. 3]\nin find kelp the that\n[p. 4]\nmoral the in kelp in\n[p. 6]\nlarger x9 was that moral\n")
+        self.assertEqual(vq.find("that moral", pages, (3, 3))[:1], ("FOUND",))
+        self.assertEqual(vq.find("that moral", pages, (6, 6))[1].split(" (")[0], "p. 6")
+
+    def test_an_elided_quote_in_a_long_text_is_checked_quickly(self):
+        import time
+        text = "[p. 1]\n" + "\n".join(f"[p. {n}]\n" + "the cat sat on the mat and the dog lay down. " * 60 for n in range(2, 400)) + "\n[p. 400]\nthe method works.\n"
+        pages = vq.pages_of(text)
+        started = time.perf_counter()
+        self.assertEqual(vq.find("the … the method works", pages, (3, 3)), ("WRONG PAGE", "cited p. 3, found on p. 399–400"))  # its first word ends p. 399
+        self.assertLess(time.perf_counter() - started, 1.0)
+
     def test_a_quote_that_runs_past_the_next_page_names_the_pages_it_is_on(self):
         pages = vq.pages_of("[p. 4]\nThe quote starts on this page and\n[p. 5]\n\n[p. 6]\ncontinues after a page with a figure only.\n")
         quote = "The quote starts on this page and continues after a page with a figure only"
@@ -295,6 +315,13 @@ class References(unittest.TestCase):
         self.assertIn("[[no-such-note]]", out)
         self.assertIn("3 references in 2026-11-21-report.md: 2 have a note, 1 do not", out)
         self.assertIn("6 links to files that are not notes were not checked", out)
+
+    def test_a_missing_note_whose_name_has_a_dot_is_still_reported(self):
+        """Found by the re-check: [[Node.js]] was taken for a file and a missing note went unreported."""
+        code, out = self.check("See [[Node.js]], [[openalex.org]] and [[Dr.Smith]].\n")
+        self.assertEqual(code, 1)
+        self.assertEqual(out.count("NO NOTE"), 3, out)
+        self.assertNotIn("not checked", out)
 
     def test_a_note_whose_name_ends_like_a_file_is_still_looked_up(self):
         (self.tmp / "research" / "notes" / "notes-on-index.html.md").write_text("# Notes on index.html\n", encoding="utf-8")
