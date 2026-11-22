@@ -1,3 +1,12 @@
+---
+type: source-note
+plugin: poiesis-research
+date: <YYYY-MM-DD, the day of the Read line>
+topic: "<the project's section, as in the note's folder>"
+id: "<the note's file name, without .md>"
+status: "<the Read level, as on the Read line: full text / part of the text / abstract only / title only>"
+from: []
+---
 # <Title> (<Authors>, <Year>)
 
 - **Source:** <journal or publisher, volume, pages> · <DOI or URL>

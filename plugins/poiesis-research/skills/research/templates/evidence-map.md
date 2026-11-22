@@ -1,3 +1,13 @@
+---
+type: evidence-map
+plugin: poiesis-research
+date: <YYYY-MM-DD, the Date line>
+topic: "<the claim, in a few words>"
+id: "<the map's file name, without .md>"
+status: "<the Verdict word: supported / mixed / not supported / not studied>"
+from:
+  - "[[<the file name of a note in research/notes for a study in the table, one item per note>]]"
+---
 # Evidence map: <the claim, in one line>
 
 - **Date:** <YYYY-MM-DD>

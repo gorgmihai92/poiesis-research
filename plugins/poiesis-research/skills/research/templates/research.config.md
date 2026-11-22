@@ -1,3 +1,9 @@
+---
+type: research-config
+plugin: poiesis-research
+date: <YYYY-MM-DD, the day it was written or last changed>
+topic: "<the project, in a few words>"
+---
 # Research config
 
 - **Project:** <what it is and what the research is for>

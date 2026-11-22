@@ -1,5 +1,20 @@
 # Changelog
 
+## 2.6.0
+Everything is added: no path or field of 2.5.0 was renamed or removed, and the scripts read every note as before.
+- **Properties.** Each template starts with a block of Obsidian properties (YAML between two `---` lines): `type`,
+  `plugin`, `date` and `topic`; a note, a signal, an evidence map and a funding call, which hold one object each,
+  add `id`, `status` and `from`. The block is a copy for Obsidian's views (Bases): the label lines stay the record,
+  and the scripts read those. In the block no line starts with `#`, text is quoted, and a link is one quoted list
+  item, `- "[[note-name]]"`.
+- **`verify_quotes.py` skips the block.** A list item in it that starts with a quotation mark was read as a quote,
+  and a `[[link]]` or DOI there as a reference with no note. Its lines are now blanked before reading, so line
+  numbers stay the same. Only a block on the very first line counts, and one that is never closed is not a block.
+- **Tests.** `test_verify_quotes.py` (four tests, which failed before the fix) and `test_templates.py`: the block in
+  each template, its rules, and `library.py`, `signals.py --next-id` and `verify_quotes.py --references` reading
+  a note the same with it as without it.
+- **Not checked in this version:** how Obsidian shows the properties (no vault was opened), and any run on a topic.
+
 ## 2.5.0
 Everything is added: no path or field of 2.4.0 was renamed or removed, and a request that was asked before is asked
 the same way.
