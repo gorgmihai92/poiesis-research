@@ -1128,13 +1128,20 @@ def zenodo_get(query: str, size: int = 10) -> dict:
 
 
 def zenodo_count(query: str) -> int:
-    """How many Zenodo records match a query in its own syntax (every resource type)."""
-    total = (zenodo_get(query, 1).get("hits") or {}).get("total")
+    """How many Zenodo records match a query in its own syntax (every resource type). An answer without a count is
+    refused before it is cached, so the next run asks again."""
+    _, text = fetch(f"{ZENODO}?" + urllib.parse.urlencode({"q": query, "size": 1}), check=lambda t: _zenodo_total(t) is not None)
+    return _zenodo_total(text)
+
+
+def _zenodo_total(text: str) -> int | None:
+    try:
+        total = ((json.loads(text) or {}).get("hits") or {}).get("total")
+    except (ValueError, AttributeError):
+        return None
     if isinstance(total, dict):
         total = total.get("value")
-    if not isinstance(total, int):
-        raise Refused(f"zenodo.org: the answer has no count (hits.total is {total!r})")
-    return total
+    return total if isinstance(total, int) and not isinstance(total, bool) else None
 
 
 def norm_zenodo(h: dict) -> dict:
@@ -1195,7 +1202,7 @@ def norm_core(r: dict) -> dict:
         "year": year if isinstance(year, int) else None,
         "authors": [a.get("name") for a in r.get("authors") or [] if a.get("name")],
         "venue": venue,
-        "type": r.get("documentType") or "",
+        "type": ",".join(map(str, r["documentType"])) if isinstance(r.get("documentType"), list) else str(r.get("documentType") or ""),
         "doi": doi,
         "oa_pdf": pdf,
         "oa_status": "open" if pdf else "unknown",
