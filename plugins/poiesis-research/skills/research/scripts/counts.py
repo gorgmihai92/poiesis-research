@@ -6,6 +6,8 @@
   counts.py --taxonomy [--from 2022]          every OpenAlex topic, by year; past 200 topics it needs a free key
   counts.py '"heat stroke"' --base 'heat OR temperature'  shares within the works that match another search
   counts.py 'TITLE_ABS:"heat stroke"' --db epmc            the same count in Europe PMC, one request per year
+  counts.py '"design anthropology"' --db doaj             in DOAJ (open-access journals), one request per year
+  counts.py '"design anthropology"' --db zenodo           in Zenodo (every resource type), one request per year
 
 A share is a count per 100,000 works of the base, and it counts the same document types above and below the line
 (--types, by default article, review and preprint). The current year is marked partial. The series is saved in
@@ -166,9 +168,37 @@ def epmc_query(q: str) -> str:
     return " ".join(p if p in ("(", ")") or p.upper() in ("AND", "OR", "NOT") else f"TITLE_ABS:{p}" for p in parts)
 
 
+# The databases counted one request per year: how a query is written, how a year is named, and the count.
+# OSF and CORE are not here: OSF's API filters titles only, and CORE's totals for a quoted phrase were not a phrase
+# count when tried (research/notes/open-sources-2026-access, 2026-11-22).
+YEARLY = {
+    "epmc": ("Europe PMC", epmc_query, lambda y: f"PUB_YEAR:{y}", lambda q: sc.epmc_count(q)),
+    "doaj": ("DOAJ", lambda q: q, lambda y: f"bibjson.year:{y}", lambda q: sc.doaj_count(q)),
+    "zenodo": ("Zenodo", sc.and_join, lambda y: f"publication_date:[{y}-01-01 TO {y}-12-31]", lambda q: sc.zenodo_count(q)),
+}
+SEARCH_FIELD = {
+    "epmc": ("title and abstract (TITLE_ABS), unless the query names its own fields. Words are matched as typed: on "
+             "2026-11-21 a singular and its plural gave different counts, quoted and not."),
+    "doaj": ("every field DOAJ searches by default, keywords too: on 2026-11-22 an article matched on its keywords alone. "
+             "Words are joined with AND (DOAJ's default). The year is the article's bibjson.year."),
+    "zenodo": ("every field Zenodo searches, keywords too, with words joined with AND (Zenodo's own default is OR). Every "
+               "resource type is counted (papers, reports, datasets, software, presentations…), the latest version of each "
+               "record. The year is the record's publication_date."),
+}
+
+
+def db_query(db: str, q: str) -> str:
+    return YEARLY[db][1](q)
+
+
+def db_series(db: str, query: str | None, base: str | None, years: range) -> dict[int, int]:
+    _, write, year, count = YEARLY[db]
+    terms = [f"({write(x)})" for x in (base, query) if x]
+    return {y: count(" AND ".join([*terms, year(y)])) for y in years}
+
+
 def epmc_series(query: str | None, base: str | None, years: range) -> dict[int, int]:
-    terms = [f"({epmc_query(x)})" for x in (base, query) if x]
-    return {y: sc.epmc_count(" AND ".join([*terms, f"PUB_YEAR:{y}"])) for y in years}
+    return db_series("epmc", query, base, years)
 
 
 # --- Files -----------------------------------------------------------------------------------
@@ -255,7 +285,7 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--from", dest="y0", type=int, help="first year (default: ten years before this one)")
     p.add_argument("--to", dest="y1", type=int, help="last year (default: this year, which is marked partial)")
     p.add_argument("--types", help='document types counted above and below the line, or "all" (default: article,preprint,review)')
-    p.add_argument("--db", choices=["openalex", "epmc"], default="openalex")
+    p.add_argument("--db", choices=["openalex", *YEARLY], default="openalex")
     p.add_argument("--out", type=Path, default=Path("research/data"))
     p.add_argument("--name", help="file name without extension (default: the first series and the date fetched)")
     p.add_argument("--record", type=Path, help="also save every answer in this folder")
@@ -276,11 +306,11 @@ def main(argv: list[str] | None = None) -> int:
         p.error("--base does not combine with --taxonomy: the taxonomy is counted in all works of the chosen types")
     chosen = a.types or ",".join(DEFAULT_TYPES)
     types = ALL if chosen.strip().lower() == "all" else tuple(sorted(t.strip() for t in chosen.split(",") if t.strip()))
-    if a.db == "epmc":
+    if a.db != "openalex":
         if a.topic or a.taxonomy:
             p.error("topics are OpenAlex's: --topic and --taxonomy need --db openalex")
         if a.types and types != ALL:
-            p.error("--types names OpenAlex's document types; with --db epmc, restrict the query itself (and --base the same way)")
+            p.error(f"--types names OpenAlex's document types; with --db {a.db}, restrict the query itself (and --base the same way)")
         types = ALL
     this_year = int((sc._now())[:4])
     y1 = a.y1 or this_year
@@ -288,7 +318,7 @@ def main(argv: list[str] | None = None) -> int:
     if y0 > y1:
         p.error("--from is after --to")
     years = range(y0, y1 + 1)
-    database = "OpenAlex" if a.db == "openalex" else "Europe PMC"
+    database = "OpenAlex" if a.db == "openalex" else YEARLY[a.db][0]
     meta = {
         "script": script_identity(argv), "database": database, "years": [y0, y1],
         "share": {"per": 100000, "numerator_types": list(types), "denominator_types": list(types)},
@@ -297,7 +327,7 @@ def main(argv: list[str] | None = None) -> int:
         meta["corpus"] = "core (OpenAlex's default; the expansion corpus is not counted)"
         meta["key"] = bool(sc.api_key("OPENALEX_API_KEY"))
     else:
-        meta["share"]["note"] = "every record type Europe PMC holds, on both sides"
+        meta["share"]["note"] = f"every record type {database} holds, on both sides"
 
     box: dict = {}  # the files, as soon as they exist: a run that stops must be able to say what it saved
     try:
@@ -332,10 +362,10 @@ def run_series(a, years: range, types: tuple[str, ...], meta: dict, box: dict) -
                                 "seen the same day: a short quoted phrase that holds a stop word (\"theory of mind\") is matched as typed.")
     else:
         base_table = None
-        base = base_all = Counts(ALL, epmc_series(None, a.base, years))
-        meta["base"] = {"what": f"records matching: {a.base}" if a.base else "all records", "query": epmc_query(a.base) if a.base else "PUB_YEAR only"}
-        meta["search_field"] = ("title and abstract (TITLE_ABS), unless the query names its own fields. Words are matched as typed: on "
-                                "2026-11-21 a singular and its plural gave different counts, quoted and not.")
+        base = base_all = Counts(ALL, db_series(a.db, None, a.base, years))
+        meta["base"] = {"what": f"records matching: {a.base}" if a.base else "all records",
+                        "query": db_query(a.db, a.base) if a.base else ("PUB_YEAR only" if a.db == "epmc" else YEARLY[a.db][2]("<year>") + " only")}
+        meta["search_field"] = SEARCH_FIELD[a.db]
     fetched = sc.last_fetched() or sc._now()
     meta["fetched"] = fetched[:10]
     meta["partial_years"] = [y for y in years if is_partial(y, fetched)]
@@ -352,7 +382,7 @@ def run_series(a, years: range, types: tuple[str, ...], meta: dict, box: dict) -
             series_meta.append({"id": value, "label": name, "topic": value, "filter": f"primary_topic.id:{value}{within}"})
         else:
             name = label or value
-            where = {"filter": search_filter(value, a.base)} if a.db == "openalex" else {"query": " AND ".join(f"({epmc_query(x)})" for x in (a.base, value) if x)}
+            where = {"filter": search_filter(value, a.base)} if a.db == "openalex" else {"query": " AND ".join(f"({db_query(a.db, x)})" for x in (a.base, value) if x)}
             series_meta.append({"id": slug(name), "label": name, "search": value, **where})
         ids.append(series_meta[-1]["id"])
     if len(set(ids)) != len(ids):
@@ -374,7 +404,7 @@ def run_series(a, years: range, types: tuple[str, ...], meta: dict, box: dict) -
             counts, counts_all = select(table, types, years), select(table, ALL, years)
             types_rows = [[s["id"], y, t, n] for y in years for t, n in sorted(table.get(y, {}).items())]
         else:
-            counts = counts_all = Counts(ALL, epmc_series(s["search"], a.base, years))
+            counts = counts_all = Counts(ALL, db_series(a.db, s["search"], a.base, years))
             types_rows = None
         shares, shares_all = share(counts, base), share(counts_all, base_all)
         rows = [[s["id"], s["label"], y, "true" if is_partial(y, fetched) else "false", counts.by_year[y], base.by_year[y], number(shares[y]),

@@ -1,0 +1,7 @@
+{
+ "url": "https://doaj.org/api/search/articles/%28%22design%20anthropology%22%29%20AND%20bibjson.year%3A2023?pageSize=1",
+ "method": "GET",
+ "status": 200,
+ "fetched": "2026-11-22T16:24:50Z",
+ "body": "{\"total\": 0, \"page\": 1, \"pageSize\": 1, \"results\": []}"
+}

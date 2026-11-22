@@ -3,7 +3,7 @@
 
 A recording made with --record holds everything a database sent. What is kept here is only what the scripts read:
 no author or investigator names, no user names, no abstracts, and not the notice OpenAlex adds for clients without
-a key (it addresses AI agents). Counts, titles, dates, identifiers and links stay as they were returned. Running
+a key (it addresses AI agents). DOAJ, Zenodo and OSF answers keep titles, years, identifiers, links and totals. Counts, titles, dates, identifiers and links stay as they were returned. Running
 it twice changes nothing.
 """
 import json
@@ -47,6 +47,31 @@ def trim(host: str, url: str, body):
         body = {"hitCount": body.get("hitCount"), "resultList": {"result": [keep(r, fields) for r in (body["resultList"] or {}).get("result") or [] if "title" in r]}}
     elif host == "huggingface.co" and isinstance(body, list):
         body = [keep(m, ("id", "createdAt", "downloads", "likes")) for m in body]
+    elif host == "doaj.org" and isinstance(body, dict):
+        rows = []
+        for r in body.get("results") or []:
+            b = r.get("bibjson") or {}
+            row = keep(b, ("title", "year", "identifier", "link"))
+            if isinstance(b.get("journal"), dict):
+                row["journal"] = keep(b["journal"], ("title",))
+            rows.append({"id": r.get("id"), "bibjson": row})
+        body = {**keep(body, ("total", "page", "pageSize")), "results": rows}
+    elif host == "zenodo.org" and isinstance(body, dict) and isinstance(body.get("hits"), dict):
+        rows = []
+        for h in body["hits"].get("hits") or []:
+            row = keep(h, ("id", "doi"))
+            row["links"] = keep(h.get("links") or {}, ("self_html",))
+            row["metadata"] = keep(h.get("metadata") or {}, ("title", "publication_date", "resource_type", "access_right", "license", "journal"))
+            rows.append(row)
+        body = {"hits": {"total": body["hits"].get("total"), "hits": rows}}
+    elif host == "api.osf.io" and isinstance(body, dict) and "data" in body:
+        rows = []
+        for x in body.get("data") or []:
+            provider = ((x.get("relationships") or {}).get("provider") or {}).get("data")
+            rows.append({"id": x.get("id"), "links": keep(x.get("links") or {}, ("html", "preprint_doi")),
+                         "attributes": keep(x.get("attributes") or {}, ("title", "date_published", "date_created", "doi")),
+                         "relationships": {"provider": {"data": provider}}})
+        body = {"links": keep(body.get("links") or {}, ("meta",)), "meta": body.get("meta"), "data": rows}
     return body
 
 

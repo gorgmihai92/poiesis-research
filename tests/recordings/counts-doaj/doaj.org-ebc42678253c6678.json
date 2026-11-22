@@ -1,0 +1,7 @@
+{
+ "url": "https://doaj.org/api/search/articles/bibjson.year%3A2023?pageSize=1",
+ "method": "GET",
+ "status": 200,
+ "fetched": "2026-11-22T16:24:49Z",
+ "body": "{\"total\": 1180859, \"page\": 1, \"pageSize\": 1, \"results\": [{\"id\": \"00003d0d19d947c4b849ac1babc56a6f\", \"bibjson\": {\"title\": \"A Novel Combining Method for Composite Groove Structure Fabrication\", \"year\": \"2023\", \"identifier\": [{\"id\": \"10.3390/cryst13121644\", \"type\": \"doi\"}, {\"id\": \"2073-4352\", \"type\": \"eissn\"}], \"link\": [{\"content_type\": \"text/html\", \"type\": \"fulltext\", \"url\": \"https://www.mdpi.com/2073-4352/13/12/1644\"}], \"journal\": {\"title\": \"Crystals\"}}}]}"
+}

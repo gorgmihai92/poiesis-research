@@ -3,7 +3,13 @@
 
   search.py "query" [--limit 10] [--from-year 2000] [--sort relevance|cited|recent] [--brief]
   search.py --doi 10.1017/S0266267124000063
-  search.py "query" --db all          every database: also Crossref, Europe PMC and arXiv
+  search.py "query" --db all          every database: also Crossref, Europe PMC, arXiv, DOAJ, OSF, Zenodo and CORE
+  search.py "query" --db doaj         one database: openalex, s2, crossref, epmc, arxiv, doaj, osf, zenodo or core
+
+DOAJ (open-access journals), OSF Preprints (SocArXiv, PsyArXiv and the other servers on OSF), Zenodo (reports,
+datasets, software, papers) and CORE (open full texts from repositories) are asked only when named or with
+--db all. They are searched by query; a DOI is looked up in the other five. OSF matches the query in titles only.
+CORE needs CORE_API_KEY (free); without it CORE is not asked, and the Coverage line says so.
 
 Each work shows its citations in each database, a first guess of the evidence kind (review / empirical /
 analytical, from title and abstract) and whether an open copy exists.
@@ -47,7 +53,7 @@ def main() -> int:
     p.add_argument("--from-year", type=int)
     p.add_argument("--oa-only", action="store_true")
     p.add_argument("--sort", choices=SORTS, default="relevance")
-    p.add_argument("--db", choices=["both", "openalex", "s2", "crossref", "epmc", "arxiv", "all"], default="both")
+    p.add_argument("--db", choices=["both", "openalex", "s2", "crossref", "epmc", "arxiv", *sc.OPEN_SOURCES, "all"], default="both")
     p.add_argument("--json", action="store_true")
     p.add_argument("--brief", action="store_true", help="one line per work, for scanning many queries")
     sc.add_request_args(p)
@@ -57,6 +63,9 @@ def main() -> int:
     works: list[dict] = []
     refused = 0  # how many of the two first databases did not answer
     others = [d for d in ("crossref", "epmc", "arxiv") if a.db in (d, "all")]
+    open_sources = [d for d in sc.OPEN_SOURCES if a.db in (d, "all")]
+    if a.doi and a.db in sc.OPEN_SOURCES:
+        p.error(f"--db {a.db} is searched by query; a DOI is looked up in openalex, s2, crossref, epmc or arxiv (or --db all)")
     if a.doi:
         doi = a.doi.removeprefix("https://doi.org/")
         if a.db in ("both", "openalex", "all"):
@@ -98,6 +107,8 @@ def main() -> int:
                 print(f"(Semantic Scholar unavailable: {e})", file=sys.stderr)
         for name in others:
             works += sc.ask(sc.FALLBACKS[name][0], a.query, a.limit, a.from_year) or []
+        for name in open_sources:
+            works += sc.ask(sc.OPEN_SOURCES[name], a.query, a.limit, a.from_year) or []
         if a.db == "both" and refused:  # Crossref, Europe PMC, arXiv: one for each database that refused
             works += sc.fallback_search(a.query, a.limit, a.from_year, need=refused)
     else:

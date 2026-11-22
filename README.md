@@ -68,13 +68,19 @@ In Claude Code:
 It needs **Python 3**, which macOS and most Linux systems already have. It works without keys. For heavy use, two
 free keys help (set them in your shell profile): `OPENALEX_API_KEY` ([openalex.org](https://openalex.org/settings/api);
 without it everyone on your network shares about 100 searches a day) and `S2_API_KEY`
-([Semantic Scholar](https://www.semanticscholar.org/product/api); without it that database answers slowly). The
-plugin never sends your email address anywhere, and it does not create keys for you.
+([Semantic Scholar](https://www.semanticscholar.org/product/api); without it that database answers slowly). A
+third, `CORE_API_KEY` ([CORE](https://core.ac.uk/services/api)), lets it search CORE's open full texts; without it
+CORE is left out and the result says so. The plugin never sends your email address anywhere, and it does not
+create keys for you.
 
 Answers from the databases are kept for a day in `~/.cache/poiesis-research/`, outside your projects, so a search
 that stopped halfway can be run again without asking twice. Set `POIESIS_RESEARCH_CACHE` to another folder, or to
 `off`. When OpenAlex's free budget for the day is used up, or Semantic Scholar is busy, Crossref, Europe PMC and
 arXiv answer in their place, and each result ends with a line that says which databases answered.
+
+For the humanities and social sciences, where journal databases cover less, four open sources can be asked too:
+DOAJ (open-access journals), OSF Preprints (SocArXiv, PsyArXiv and the others), Zenodo (reports, datasets,
+software) and CORE (open full texts). Ask for them by name, or for every database at once.
 
 ## Ask in plain language
 
@@ -101,12 +107,12 @@ at once, one part of a question each.
 
 | Playbook | Agent | Where it searches |
 |---|---|---|
-| literature | `paper-scout` | OpenAlex and Semantic Scholar, merged; Google Scholar through your own export |
+| literature | `paper-scout` | OpenAlex and Semantic Scholar, merged; Google Scholar through your own export; DOAJ, OSF Preprints, Zenodo and CORE when asked |
 | evidence | `evidence-scout` | the same databases, empirical studies first |
 | funding | `funding-scout` | EU Funding & Tenders Portal (Horizon Europe, Digital Europe, Creative Europe, Erasmus+, CERV, and calls EU projects open to SMEs); Ministry of Investments and European Projects, regional development agencies, UEFISCDI, AFIR |
-| trends | none: a script counts | OpenAlex, by year and by document type; Europe PMC as a second database |
+| trends | none: a script counts | OpenAlex, by year and by document type; Europe PMC, DOAJ or Zenodo as a second database |
 | signals | `signal-scout` | arXiv, Europe PMC, NIH RePORTER, OpenAIRE, Hacker News, Wikimedia pageviews, Hugging Face |
-| prior art | `paper-scout` | every database above for papers: OpenAlex, Semantic Scholar, Crossref, Europe PMC, arXiv |
+| prior art | `paper-scout` | every database above for papers: OpenAlex, Semantic Scholar, Crossref, Europe PMC, arXiv, DOAJ, OSF Preprints, Zenodo, CORE |
 
 - **Literature, founders first.** It reads the bibliographies of the most-cited works on the topic. Works that
   most of them cite are the field's foundations, however old. Then it adds current work by citations and
@@ -258,7 +264,8 @@ Each rule names its source; there is one note per source in `research/notes`.
   abstract level only.
 - **The signal record:** the horizon-scanning section of the UK Government Office for Science's Futures Toolkit
   (2024). It is practitioner guidance, not evidence that scanning works.
-- **What each database allows:** its own documentation, as read on 2026-11-21.
+- **What each database allows:** its own documentation, as read on 2026-11-21 (DOAJ, OSF, Zenodo and CORE on
+  2026-11-22).
 - **Licences, legal copies, fresh funding calls, where the cache lives, the default document types and the
   six-month signal window:** the plugin's own choices, not research findings.
 
