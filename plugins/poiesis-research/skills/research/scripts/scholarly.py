@@ -6,9 +6,8 @@
 - Semantic Scholar (https://www.semanticscholar.org/product/api): free; S2_API_KEY (optional) gives 1 request a
   second. Without a key requests are shared and may be throttled: they are retried with backoff.
 - Crossref, Europe PMC and arXiv: free, no key. They answer when OpenAlex or Semantic Scholar refuses.
-- DOAJ, OSF Preprints, Zenodo and CORE: open sources that journal databases cover less (open-access journals,
-  social-science preprints, reports and datasets, open full texts). Asked only when named (`--db`) or with
-  `--db all`. CORE needs CORE_API_KEY (free: https://core.ac.uk/services/api); without it CORE is not asked, and
+- DOAJ, OSF Preprints, Zenodo and CORE: open sources (open-access journals, social-science preprints, reports and
+  datasets, works harvested from repositories). Asked only when named (`--db`); `--db all` asks all but OSF. CORE needs CORE_API_KEY (free: https://core.ac.uk/services/api); without it CORE is not asked, and
   the Coverage line says so.
 
 Every request goes through one layer (see "Request layer" below): a cache on disk, pacing per host, the OpenAlex
@@ -465,6 +464,8 @@ def fetch(url: str, data: bytes | None = None, headers: dict | None = None, trie
                     # Python would not send it: a character it does not allow in a header or an address, or a
                     # proxy setting it cannot read. Its own words say which; they can name the key, which is cut.
                     why = scrub(str(e), url)
+                    if "header" in why.lower():  # Python's words repeat the header's value: a key, perhaps with a line break
+                        why = "a header value it does not allow (a key with a line break or another control character?)"
                     _event(host, "refused", detail="the request could not be sent")
                     raise Refused(f"{host}: the request could not be sent: {why}") from None
                 with res:
@@ -1037,18 +1038,21 @@ def fallback_doi(doi: str) -> dict | None:
 
 def and_join(q: str) -> str:
     """A query in which words and phrases that stand side by side are joined with AND, for a database whose
-    default operator is OR (Zenodo). Operators, brackets and fields the user wrote are kept as written."""
-    tokens = re.findall(r'(?:[^\s()"\[]+:)?(?:"[^"]*"|\[[^\]]*\]|\{[^}]*\})|[()]|[^\s()"]+', q)
+    default operator is OR (Zenodo). Operators (in capitals), brackets, fields (`title:"…"`, `title:(…)`,
+    `publication_date:[… TO …]`) and a phrase's `~N` or `^N` are kept as written."""
+    tokens = re.findall(r'(?:[^\s()"\[{]+:)?(?:"[^"]*"|\[[^\]]*\]|\{[^}]*\})(?:[~^][\d.]*)?|[^\s()"]+:\(|[()]|[^\s()"]+', q)
     out: list[str] = []
     for t in tokens:
-        if out and out[-1] not in ("(", "AND", "OR", "NOT") and t not in (")", "AND", "OR", "NOT"):
+        if out and not out[-1].endswith("(") and out[-1] not in ("AND", "OR", "NOT") and t not in (")", "AND", "OR", "NOT"):
             out.append("AND")
         out.append(t)
     return " ".join(out)
 
 
 def doaj_get(query: str, page_size: int = 10) -> dict:
-    return get(DOAJ + urllib.parse.quote(query, safe="") + f"?pageSize={max(1, min(page_size, 50))}")
+    """The query travels in the address's path, so a 404 is not "no such record": it is refused, never a count of 0."""
+    _, text = fetch(DOAJ + urllib.parse.quote(query, safe="") + f"?pageSize={max(1, min(page_size, 50))}", not_found_ok=False)
+    return json.loads(text)
 
 
 def doaj_count(query: str) -> int:
@@ -1080,7 +1084,8 @@ def norm_doaj(r: dict) -> dict:
 
 
 def doaj_search(q: str, limit: int = 10, from_year: int | None = None) -> list[dict]:
-    """DOAJ's article search: its default operator is AND, and it looks in every field, keywords too."""
+    """DOAJ's article search: its default operator is AND, and its default fields include keywords (one article
+    seen on 2026-11-22 matched on its keywords alone)."""
     query = f"({q}) AND bibjson.year:[{from_year} TO 3000]" if from_year else q
     return [norm_doaj(r) for r in doaj_get(query, limit).get("results") or []]
 
@@ -1109,8 +1114,9 @@ def norm_osf(x: dict) -> dict:
 
 
 def osf_search(q: str, limit: int = 10, from_year: int | None = None) -> list[dict]:
-    """OSF preprints whose title holds the query as one string (case does not matter). OSF has no search of
-    abstracts or full texts in this API: a word that is only in the abstract is not found."""
+    """OSF preprints whose title holds the query as one string (case did not matter in the one probe of
+    2026-11-22; the title filter is not on the documented list). The API has no search of abstracts or full
+    texts: a word that is only in the abstract is not found. Quotes are dropped; operators are not understood."""
     text = " ".join(q.replace('"', " ").split())
     data = get(OSF + "?" + urllib.parse.urlencode({"filter[title]": text, "page[size]": max(1, min(limit, 100))})).get("data") or []
     works = [norm_osf(x) for x in data]
@@ -1122,9 +1128,13 @@ def zenodo_get(query: str, size: int = 10) -> dict:
 
 
 def zenodo_count(query: str) -> int:
-    """How many Zenodo records match a query in its own syntax (all resource types, the latest version of each)."""
+    """How many Zenodo records match a query in its own syntax (every resource type)."""
     total = (zenodo_get(query, 1).get("hits") or {}).get("total")
-    return int(total.get("value") if isinstance(total, dict) else total or 0)
+    if isinstance(total, dict):
+        total = total.get("value")
+    if not isinstance(total, int):
+        raise Refused(f"zenodo.org: the answer has no count (hits.total is {total!r})")
+    return total
 
 
 def norm_zenodo(h: dict) -> dict:
@@ -1161,8 +1171,11 @@ def zenodo_search(q: str, limit: int = 10, from_year: int | None = None) -> list
 
 def core_headers() -> dict:
     """CORE's key travels in a header, never in the address, so it is never part of what is cached or recorded.
-    Without CORE_API_KEY, CORE is not asked: the Coverage line names it with the reason."""
+    Without CORE_API_KEY, CORE is not asked: the Coverage line names it with the reason. A replay needs no key: it
+    never uses the network."""
     k = api_key("CORE_API_KEY")
+    if not k and LAYER.replay is not None:
+        return {}
     if not k:
         _event("api.core.ac.uk", "refused", detail="not asked: no key, set CORE_API_KEY (free: https://core.ac.uk/services/api)")
         raise NeedsKey("CORE: not asked without a key. Set CORE_API_KEY (free: https://core.ac.uk/services/api).")
@@ -1170,7 +1183,7 @@ def core_headers() -> dict:
 
 
 def norm_core(r: dict) -> dict:
-    """A CORE work: what repositories and journals CORE harvests hold, with a link to the full text when CORE has one."""
+    """A CORE work: a record CORE harvested from a repository or a journal, with a download link when CORE has one."""
     doi = (r.get("doi") or "").lower().removeprefix("https://doi.org/") or None
     display = next((x.get("url") for x in r.get("links") or [] if x.get("type") == "display" and x.get("url")), None)
     pdf = r.get("downloadUrl") or None
@@ -1193,14 +1206,32 @@ def norm_core(r: dict) -> dict:
 
 
 def core_search(q: str, limit: int = 10, from_year: int | None = None) -> list[dict]:
-    """CORE's works, in its own query language (space is AND). Asked only with CORE_API_KEY set."""
+    """CORE's works, in its own query language (space is AND). Asked only with CORE_API_KEY set.
+
+    Not tried with a key (none was available on 2026-11-22). Without one, a free-text query answered HTTP 500
+    ("abstract is not a searchable field") and a `title:"…"` query answered; so a 500 is asked again once only.
+    The address ends in a slash: the one without it redirected there (observed), and a redirect carries the key."""
     headers = core_headers()
     query = f"({q}) AND yearPublished>={from_year}" if from_year else q
-    data = get(f"{CORE}?" + urllib.parse.urlencode({"q": query, "limit": max(1, min(limit, 100))}), headers)
+    data = get(f"{CORE}?" + urllib.parse.urlencode({"q": query, "limit": max(1, min(limit, 100))}), headers, tries=2)
     return [norm_core(r) for r in data.get("results") or []]
 
 
 OPEN_SOURCES = {"doaj": doaj_search, "osf": osf_search, "zenodo": zenodo_search, "core": core_search}
+OPEN_HOSTS = {"doaj": "doaj.org", "osf": "api.osf.io", "zenodo": "zenodo.org", "core": "api.core.ac.uk"}
+IN_ALL = ("doaj", "zenodo", "core")  # OSF only when named: it matches titles only, and it is paced 36.5 seconds
+
+
+def ask_open(name: str, q: str, limit: int = 10, from_year: int | None = None) -> list[dict] | None:
+    """One open source, like `ask`. Each answer's shape is known from a few records only: one that is not as
+    expected is a refusal named in the Coverage line, never a stop of the whole run."""
+    try:
+        return OPEN_SOURCES[name](q, limit, from_year)
+    except REFUSALS:
+        return None
+    except (AttributeError, TypeError, ValueError, KeyError):
+        _event(OPEN_HOSTS[name], "refused", detail="answer not in the expected shape")
+        return None
 
 
 def works_by_doi(dois: list[str]) -> list[dict]:

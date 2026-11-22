@@ -30,11 +30,13 @@ source was read.
 3. **A second database** when one covers the subject: the same search with `--db epmc` (Europe PMC: life
    sciences first), `--db doaj` (articles in open-access journals) or `--db zenodo` (every resource type: papers,
    reports, datasets, software). Two databases that disagree are both reported; neither is picked.
-   - DOAJ and Zenodo look in every field, keywords too, not only title and abstract; their counts are not
-     comparable with OpenAlex's search field. Zenodo counts datasets and software alongside papers.
-   - OSF Preprints and CORE give no yearly counts: OSF's API filters titles only, and CORE's total for a quoted
-     phrase was not a count of that phrase when tried (`open-sources-2026-access`, 2026-11-22). Say so under
-     "Not checked" when the subject lives in preprints or repositories.
+   - DOAJ and Zenodo look beyond title and abstract (keywords matched alone, seen once in each); their counts are
+     not comparable with OpenAlex's search field. Zenodo counts datasets and software alongside papers. The years
+     added up in one probe of one phrase: that is what was seen, not a guarantee.
+   - OSF Preprints and CORE give no yearly counts: OSF documents no title and no publication-date filter for
+     preprints, and CORE's total for a quoted phrase was not a count of that phrase when tried
+     (`open-sources-2026-access`, 2026-11-22). Say so under "Not checked" when the subject lives in preprints or
+     repositories.
 4. **Cost:** without a key OpenAlex gives $0.10 a day to everyone on the same network. A search series costs
    $0.001 and the base $0.0001. Answers are cached for a day, so a run that stopped can be run again at no cost.
 

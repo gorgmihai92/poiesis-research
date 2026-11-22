@@ -3,16 +3,20 @@
 ## 2.5.0
 Everything is added: no path or field of 2.4.0 was renamed or removed, and a request that was asked before is asked
 the same way.
-- **Open sources.** `search.py --db doaj|osf|zenodo|core`, and `--db all` asks them too: DOAJ (articles in
-  open-access journals), OSF Preprints (SocArXiv, PsyArXiv and the other servers on OSF; titles only), Zenodo
-  (reports, datasets, software, papers) and CORE (open full texts). They go through the same request layer:
+- **Open sources.** `search.py --db doaj|osf|zenodo|core`; `--db all` asks DOAJ, Zenodo and CORE too, and OSF only
+  when named (titles only, 100 requests an hour): DOAJ (articles in open-access journals), OSF Preprints
+  (SocArXiv, PsyArXiv and the other servers on OSF), Zenodo (reports, datasets, software, papers) and CORE (works
+  harvested from repositories and journals, with a download link when CORE has one). They go through the same request layer:
   cache, pacing per host from each documentation, the Coverage line. Their rows have the same shape as the other
-  databases'; they are searched by query, not by DOI.
+  databases'; they are searched by query, not by DOI. An answer that is not in the expected shape is a refusal
+  named in the Coverage line, not a stop of the run. A DOAJ 404 is a refusal, never a count of 0.
 - **CORE's key.** `CORE_API_KEY` is read from the environment and sent in a header, never in the address, and it is
-  scrubbed from every answer, cache file and recording like the other keys. Without it CORE is not asked, and the
+  scrubbed from every answer, cache file and recording like the other keys. A header Python refuses to send
+  (a key with a line break) is reported without Python's own words, which repeat the key. Without it CORE is not asked, and the
   Coverage line says "CORE refused (not asked: no key, …)".
 - **Counts.** `counts.py --db doaj` and `--db zenodo`, one request per year. OSF and CORE have no yearly counts:
-  OSF's API filters titles only, and CORE's total for a quoted phrase was not a count of that phrase when tried.
+  OSF documents no title and no publication-date filter for preprints, and CORE's total for a quoted phrase was
+  not a count of that phrase when tried.
 - **Notes and playbooks.** `research/notes/open-sources-2026-access`: each API's documentation read on 2026-11-22
   and what a few keyless requests showed. `playbooks/literature.md` and `playbooks/trends.md` say when to use each
   source and what it does not match.

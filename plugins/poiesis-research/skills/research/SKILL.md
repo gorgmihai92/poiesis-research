@@ -46,13 +46,14 @@ PMC and arXiv answer in its place. Answers are kept on disk for a day, so a run 
 without asking twice; `--fresh` asks again. `python3 -I $S/scholarly.py cache` says where they are kept.
 
 **Sources.** OpenAlex and Semantic Scholar by default; Crossref, Europe PMC and arXiv when they refuse. Four open
-sources are asked when named with `--db`, or with `--db all`, and fill the gaps journal databases leave in the
-humanities and social sciences:
-- `doaj`: DOAJ, articles in open-access journals; every field, keywords too.
-- `osf`: OSF Preprints (SocArXiv, PsyArXiv and the other servers on OSF); titles only.
-- `zenodo`: Zenodo, reports, datasets, software, presentations and papers; every field.
-- `core`: CORE, open full texts from repositories; only with `CORE_API_KEY` (free). Without it CORE is not asked,
-  and the Coverage line says so.
+sources, added for work in the humanities and social sciences (a product choice: their coverage was not measured),
+are asked when named with `--db`; `--db all` asks DOAJ, Zenodo and CORE too:
+- `doaj`: DOAJ, articles in open-access journals; its default fields, keywords among them.
+- `osf`: OSF Preprints (SocArXiv, PsyArXiv and the other servers on OSF); the query as one string in titles. Only
+  when named: it allows 100 requests an hour, so requests are 36.5 seconds apart.
+- `zenodo`: Zenodo, reports, datasets, software, presentations and papers; any field.
+- `core`: CORE, works harvested from repositories and journals, with a download link when CORE has one; only with
+  `CORE_API_KEY` (free). Without it CORE is not asked, and the Coverage line says so. Not yet tried with a key.
 They are searched by query, not by DOI. What each one matches is in the note `open-sources-2026-access` in the
 plugin's repository.
 
