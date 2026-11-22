@@ -61,7 +61,7 @@ plugin: poiesis-research
 date: 2026-11-22
 topic: "methods"
 id: "example-2025-note"
-status: "part of the text: p. 2–4"
+status: "part of the text"
 from:
   - "[[IN-001]]"
 ---

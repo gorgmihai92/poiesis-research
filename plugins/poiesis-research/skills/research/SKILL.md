@@ -147,3 +147,7 @@ Added in 2.6.0. Everything above is unchanged.
   the block no line starts with `#`, text values are quoted, and `from` is a list of quoted links, one per line
   (`  - "[[note-name]]"`), or `[]`. Never put a link in a heading or an **Id** line, or a link with an alias
   (`[[a|b]]`) in a table. `verify_quotes.py` skips the block.
+- The block is a copy, so when a label line changes (a note read further, a call's status, a map's verdict), change
+  its value in the block in the same edit. `status` holds the first words of the label only: `abstract only`,
+  never `abstract only · 2026-11-22`. Inside a quoted value write `\"` for a quotation mark and `\\` for a
+  backslash.
