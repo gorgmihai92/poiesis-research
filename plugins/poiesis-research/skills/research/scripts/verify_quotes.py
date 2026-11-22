@@ -15,6 +15,10 @@ A quote may run onto the next page, but it has to start on the page the note giv
 
 A quote that is found shows the words are in the source. It does not show that a claim built on them follows.
 
+Properties. A block of Obsidian properties at the very top of a note or report (YAML between a first line `---`
+and the next `---`) is skipped: its lines are not quotes or references, even a list item that starts with a
+quotation mark or holds a `[[link]]`. Line numbers still count its lines.
+
 References. With --references, every DOI, link to a note, `[[note]]` link and `[@key]` citation in the report is
 looked up in the notes folder (and in a Texere bibliography when there is one). One line per reference with no
 note. "Author Year" mentions that match no note are listed as leads: they are a guess from the text, so they do
@@ -53,6 +57,18 @@ MENTION = re.compile(r"\b([A-Z][A-Za-zÀ-ÖØ-öø-ÿ'’\-]+)(?:\s+(?:et al\.?|
 # --- Quotes ----------------------------------------------------------------------------------
 
 
+def without_properties(text: str) -> str:
+    """The text with a properties block at its top blanked line for line, so the line numbers stay the same. The
+    block is Obsidian's: the first line is `---` and it ends at the next `---` line; never closed, it is not one."""
+    lines = text.splitlines(keepends=True)
+    if not lines or lines[0].rstrip() != "---":
+        return text
+    end = next((i for i, line in enumerate(lines[1:], 1) if line.rstrip() == "---"), None)
+    if end is None:
+        return text
+    return "".join(line[len(line.rstrip("\r\n")):] for line in lines[: end + 1]) + "".join(lines[end + 1 :])
+
+
 def fold(s: str) -> str:
     """Letters and digits only, lower case, ligatures and accents undone: what survives PDF text extraction."""
     s = unicodedata.normalize("NFKD", s)
@@ -70,7 +86,7 @@ def pages_of(text: str) -> dict[int, str]:
 def quotes_of(note: str) -> list[tuple[int, str, tuple[int, int] | None]]:
     """(line number, the quoted words, the pages given or None) for each quote line of a note."""
     out = []
-    for n, line in enumerate(note.splitlines(), 1):
+    for n, line in enumerate(without_properties(note).splitlines(), 1):
         m = QUOTE_LINE.match(line)
         if not m:
             continue
@@ -252,7 +268,7 @@ def check_references(report: Path, notes: Path, bibliography: Path | None) -> in
     found, missing, leads = 0, [], []
     files = 0  # links to PDFs, images and data files: they are not notes, so they are not checked
     fenced = False
-    for n, line in enumerate(text.splitlines(), 1):
+    for n, line in enumerate(without_properties(text).splitlines(), 1):
         if line.lstrip().startswith("```"):
             fenced = not fenced
             continue

@@ -343,3 +343,70 @@ class References(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+PROPERTIES = (
+    "---\n"
+    "type: source-note\n"
+    "plugin: poiesis-research\n"
+    "date: 2026-11-22\n"
+    "id: wu-2025-note\n"
+    "doi: \"doi:10.1234/not-in-the-library\"\n"
+    "from:\n"
+    "  - \"[[IN-001]]\"\n"
+    "  - \"words in a list item that are not in the source\"\n"
+    "---\n"
+)
+
+
+class PropertiesAtTheTop(unittest.TestCase):
+    """Obsidian's properties block: YAML between two `---` lines at the very top of a note. Its lines are not
+    quotes or references, so a note or report gives the same result with it as without it."""
+
+    def setUp(self):
+        self._tmp = tempfile.TemporaryDirectory()
+        self.tmp = Path(self._tmp.name)
+        self.notes = self.tmp / "research" / "notes"
+        self.notes.mkdir(parents=True)
+        (self.tmp / "research" / "papers").mkdir(parents=True)
+        (self.tmp / "research" / "papers" / "wu-2025-note.txt").write_text(TEXT, encoding="utf-8")
+        self.body = "# T (Wu, 2025)\n\n## Quotes\n- \"web search helps\" (p. 1)\n- \"web search hurts\" (p. 1)\n"
+
+    def tearDown(self):
+        self._tmp.cleanup()
+
+    def quotes(self, text: str) -> tuple[int, list[str]]:
+        (self.notes / "wu-2025-note.md").write_text(text, encoding="utf-8")
+        code, out = run([str(self.notes), "--papers", str(self.tmp / "research" / "papers")])
+        return code, out.strip().splitlines()
+
+    def test_a_list_item_in_the_properties_is_not_read_as_a_quote(self):
+        code_without, without = self.quotes(self.body)
+        code_with, with_ = self.quotes(PROPERTIES + self.body)
+        self.assertEqual(code_with, code_without)
+        self.assertEqual(with_[-1], without[-1])
+        self.assertEqual(with_[-1], "FOUND: 1 · NOT FOUND: 1")
+        self.assertNotIn("[[IN-001]]", "\n".join(with_))
+
+    def test_line_numbers_still_count_the_properties_lines(self):
+        _, with_ = self.quotes(PROPERTIES + self.body)
+        self.assertTrue(with_[0].startswith("FOUND      wu-2025-note.md · line 14 · p. 1"), with_[0])
+
+    def test_only_a_block_on_the_first_line_is_properties(self):
+        _, out = self.quotes("# T (Wu, 2025)\n\n---\n- \"web search helps\" (p. 1)\n---\n")
+        self.assertEqual(out[-1], "FOUND: 1")
+        _, out = self.quotes("---\n- \"web search helps\" (p. 1)\n")  # never closed: not a properties block
+        self.assertEqual(out[-1], "FOUND: 1")
+
+    def test_a_reference_in_the_properties_is_not_looked_up(self):
+        report = self.tmp / "insights" / "2026-11-22-report.md"
+        report.parent.mkdir()
+        (self.notes / "murad-2016-new-evidence-pyramid.md").write_text("# New evidence pyramid (Murad, 2016)\n", encoding="utf-8")
+        body = "A claim, see [[murad-2016-new-evidence-pyramid]].\n"
+        results = []
+        for text in (body, PROPERTIES + body):
+            report.write_text(text, encoding="utf-8")
+            results.append(run(["--references", str(report), "--notes", str(self.notes)]))
+        self.assertEqual(results[1][0], 0, results[1][1])
+        self.assertEqual(results[1], results[0])
+        self.assertIn("1 references in 2026-11-22-report.md: 1 have a note, 0 do not.", results[1][1])
