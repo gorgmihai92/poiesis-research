@@ -6,6 +6,7 @@ canned answers by a piece of the URL, and counts what it was asked.
 import contextlib
 import email.message
 import io
+import os
 import sys
 import tempfile
 import unittest
@@ -73,6 +74,8 @@ class FakeNet:
             if piece in url:
                 if isinstance(answer, list):
                     answer = answer.pop(0) if len(answer) > 1 else answer[0]
+                if isinstance(answer, BaseException):  # what opening the connection raises, as it is
+                    raise answer
                 if answer.status >= 400:
                     raise urllib.error.HTTPError(url, answer.status, "refused by the fake network", headers(answer.head), io.BytesIO(answer.body.encode()))
                 return _Response(answer)
@@ -89,6 +92,8 @@ class LayerCase(unittest.TestCase):
         self._tmp = tempfile.TemporaryDirectory()
         self.tmp = Path(self._tmp.name)
         self.sleeps: list[float] = []
+        # A key set in the shell would change what the scripts send and say: a test that wants one sets its own.
+        self._keys = {name: os.environ.pop(name, None) for name in ("OPENALEX_API_KEY", "S2_API_KEY")}
         self._saved = (sc.LAYER, sc._open, sc._sleep)
         sc.LAYER = sc._Layer()
         sc.configure(cache_dir=self.tmp / "cache", fresh=False, record=None, replay=None, hours=24)
@@ -97,6 +102,10 @@ class LayerCase(unittest.TestCase):
 
     def tearDown(self) -> None:
         sc.LAYER, sc._open, sc._sleep = self._saved
+        for name, value in self._keys.items():
+            os.environ.pop(name, None)
+            if value is not None:
+                os.environ[name] = value
         self._tmp.cleanup()
 
     def use(self, routes: list[tuple[str, object]]) -> FakeNet:

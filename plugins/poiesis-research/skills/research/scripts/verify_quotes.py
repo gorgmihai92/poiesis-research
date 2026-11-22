@@ -38,7 +38,7 @@ QUOTE_LINE = re.compile(r"^\s*[-*+]\s+[" + QUOTE_MARKS + r"](.+)$")
 PAGE = re.compile(r"\bpp?\.\s*(\d+)(?:\s*[-–—]\s*(\d+))?")
 MARKER = re.compile(r"^\[p\. (\d+)\]\s*$", re.M)
 ELLIPSIS = re.compile(r"\s*\[?(?:…|\.\.\.)\]?\s*")
-NOT_A_NOTE = re.compile(r"\.(pdf|png|jpe?g|gif|svg|webp|bmp|mp3|mp4|m4a|wav|mov|csv|json|canvas|base|xlsx?|docx?|pptx?|txt|html?|zip)$", re.I)
+FILE_LINK = re.compile(r"\.(?!md$)[A-Za-z][A-Za-z0-9]{1,4}$", re.I)  # a link that names a file of another kind: a PDF, an image, data
 MONTHS = {"january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december",
           "table", "figure", "fig", "section", "chapter", "since", "until", "from", "before", "after", "between", "during", "around", "about", "early", "late",
           "version", "edition", "spring", "summer", "autumn", "winter", "fall"}
@@ -74,7 +74,12 @@ def quotes_of(note: str) -> list[tuple[int, str, tuple[int, int] | None]]:
         if end <= 0:
             continue
         page = PAGE.search(rest[end + 1 :])
-        span = (int(page.group(1)), int(page.group(2) or page.group(1))) if page else None
+        span = None
+        if page:
+            first, last = page.group(1), page.group(2) or page.group(1)
+            if len(last) < len(first) and int(last) < int(first):  # "pp. 249–51" means 249 to 251
+                last = first[: len(first) - len(last)] + last
+            span = (int(first), int(last))
         out.append((n, rest[:end], span))
     return out
 
@@ -86,18 +91,31 @@ def find(quote: str, pages: dict[int, str], span: tuple[int, int] | None) -> tup
     if not parts:
         return "NOT FOUND", "nothing to look for"
 
-    def start_of(text: str) -> int:
-        """Where the quote begins in a text, with all its parts in order; -1 when it is not there."""
-        start = at = text.find(parts[0])
-        if start < 0:
-            return -1
-        at += len(parts[0])
-        for part in parts[1:]:
-            at = text.find(part, at)
-            if at < 0:
-                return -1
-            at += len(part)
-        return start
+    def match(text: str) -> tuple[int, int] | None:
+        """Where the quote is in a text, all its parts in order: the start and the end of the tightest place, or
+        None. Tightest, because the first words of an elided quote often stand somewhere earlier too."""
+        best = None
+        at = text.find(parts[0])
+        while at >= 0:
+            end = at + len(parts[0])
+            for part in parts[1:]:
+                nxt = text.find(part, end)
+                if nxt < 0:
+                    return best  # the later parts do not follow this place, so they follow no later one either
+                end = nxt + len(part)
+            if best is None or end - at < best[1] - best[0]:
+                best = (at, end)
+            at = text.find(parts[0], at + 1)
+        return best
+
+    def page_at(offset: int) -> int:
+        """The page a place in the whole text is on."""
+        seen = 0
+        for n in numbers:
+            seen += len(pages[n])
+            if offset < seen:
+                return n
+        return numbers[-1]
 
     numbers = sorted(pages)
     short = f" (short: {sum(map(len, parts))} letters, a weak check)" if sum(map(len, parts)) < 20 else ""
@@ -105,28 +123,19 @@ def find(quote: str, pages: dict[int, str], span: tuple[int, int] | None) -> tup
     if span is not None and numbers != [0]:
         own = "".join(pages.get(n, "") for n in range(span[0], span[1] + 1))
         # A quote can run onto the next page, but it starts on a cited one.
-        if 0 <= start_of(own + pages.get(span[1] + 1, "")) < len(own):
+        got = match(own + pages.get(span[1] + 1, ""))
+        if got is not None and got[0] < len(own):
             return "FOUND", cited.removeprefix("cited ") + short
-    whole = "".join(pages[n] for n in numbers)
-    start = start_of(whole)
-    if start < 0:
+    got = match("".join(pages[n] for n in numbers))
+    if got is None:
         return "NOT FOUND", "not in the source's text"
     if numbers == [0]:
         return "FOUND", "the text has no page markers" + short
-    where = next((n for n in numbers if start_of(pages[n]) >= 0), None)
-    if where is None:  # it crosses a page break: name the page it starts on
-        seen = 0
-        for n in numbers:
-            seen += len(pages[n])
-            if start < seen:
-                first = n
-                break
-        if span is None:
-            return "FOUND", "across two pages" + short
-        return "WRONG PAGE", f"{cited}, found starting on p. {first}"
+    first, last = page_at(got[0]), page_at(got[1] - 1)
+    where = f"p. {first}" if first == last else f"p. {first}–{last}"
     if span is None:
-        return "FOUND", f"p. {where}" + short
-    return "WRONG PAGE", f"{cited}, found on p. {where}"
+        return "FOUND", where + short
+    return "WRONG PAGE", f"{cited}, found on {where}"
 
 
 def source_text(note: Path, text: str, papers: list[Path]) -> Path | None:
@@ -239,13 +248,13 @@ def check_references(report: Path, notes: Path, bibliography: Path | None) -> in
             else:
                 missing.append((n, target, "the linked note does not exist"))
         for target in re.findall(r"\[\[([^\]|#]+)", line):
-            if NOT_A_NOTE.search(target.strip()):
-                files += 1  # Texere links each annotation to its place in the PDF
-                continue
-            if Path(target.strip()).name.lower().removesuffix(".md") in lib["names"]:
+            target = target.strip().rstrip("\\").strip()  # in a table the bar before an alias is written \|
+            if Path(target).name.lower().removesuffix(".md") in lib["names"]:
                 found += 1
+            elif FILE_LINK.search(target):
+                files += 1  # not a note: Texere, for one, links each annotation to its place in the PDF
             else:
-                missing.append((n, f"[[{target.strip()}]]", "no note with this name"))
+                missing.append((n, f"[[{target}]]", "no note with this name"))
         for group in re.findall(r"\[([^\[\]]*@[^\[\]]*)\]", line):
             for key in re.findall(r"@([\w:.#$%&+?<>~/\-]*\w)", group):
                 if key in lib["keys"] or key.lower() in lib["names"]:

@@ -61,8 +61,11 @@ DATABASES = {
     "huggingface.co": "Hugging Face",
 }
 SECRETS = {"api_key", "apikey", "mailto", "token", "access_token"}  # never written to disk or shown
-# One of them as an answer may repeat it: api_key=…, or api_key%3D… inside another address.
-_AS_PARAMETER = r"(?<![A-Za-z_-])((?i:" + "|".join(sorted(SECRETS, key=len, reverse=True)) + r")(?:=|%3[Dd]))"
+# One of them as an answer may name it: api_key=…, api_key%3D… inside another address, or "api_key": "…".
+# The name stands at the start of a word; what stands before it may itself be encoded (%3F, \u0026).
+_AS_PARAMETER = (r"(?:(?<![A-Za-z_-])|(?<=%[0-9A-Fa-f]{2})|(?<=\\u[0-9A-Fa-f]{4}))((?i:" + "|".join(sorted(SECRETS, key=len, reverse=True))
+                 + r")(?:=|%(?:25)*3[Dd]|\"\s*:\s*\"))")
+_UNRESERVED = frozenset("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_.~")  # never encoded in an address
 CACHE_HOURS = 24.0
 
 
@@ -144,22 +147,56 @@ def clean_url(url: str) -> str:
     return urllib.parse.urlunsplit(parts._replace(query=urllib.parse.urlencode(query)))
 
 
+def api_key(name: str) -> str:
+    """A key from the environment, without the blanks or the line end a copied line can carry; "" when not set."""
+    return os.environ.get(name, "").strip()
+
+
+def _hex(number: str) -> str:
+    return "".join(f"[{h}{h.lower()}]" if h.isalpha() else h for h in number)
+
+
+def _spelled(secret: str) -> str:
+    """A pattern for a secret however a text spells it: as it is, percent-encoded once or more (%2B, %2b, %252B),
+    as a JSON escape (\\u002b, \\/), a blank as +. Letters, digits and - _ . ~ are always written as they are."""
+    out = []
+    for c in secret:
+        if c in _UNRESERVED:
+            out.append(re.escape(c))
+            continue
+        forms = [re.escape(c), "".join("%(?:25)*" + _hex(f"{b:02X}") for b in c.encode("utf-8"))]
+        if ord(c) < 0x10000:
+            forms.append(r"\\u" + _hex(f"{ord(c):04X}"))
+        if c == "/":
+            forms.append(r"\\/")
+        if c == " ":
+            forms.append(r"\+")
+        out.append("(?:" + "|".join(forms) + ")")
+    return "".join(out)
+
+
+def _key_like(value: str) -> bool:
+    """A value no answer holds by chance: 8 characters or more, and not a plain word or a plain number."""
+    if len(value) < 8 or value.isdigit():
+        return False
+    return not (value.isalpha() and len(value) < 20 and (value.islower() or value.isupper() or value.istitle()))
+
+
 def scrub(text: str, url: str = "") -> str:
     """The text without the request's secrets: the key and email parameters of its address and the keys in the
-    environment, plain and percent-encoded. An answer can repeat the address it was asked at, or a key from a
+    environment, however the text spells them. An answer can repeat the address it was asked at, or a key from a
     header, and nothing of that kind is stored or passed on.
 
-    A value of 8 characters or more is removed wherever it stands. A shorter one is a placeholder ("test"):
-    removing it everywhere would damage the answer itself, so it is removed only where it stands as a parameter
-    of an address (api_key=test)."""
-    found = [v for k, v in urllib.parse.parse_qsl(urllib.parse.urlsplit(url).query) if k.lower() in SECRETS]
-    found += [os.environ.get(name, "") for name in ("OPENALEX_API_KEY", "S2_API_KEY")]
+    A value of 8 characters or more that is not a plain word or number is removed wherever it stands. Anything
+    else is a placeholder ("test", "changeme", "12345678"): removing it everywhere would damage the answer
+    itself, so it is removed only where the text names it as one of those parameters (api_key=test)."""
+    found = [v.strip() for k, v in urllib.parse.parse_qsl(urllib.parse.urlsplit(url).query) if k.lower() in SECRETS]
+    found += [api_key(name) for name in ("OPENALEX_API_KEY", "S2_API_KEY")]
     for secret in sorted({s for s in found if s}, key=len, reverse=True):
-        for form in {secret, urllib.parse.quote(secret, safe=""), urllib.parse.quote_plus(secret)}:
-            if len(secret) >= 8:
-                text = text.replace(form, "REDACTED")
-            else:
-                text = re.sub(_AS_PARAMETER + re.escape(form) + r"(?![A-Za-z0-9_.~%+-])", r"\1REDACTED", text)
+        if _key_like(secret):
+            text = re.sub(_spelled(secret), "REDACTED", text)
+        else:
+            text = re.sub(_AS_PARAMETER + _spelled(secret) + r"(?![A-Za-z0-9_~-])", r"\1REDACTED", text)
     return text
 
 
@@ -225,7 +262,7 @@ def pace_seconds(host: str, url: str = "") -> float:
         wide = re.search(r"(?:topics?|primary_topic|concepts?)\.id:[^,&|]*(?:\|[^,&|]*){10,}", query) is not None
         return 1.1 if broad or wide else 0.2
     if host == "api.semanticscholar.org":  # 1 request a second with a key; shared and throttled without one
-        return 1.05 if os.environ.get("S2_API_KEY") else 1.1
+        return 1.05 if api_key("S2_API_KEY") else 1.1
     if host == "api.crossref.org":  # public pool: 5 DOI lookups a second, 1 query a second, one at a time
         return 0.25 if urllib.parse.urlsplit(url).path.count("/") > 1 else 1.05
     if host == "export.arxiv.org":  # one request every three seconds, one connection
@@ -286,7 +323,7 @@ def openalex_cost(url: str) -> float:
 def _budget_file(host: str) -> Path | None:
     if LAYER.cache_dir is None:
         return None
-    who = "key" if os.environ.get("OPENALEX_API_KEY") else "nokey"
+    who = "key" if api_key("OPENALEX_API_KEY") else "nokey"
     return LAYER.cache_dir / "budget" / f"{host}.{who}.json"
 
 
@@ -324,8 +361,8 @@ def budget(host: str = OPENALEX_HOST) -> dict | None:
 
 def _budget_message(host: str, seconds: float) -> str:
     seconds = max(0, int(seconds))
-    free = "" if os.environ.get("OPENALEX_API_KEY") else " free"
-    hint = "" if os.environ.get("OPENALEX_API_KEY") else " A free key gives your own budget (OpenAlex: set OPENALEX_API_KEY)."
+    free = "" if api_key("OPENALEX_API_KEY") else " free"
+    hint = "" if api_key("OPENALEX_API_KEY") else " A free key gives your own budget (OpenAlex: set OPENALEX_API_KEY)."
     return f"{host}: daily{free} budget used up, resets in {seconds // 3600}h{seconds % 3600 // 60:02d}m.{hint}"
 
 
@@ -402,8 +439,14 @@ def fetch(url: str, data: bytes | None = None, headers: dict | None = None, trie
     for attempt in range(tries):
         try:
             with _slot(host, url):
-                req = urllib.request.Request(url, data=data, headers={**UA, **(headers or {})})
-                with _open(req, 60) as res:
+                try:
+                    res = _open(urllib.request.Request(url, data=data, headers={**UA, **(headers or {})}), 60)
+                except ValueError:
+                    # Python will not send a header or an address with a character it does not allow, and its
+                    # error names the value: the key, when the key is what it refused. Nothing of it is passed on.
+                    _event(host, "refused", detail="the request could not be sent")
+                    raise Refused(f"{host}: the request could not be sent: its address or a key holds a character that is not allowed.") from None
+                with res:
                     text = res.read().decode("utf-8", "replace")
                     answered = res.headers
             _note_budget(host, answered)
@@ -734,7 +777,7 @@ def merge_all(works: list[dict]) -> list[dict]:
 
 def openalex_auth() -> dict:
     """The user's own key when set (own budget). No email is sent: OpenAlex ignores `mailto` since February 2026."""
-    key = os.environ.get("OPENALEX_API_KEY")
+    key = api_key("OPENALEX_API_KEY")
     return {"api_key": key} if key else {}
 
 
@@ -788,7 +831,7 @@ def openalex_dois(dois: list[str]) -> list[dict]:
 
 
 def s2_headers() -> dict:
-    k = os.environ.get("S2_API_KEY")
+    k = api_key("S2_API_KEY")
     return {"x-api-key": k} if k else {}
 
 
@@ -1039,6 +1082,34 @@ def brief(w: dict, head: str = "") -> str:
 # --- The cache, from the command line --------------------------------------------------------
 
 
+def _is_answer(f: Path) -> bool:
+    """A cached answer this layer wrote: named by its hash, in the folder of the host its own address names."""
+    if not re.fullmatch(r"[0-9a-f]{64}\.json", f.name):
+        return False
+    try:
+        with open(f, encoding="utf-8") as fh:
+            head = fh.read(2048)
+    except (OSError, ValueError):
+        return False
+    m = re.match(r'\{\s*"url":\s*"[a-z]+://([^/"?#]*)', head)  # how _write starts an entry
+    return m is not None and m.group(1) == f.parent.name
+
+
+def _is_state(f: Path) -> bool:
+    """The layer's budget file, a pacing lock holding the time of the last request, or what a write that was cut
+    short left behind."""
+    if re.fullmatch(r"\.(?:[0-9a-f]{64}|" + re.escape(OPENALEX_HOST) + r"\.(?:no)?key)\.json\.\d+\.tmp", f.name):
+        return True
+    if f.parent.name == "budget":
+        return f.name in (f"{OPENALEX_HOST}.key.json", f"{OPENALEX_HOST}.nokey.json")
+    if f.parent.name == "pace" and f.suffix == ".lock":
+        try:
+            return re.fullmatch(r"\s*(?:\d+(?:\.\d+)?(?:e[+-]?\d+)?)?\s*", f.read_text(encoding="utf-8")[:64]) is not None
+        except (OSError, ValueError):
+            return False
+    return False
+
+
 def main() -> int:
     import argparse
 
@@ -1049,13 +1120,14 @@ def main() -> int:
     if LAYER.cache_dir is None:
         print("The cache is off (POIESIS_RESEARCH_CACHE=off).")
         return 0
-    # Only what this layer wrote counts as the cache: answers named by their hash, and its budget and pacing
-    # files. Anything else in the folder is someone else's and is never removed.
+    # Only what this layer wrote counts as the cache, and a name of the right shape is not enough: a file is
+    # looked into before it is called ours. Anything else in the folder is someone else's and is never removed.
     present = [f for f in LAYER.cache_dir.rglob("*") if f.is_file()] if LAYER.cache_dir.is_dir() else []
-    answers = [f for f in present if f.parent.parent == LAYER.cache_dir and re.fullmatch(r"[0-9a-f]{64}\.json", f.name)]
-    state = [f for f in present if f.parent.parent == LAYER.cache_dir
-             and ((f.parent.name == "budget" and f.name.endswith((".key.json", ".nokey.json"))) or (f.parent.name == "pace" and f.suffix == ".lock"))]
-    kept = sorted(str(f.relative_to(LAYER.cache_dir)) for f in present if f not in answers and f not in state)
+    in_place = [f for f in present if f.parent.parent == LAYER.cache_dir]
+    answers = [f for f in in_place if _is_answer(f)]
+    state = [f for f in in_place if _is_state(f)]
+    own = set(answers) | set(state)
+    kept = sorted(str(f.relative_to(LAYER.cache_dir)) for f in present if f not in own)
     others = len(kept)
     size = sum(f.stat().st_size for f in answers)
     print(f"Cache: {LAYER.cache_dir} · {len(answers)} answers · {size / 1e6:.1f} MB · an answer is used for {LAYER.max_age / 3600:g} hours")

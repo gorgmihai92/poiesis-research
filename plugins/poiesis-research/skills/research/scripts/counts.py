@@ -99,14 +99,20 @@ def search_filter(query: str, base: str | None) -> str:
     return "title_and_abstract.search:" + (f"({base}) AND ({query})" if base else query)
 
 
-def free_name(folder: Path, name: str, command: list[str]) -> str:
-    """A default file name that does not overwrite another run's series: the same command gets its own files
-    again (a run that stopped is run again), and a different command gets the name with -2, -3 and so on."""
+def counted(meta: dict) -> dict:
+    """What a run counts, whatever the order of its arguments and however it was asked (--fresh, --json)."""
+    return {k: meta.get(k) for k in ("database", "years", "share", "base", "series", "corpus")}
+
+
+def free_name(folder: Path, name: str, meta: dict) -> str:
+    """A default file name that does not overwrite another run's series: a run that counts the same things gets
+    its own files again (one that stopped is run again, or asked again with --fresh), and a run that counts
+    something else gets the name with -2, -3 and so on."""
     candidate, n = name, 1
     while (folder / f"{candidate}.meta.json").is_file():
         try:
             before = json.loads((folder / f"{candidate}.meta.json").read_text(encoding="utf-8"))
-            same = before.get("script", {}).get("command") == command
+            same = counted(before) == counted(meta)
         except (OSError, ValueError, AttributeError):
             same = False
         if same:
@@ -289,7 +295,7 @@ def main(argv: list[str] | None = None) -> int:
     }
     if a.db == "openalex":
         meta["corpus"] = "core (OpenAlex's default; the expansion corpus is not counted)"
-        meta["key"] = bool(os.environ.get("OPENALEX_API_KEY"))
+        meta["key"] = bool(sc.api_key("OPENALEX_API_KEY"))
     else:
         meta["share"]["note"] = "every record type Europe PMC holds, on both sides"
 
@@ -308,8 +314,9 @@ def main(argv: list[str] | None = None) -> int:
     files.save(complete=not files.meta.get("stopped"), coverage=sc.coverage_line())
     files.close()
     report(a, files, out, types, database)
-    if box.get("renamed_from") and not a.json:
-        print(f"Another run's files already have the name {box['renamed_from']}, so this series is kept under a new name. --name sets one.")
+    if box.get("renamed_from"):  # with --json it is said beside the JSON, not inside it
+        print(f"Another run's files already have the name {box['renamed_from']}, so this series is kept under a new name. --name sets one.",
+              file=sys.stderr if a.json else sys.stdout)
     return 0 if files.meta["complete"] else 2  # 2: saved, and marked incomplete
 
 
@@ -353,7 +360,7 @@ def run_series(a, years: range, types: tuple[str, ...], meta: dict, box: dict) -
     meta["series"] = series_meta
 
     default = f"{ids[0]}-{meta['fetched']}"
-    name = a.name or free_name(a.out, default, meta["script"]["command"])
+    name = a.name or free_name(a.out, default, meta)
     if name != default and not a.name:
         box["renamed_from"] = default
     files = box["files"] = Files(a.out, name, HEADER, meta, types_file=base_table is not None)
@@ -389,7 +396,7 @@ def run_taxonomy(a, years: range, types: tuple[str, ...], meta: dict, box: dict)
                             base={"what": "all works of those types that year, with or without a topic"},
                             series=[{"id": "taxonomy", "label": "every OpenAlex topic (a work counts under its primary topic)", "filter": "group_by=primary_topic.id"}])
                 default = f"taxonomy-{years[0]}-{years[-1]}-{meta['fetched']}"
-                name = a.name or free_name(a.out, default, meta["script"]["command"])
+                name = a.name or free_name(a.out, default, meta)
                 if name != default and not a.name:
                     box["renamed_from"] = default
                 files = box["files"] = Files(a.out, name, TAXONOMY_HEADER, meta, types_file=False)
