@@ -221,6 +221,37 @@ class Secrets(LayerCase):
         finally:
             del os.environ["S2_API_KEY"]
 
+    def test_a_request_that_cannot_be_sent_says_why_without_the_key(self):
+        """Found by the re-check: a mistyped proxy was reported as a bad character in the key."""
+        import http.client
+        os.environ["OPENALEX_API_KEY"] = "PROBE-KEY-123"
+        try:
+            for error, why in ((ValueError("proxy URL with no authority: 'http:/127.0.0.1:9'"), "proxy URL with no authority"),
+                               (http.client.InvalidURL("URL can't contain control characters. '/works?api_key=PROBE-KEY-123'"), "URL can't contain control characters")):
+                with self.subTest(error=type(error).__name__):
+                    sc.LAYER = sc._Layer()
+                    sc.configure(cache_dir=self.tmp / "c", fresh=False, record=None, replay=None, hours=24)
+                    self.use([("api.openalex.org", error)])
+                    with self.assertRaises(sc.Refused) as c:
+                        sc.openalex({"filter": "a"})
+                    self.assertIn(why, str(c.exception))
+                    self.assertNotIn("PROBE-KEY-123", str(c.exception) + sc.coverage_line() + json.dumps(sc.LAYER.events))
+        finally:
+            del os.environ["OPENALEX_API_KEY"]
+
+    def test_a_status_line_that_repeats_the_key_is_not_passed_on(self):
+        import io
+        os.environ["OPENALEX_API_KEY"] = "PROBE-KEY-123"
+        try:
+            url = f"{OA}?filter=a&api_key=PROBE-KEY-123"
+            self.use([("api.openalex.org", urllib.error.HTTPError(url, 400, "Bad key PROBE-KEY-123", None, io.BytesIO(b"{}")))])
+            with self.assertRaises(urllib.error.HTTPError) as c:
+                sc.openalex({"filter": "a"})
+            self.assertNotIn("PROBE-KEY-123", str(c.exception) + str(c.exception.reason))
+            c.exception.close()
+        finally:
+            del os.environ["OPENALEX_API_KEY"]
+
     def test_a_key_is_found_however_the_answer_spells_it(self):
         os.environ["OPENALEX_API_KEY"] = "SECRET+KEY/123="
         try:
