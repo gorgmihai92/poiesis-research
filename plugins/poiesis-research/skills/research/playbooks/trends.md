@@ -13,6 +13,8 @@ source was read.
   works are typed, how topics are assigned and when that changed.
 - `liu-2024-database-expansion`: a study of Web of Science, read in part. A count describes the database and the
   field together.
+- `open-sources-2026-access`: DOAJ, OSF, Zenodo and CORE, documentation read and requests tried on 2026-11-22:
+  which of them can be counted by year, and why the other two are not.
 
 ## Count
 1. **Fix the slices before looking:** the words of each series, the years, the document types and the base.
@@ -26,7 +28,15 @@ source was read.
      (`OPENALEX_API_KEY`). Without one the script saves those 200, says the scan is incomplete and exits with
      code 2. They are the first 200 by id, not the largest.
 3. **A second database** when one covers the subject: the same search with `--db epmc` (Europe PMC: life
-   sciences first). Two databases that disagree are both reported; neither is picked.
+   sciences first), `--db doaj` (articles in open-access journals) or `--db zenodo` (every resource type: papers,
+   reports, datasets, software). Two databases that disagree are both reported; neither is picked.
+   - DOAJ and Zenodo look beyond title and abstract (keywords matched alone, seen once in each); their counts are
+     not comparable with OpenAlex's search field. Zenodo counts datasets and software alongside papers. The years
+     added up in one probe of one phrase: that is what was seen, not a guarantee.
+   - OSF Preprints and CORE give no yearly counts: OSF documents no title and no publication-date filter for
+     preprints, and CORE's total for a quoted phrase was not a count of that phrase when tried
+     (`open-sources-2026-access`, 2026-11-22). Say so under "Not checked" when the subject lives in preprints or
+     repositories.
 4. **Cost:** without a key OpenAlex gives $0.10 a day to everyone on the same network. A search series costs
    $0.001 and the base $0.0001. Answers are cached for a day, so a run that stopped can be run again at no cost.
 

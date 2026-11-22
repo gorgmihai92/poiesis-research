@@ -93,7 +93,7 @@ class LayerCase(unittest.TestCase):
         self.tmp = Path(self._tmp.name)
         self.sleeps: list[float] = []
         # A key set in the shell would change what the scripts send and say: a test that wants one sets its own.
-        self._keys = {name: os.environ.pop(name, None) for name in ("OPENALEX_API_KEY", "S2_API_KEY")}
+        self._keys = {name: os.environ.pop(name, None) for name in sc.KEY_NAMES}
         self._saved = (sc.LAYER, sc._open, sc._sleep)
         sc.LAYER = sc._Layer()
         sc.configure(cache_dir=self.tmp / "cache", fresh=False, record=None, replay=None, hours=24)

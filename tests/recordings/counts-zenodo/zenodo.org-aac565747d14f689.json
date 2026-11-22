@@ -1,0 +1,7 @@
+{
+ "url": "https://zenodo.org/api/records?q=publication_date%3A%5B2023-01-01+TO+2023-12-31%5D&size=1",
+ "method": "GET",
+ "status": 200,
+ "fetched": "2026-11-22T16:24:51Z",
+ "body": "{\"hits\": {\"total\": 468033, \"hits\": [{\"id\": 8435696, \"doi\": \"10.5281/zenodo.8435696\", \"links\": {\"self_html\": \"https://zenodo.org/records/8435696\"}, \"metadata\": {\"title\": \"PocketCoffea: a configuration layer for CMS analyses with Coffea\", \"publication_date\": \"2023-10-10\", \"resource_type\": {\"title\": \"Presentation\", \"type\": \"presentation\"}, \"access_right\": \"open\", \"license\": {\"id\": \"cc-by-4.0\"}}}]}}"
+}

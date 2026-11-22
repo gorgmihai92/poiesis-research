@@ -1,0 +1,7 @@
+{
+ "url": "https://doaj.org/api/search/articles/%28%22design%20anthropology%22%29%20AND%20bibjson.year%3A2024?pageSize=1",
+ "method": "GET",
+ "status": 200,
+ "fetched": "2026-11-22T16:24:51Z",
+ "body": "{\"total\": 4, \"page\": 1, \"pageSize\": 1, \"results\": [{\"id\": \"0fbbcb2a4e144009964e12e0f721b6ad\", \"bibjson\": {\"title\": \"Mutazioni e corrispondenze\", \"year\": \"2024\", \"identifier\": [{\"id\": \"1723-9990\", \"type\": \"pissn\"}, {\"id\": \"2785-7778\", \"type\": \"eissn\"}], \"link\": [{\"content_type\": \"HTML\", \"type\": \"fulltext\", \"url\": \"https://and-architettura.it/index.php/and/article/view/621\"}], \"journal\": {\"title\": \"And\"}}}]}"
+}
