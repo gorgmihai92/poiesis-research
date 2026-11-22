@@ -6,31 +6,32 @@ by year, records what is being noticed about it now, and looks for the nearest e
 called new. Every source, page, date, count and amount comes from a search or a page it read, never from memory.
 
 For a thesis, a paper, a grant application or a product decision that has to rest on sources someone else can check.
-Poiesis Research is one of the four products in the [Poiesis Toolkit](#part-of-the-poiesis-toolkit) and works on its
+Poiesis Research is one of the five products in the [Poiesis Toolkit](#part-of-the-poiesis-toolkit) and works on its
 own, as one plugin. Install it below and ask in plain language.
 
 ## Part of the Poiesis Toolkit
 
-The Poiesis Toolkit is four products for Claude Code, one for each step from a question to a finished product:
-**Research** collects, **Insight** connects, **Frontier** explores, **Design** creates. Each installs and works on
-its own. Insight and Frontier also read what the other steps left in your project, as plain files, and Design
-builds a Frontier concept when you ask.
+The Poiesis Toolkit is five products for Claude Code, one for each step from a question to a finished product:
+**Research** collects, **Insight** connects, **Foresight** anticipates, **Frontier** explores, **Design** creates.
+Each installs and works on its own. Insight, Foresight and Frontier also read what the other steps left in your
+project, as plain files, and Design builds a Frontier concept when you ask.
 
 | Product | What it does | Plugins | Agents | Reads | Leaves in your project |
 |---|---|---|---|---|---|
-| [Poiesis Research](https://github.com/gorgmihai92/poiesis-research) | **collect:** the literature on a topic, the evidence for and against a claim, the grants that fit | `poiesis-research` | `paper-scout`, `evidence-scout`, `funding-scout` | the web's scholarly databases, official funding pages | `research/` |
-| [Poiesis Insight](https://github.com/gorgmihai92/poiesis-insight) | **connect:** what the evidence or your data mean, and what is emerging; every conclusion challenged | `poiesis-insight` | `insight-analyst`, `foresight-analyst`, `challenger` | `research/`, your own data, `frontier/results/` | `insights/`, `foresight/` |
-| [Poiesis Frontier](https://github.com/gorgmihai92/poiesis-frontier) | **explore:** new concepts, each with the smallest experiment that could kill it | `poiesis-frontier` | `experimentalist` | `insights/`, `foresight/`, `research/` | `frontier/` |
-| [Poiesis Design](https://github.com/gorgmihai92/poiesis-design) | **create:** how the interface looks, behaves and what it says, built from components that already pass, checked before release | `poiesis-ui`, `poiesis-ux`, `poiesis-copy`, `poiesis-components` | `ui-auditor`, `ux-tester`, `copy-reviewer` | your code, `.poiesis-design/` | `.poiesis-design/`, design tokens, components |
+| [Poiesis Research](https://github.com/gorgmihai92/poiesis-research) | **collect:** the literature on a topic, the evidence for and against a claim, the grants that fit, yearly counts, signals | `poiesis-research` | `paper-scout`, `evidence-scout`, `funding-scout`, `signal-scout` | the web's scholarly databases, official funding pages | `research/` |
+| [Poiesis Insight](https://github.com/gorgmihai92/poiesis-insight) | **connect:** what the evidence or your data mean, what it leaves unanswered; every conclusion challenged and its verdict recorded | `poiesis-insight` | `insight-analyst`, `challenger` | `research/`, your own data, `frontier/results/` | `insights/` |
+| [Poiesis Foresight](https://github.com/gorgmihai92/poiesis-foresight) | **anticipate:** signals, trends, scenarios, forecasts, signposts | `poiesis-foresight` | `foresight-analyst`, `forecaster` | `research/`, `insights/`, your own data | `foresight/` |
+| [Poiesis Frontier](https://github.com/gorgmihai92/poiesis-frontier) | **explore:** new concepts, each with the smallest experiment that could kill it; study designs for a small group | `poiesis-frontier` | `experimentalist` | `insights/`, `foresight/`, `research/` | `frontier/` |
+| [Poiesis Design](https://github.com/gorgmihai92/poiesis-design) | **create:** how the interface looks, behaves and what it says, built from components that already pass, checked before release; free exploration and reports in a lab notebook | `poiesis-ui`, `poiesis-ux`, `poiesis-copy`, `poiesis-components`, `poiesis-studio` | `ui-auditor`, `ux-tester`, `copy-reviewer` | your code, `.poiesis-design/`; for reports, the notebook's folders | `.poiesis-design/`, design tokens, components; `design/` in a notebook |
 
 ```
-Research ──► Insight ──► Frontier ──► Design
-               ▲            │
-               └─ results ◄─┘   (experiment results go back to Insight as data)
+Research ──► Insight ──► Foresight ──► Frontier ──► Design
+               ▲                          │
+               └──────── results ◄────────┘   (experiment results go back to Insight as data)
 ```
 
-- **One job each.** Research says what sources say; Insight says what it means; Frontier proposes what could be
-  and how to test it; Design builds and checks. None does another's job.
+- **One job each.** Research says what sources say; Insight says what it means; Foresight reads it forward;
+  Frontier proposes what could be and how to test it; Design builds and checks. None does another's job.
 - **None needs another.** When another product would really improve the answer, Claude says so once, in one line,
   and offers to install it. You can say no; the work goes on and the report says what was left out.
 - **Depth you choose:** quick, standard (the default) or thorough, per request or as a line in your project's

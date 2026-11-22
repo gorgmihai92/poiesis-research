@@ -94,9 +94,11 @@ on without it if the user says no (say what was left out). Check with `claude pl
 the user agrees, with `claude plugin marketplace add gorgmihai92/<repo>` and then
 `claude plugin install <plugin>@<repo>` (it works after Claude Code restarts).
 Every suggestion, from the skill or an agent, gives the plugin's link (below) and names the skill or agent
-to use, e.g. "[poiesis-insight](https://github.com/gorgmihai92/poiesis-insight), `foresight-analyst`".
+to use, e.g. "[poiesis-foresight](https://github.com/gorgmihai92/poiesis-foresight), `foresight-analyst`".
 - **[poiesis-insight](https://github.com/gorgmihai92/poiesis-insight)**: when the user wants to know what the sources mean (patterns,
-  contradictions, implications) or what is emerging; research stops at what they say.
+  contradictions, implications); research stops at what they say.
+- **[poiesis-foresight](https://github.com/gorgmihai92/poiesis-foresight)**: when the user wants what is emerging and what may come:
+  signals read forward, trends, scenarios, dated forecasts (its `foresight` skill and `foresight-analyst` agent).
 - **[poiesis-frontier](https://github.com/gorgmihai92/poiesis-frontier)**: when the user wants new concepts or experiments from the gaps the
   library shows.
 
@@ -137,3 +139,15 @@ Added in 2.5.0. Everything above is unchanged.
   is named as `CORE refused (not asked: no key, …)`.
 - `search.py --json` works carry `doaj`, `osf`, `zenodo` and `core`: each database's own id, or null.
 - `research/data/<name>.meta.json` can have `database` DOAJ or Zenodo.
+
+Added in 2.6.0. Everything above is unchanged.
+- Every note, signal, evidence map and funding call starts with a block of Obsidian properties, as its template
+  shows: `type`, `plugin`, `date`, `topic`, `id`, `status` and `from`. Copy each value from the note's own lines
+  when the note is written; the label lines stay the record, and every script reads those, never the block. In
+  the block no line starts with `#`, text values are quoted, and `from` is a list of quoted links, one per line
+  (`  - "[[note-name]]"`), or `[]`. Never put a link in a heading or an **Id** line, or a link with an alias
+  (`[[a|b]]`) in a table. `verify_quotes.py` skips the block.
+- The block is a copy, so when a label line changes (a note read further, a call's status, a map's verdict), change
+  its value in the block in the same edit. `status` holds the first words of the label only: `abstract only`,
+  never `abstract only · 2026-11-22`. Inside a quoted value write `\"` for a quotation mark and `\\` for a
+  backslash.

@@ -1,5 +1,26 @@
 # Changelog
 
+## 2.6.0
+Everything is added: no path or field of 2.5.0 was renamed or removed, and the scripts read every note as before.
+- **Properties.** Each template starts with a block of Obsidian properties (YAML between two `---` lines): `type`,
+  `plugin`, `date` and `topic`; a note, a signal, an evidence map and a funding call, which hold one object each,
+  add `id`, `status` and `from`. The block is a copy for Obsidian's views (Bases): the label lines stay the record,
+  and the scripts read those. In the block no line starts with `#`, text is quoted, and a link is one quoted list
+  item, `- "[[note-name]]"`.
+- **`verify_quotes.py` skips the block.** A list item in it that starts with a quotation mark was read as a quote,
+  and a `[[link]]` or DOI there as a reference with no note. Its lines are now blanked before reading, so line
+  numbers stay the same. Only a block on the very first line counts (after a byte-order mark, if there is one),
+  and one that is never closed is not a block. A quote line inside the block is skipped without a word.
+- **Tests.** In `test_verify_quotes.py`, three tests that failed before the fix, one that guards it (a `---` further
+  down or never closed is not a block) and one for a note that starts with a byte-order mark; `test_templates.py`:
+  the block in each template, its rules, and `library.py`, `signals.py --next-id` and `verify_quotes.py
+  --references` reading a note the same with it as without it.
+- **The block is a copy.** `SKILL.md` asks for a value in the block to change in the same edit as its label line,
+  and for `status` to hold the label's first words only.
+- **Docs.** The READMEs name five products, with a Poiesis Foresight row and `poiesis-studio` in the Design row; `SKILL.md` suggests poiesis-foresight,
+  not poiesis-insight, for what is emerging.
+- **Not checked in this version:** how Obsidian shows the properties (no vault was opened), and any run on a topic.
+
 ## 2.5.0
 Everything is added: no path or field of 2.4.0 was renamed or removed, and a request that was asked before is asked
 the same way.

@@ -1,3 +1,12 @@
+---
+type: signal
+plugin: poiesis-research
+date: <YYYY-MM-DD, the day it was looked up>
+topic: "<the subject scanned>"
+id: "SG-<the number on the Id line>"
+status: "<the Read value, as on the Read line>"
+from: []
+---
 # <What was observed, in one line, with no adjective>
 
 - **Id:** SG-<number from `signals.py --next-id research/signals`>
