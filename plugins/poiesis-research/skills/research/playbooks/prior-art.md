@@ -22,8 +22,9 @@ A name someone just coined finds nothing. The mechanism finds neighbours.
    someone who built this ten years ago would have called it.
 2. **Search every wording in more than one database:**
    `python3 -I $S/search.py "<wording>" --db all --brief`, by relevance, and again with `--sort cited`.
-   `--db all` asks OpenAlex, Semantic Scholar, Crossref, Europe PMC and arXiv; the Coverage line says which
-   answered. A wording that returns nothing is written down too.
+   `--db all` asks OpenAlex, Semantic Scholar, Crossref, Europe PMC, arXiv, DOAJ, Zenodo and CORE (CORE only with
+   `CORE_API_KEY`); the Coverage line says which answered. OSF Preprints only when named (`--db osf`), with a
+   short wording: it matches titles only. A wording that returns nothing is written down too.
 3. **Follow the closest ones.** `python3 -I $S/citing.py --doi <DOI>` shows later work built on a neighbour.
    `python3 -I $S/foundations.py --doi <DOI> --doi <DOI>` shows what the neighbours cite in common: the field the
    thing belongs to, whatever it is called there.

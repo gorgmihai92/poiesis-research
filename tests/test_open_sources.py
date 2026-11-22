@@ -66,6 +66,10 @@ class Records(unittest.TestCase):
         self.assertEqual(sc.and_join("(craft OR making) ritual"), "( craft OR making ) AND ritual")
         self.assertEqual(sc.and_join('title:"x y" z'), 'title:"x y" AND z')
         self.assertEqual(sc.and_join("ritual publication_date:[2020-01-01 TO 2020-12-31]"), "ritual AND publication_date:[2020-01-01 TO 2020-12-31]")
+        self.assertEqual(sc.and_join("title:(design anthropology) ritual"), "title:( design AND anthropology ) AND ritual")
+        self.assertEqual(sc.and_join('"design anthropology"~3 craft'), '"design anthropology"~3 AND craft')
+        self.assertEqual(sc.and_join('"a b"^2 c'), '"a b"^2 AND c')
+        self.assertEqual(sc.and_join("craft and ritual"), "craft AND and AND ritual")  # a lowercase "and" is a word in Zenodo's syntax
 
     def test_each_host_is_paced_as_its_documentation_asks(self):
         self.assertEqual([sc.pace_seconds(h) for h in ("doaj.org", "api.osf.io", "zenodo.org", "api.core.ac.uk")], [0.55, 36.5, 2.1, 6.1])
@@ -120,7 +124,7 @@ class CoreKey(LayerCase):
         self.assertIn("No results.", out)
         self.assertIn("CORE refused (not asked: no key, set CORE_API_KEY (free: https://core.ac.uk/services/api))", out.splitlines()[-1])
 
-    def test_db_all_asks_every_database_and_names_core_when_it_has_no_key(self):
+    def test_db_all_asks_every_database_but_osf_and_names_core_when_it_has_no_key(self):
         empty = Answer(json.dumps({}))
         net = self.use([("api.openalex.org", Answer(json.dumps({"results": []}))), ("semanticscholar", Answer(json.dumps({"data": []}))),
                         ("api.crossref.org", Answer(json.dumps({"message": {"items": []}}))), ("ebi.ac.uk", Answer(json.dumps({"resultList": {"result": []}}))),
@@ -128,11 +132,12 @@ class CoreKey(LayerCase):
                         ("doaj.org", empty), ("api.osf.io", empty), ("zenodo.org", empty)])
         code, out, _ = self.run_script(search, ["design anthropology", "--db", "all", "--brief"])
         self.assertEqual(code, 0)
-        for host in ("doaj.org", "api.osf.io", "zenodo.org"):
+        for host in ("doaj.org", "zenodo.org"):
             self.assertEqual(net.count(host), 1, host)
-        self.assertEqual(net.count("core.ac.uk"), 0)
+        self.assertEqual((net.count("core.ac.uk"), net.count("api.osf.io")), (0, 0))  # OSF only when named
         line = out.splitlines()[-1]
-        for name in ("OpenAlex", "Semantic Scholar", "Crossref", "Europe PMC", "arXiv", "DOAJ", "OSF Preprints", "Zenodo"):
+        self.assertNotIn("OSF", line)
+        for name in ("OpenAlex", "Semantic Scholar", "Crossref", "Europe PMC", "arXiv", "DOAJ", "Zenodo"):
             self.assertIn(f"{name} answered (1 request)", line)
         self.assertIn("CORE refused (not asked: no key", line)
 
@@ -164,6 +169,89 @@ class CoreKey(LayerCase):
             self.assertNotIn("CORE-SECRET", text)
 
 
+class Requests(LayerCase):
+    """How each open source is asked, and what a refusal or an odd answer does: on the fake network."""
+
+    def test_from_year_reaches_each_source_in_its_own_syntax(self):
+        os.environ["CORE_API_KEY"] = KEY
+        net = self.use([("doaj.org", Answer(json.dumps({"total": 0, "results": []}))), ("zenodo.org", Answer(json.dumps({"hits": {"total": 0, "hits": []}}))),
+                        ("api.core.ac.uk", Answer(json.dumps({"results": []})))])
+        for name in ("doaj", "zenodo", "core"):
+            sc.OPEN_SOURCES[name]('"design anthropology" ritual', 5, 2020)
+        doaj, zenodo, core = net.calls
+        self.assertEqual(doaj, sc.DOAJ + "%28%22design%20anthropology%22%20ritual%29%20AND%20bibjson.year%3A%5B2020%20TO%203000%5D?pageSize=5")
+        self.assertIn("q=%28%22design+anthropology%22+AND+ritual%29+AND+publication_date%3A%5B2020-01-01+TO+3000-12-31%5D&size=5", zenodo)
+        self.assertIn("q=%28%22design+anthropology%22+ritual%29+AND+yearPublished%3E%3D2020&limit=5", core)
+
+    def test_osf_keeps_from_year_on_its_own_side_and_drops_quotes(self):
+        data = {"data": [{"attributes": {"title": "Old", "date_published": "2018-05-01"}}, {"attributes": {"title": "New", "date_published": "2024-05-01"}}]}
+        net = self.use([("api.osf.io", Answer(json.dumps(data)))])
+        works = sc.osf_search('"design  anthropology"', 3, 2020)
+        self.assertEqual([w["title"] for w in works], ["New"])
+        self.assertTrue(net.calls[0].endswith("?filter%5Btitle%5D=design+anthropology&page%5Bsize%5D=3"), net.calls[0])
+
+    def test_a_doaj_query_with_a_slash_a_question_mark_or_a_hash_stays_in_the_path(self):
+        net = self.use([("doaj.org", Answer(json.dumps({"total": 1, "results": []})))])
+        sc.doaj_search("doi:10.1234/ab?c#d%", 2)
+        self.assertEqual(net.calls[0], sc.DOAJ + "doi%3A10.1234%2Fab%3Fc%23d%25?pageSize=2")
+
+    def test_a_doaj_404_is_a_refusal_not_a_count_of_zero(self):
+        self.use([("doaj.org", Answer("", 404))])
+        with self.assertRaises(Exception) as caught:
+            sc.doaj_count("x")
+        self.assertIsInstance(caught.exception, sc.REFUSALS)
+        self.assertIn("DOAJ refused (HTTP 404", sc.coverage_line())
+        self.assertNotIn("DOAJ answered", sc.coverage_line())
+
+    def test_a_zenodo_answer_without_a_count_is_refused(self):
+        self.use([("zenodo.org", Answer(json.dumps({"hits": {"total": {}}})))])
+        with self.assertRaises(sc.Refused):
+            sc.zenodo_count("x")
+
+    def test_a_busy_zenodo_is_asked_again_and_then_refused(self):
+        net = self.use([("zenodo.org", Answer("", 429))])
+        self.assertIsNone(sc.ask_open("zenodo", "x"))
+        self.assertEqual(net.count("zenodo.org"), 5)
+        self.assertIn("Zenodo refused (HTTP 429", sc.coverage_line())
+
+    def test_a_core_500_is_asked_again_once_only(self):
+        os.environ["CORE_API_KEY"] = KEY
+        net = self.use([("api.core.ac.uk", Answer(json.dumps({"message": "abstract is not a searchable field"}), 500))])
+        self.assertIsNone(sc.ask_open("core", "design anthropology"))
+        self.assertEqual(net.count("core.ac.uk"), 2)
+        self.assertIn("CORE refused (HTTP 500", sc.coverage_line())
+
+    def test_an_answer_of_an_unexpected_shape_is_named_and_the_run_goes_on(self):
+        odd = {"hits": {"total": 1, "hits": [{"metadata": {"title": "T", "license": "cc-by-4.0", "resource_type": "dataset"}}]}}
+        self.use([("zenodo.org", Answer(json.dumps(odd))), ("doaj.org", Answer(json.dumps({"total": 0, "results": []})))])
+        self.assertIsNone(sc.ask_open("zenodo", "x"))
+        self.assertEqual(sc.ask_open("doaj", "x"), [])
+        line = sc.coverage_line()
+        self.assertIn("Zenodo answered (1 request) and refused (answer not in the expected shape)", line)
+        self.assertIn("DOAJ answered (1 request)", line)
+
+    def test_a_key_with_a_line_break_inside_never_reaches_a_message(self):
+        os.environ["CORE_API_KEY"] = "CORE-SECRET\n123abcdef"
+        self.use([])
+        sc._open = lambda req, timeout=60: (_ for _ in ()).throw(ValueError(f"Invalid header value {req.get_header('Authorization')!r}"))
+        with self.assertRaises(sc.Refused) as caught:
+            sc.core_search("x")
+        self.assertNotIn("SECRET", str(caught.exception))
+        self.assertNotIn("123abcdef", sc.coverage_line())
+
+    def test_a_recorded_core_answer_replays_without_a_key(self):
+        sc.configure(record=self.tmp / "rec")
+        os.environ["CORE_API_KEY"] = KEY
+        self.use([("api.core.ac.uk", Answer(fixture("core-search-design-anthropology.json")))])
+        sc.core_search("design anthropology", 1)
+        del os.environ["CORE_API_KEY"]
+        sc.LAYER = sc._Layer()
+        sc.configure(cache_dir=None, replay=self.tmp / "rec")
+        net = self.use([])
+        self.assertEqual([w["doi"] for w in sc.core_search("design anthropology", 1)], ["10.1111/gena.12013"])
+        self.assertEqual(net.calls, [])
+
+
 class CountsReplay(LayerCase):
     def counted(self, db: str) -> tuple[str, dict]:
         net = self.use([])
@@ -178,7 +266,7 @@ class CountsReplay(LayerCase):
     def test_doaj_counts_one_year_at_a_time(self):
         text, meta = self.counted("doaj")
         self.assertEqual((meta["database"], meta["series"][0]["query"], meta["base"]["query"]), ("DOAJ", '("design anthropology")', "bibjson.year:<year> only"))
-        self.assertIn("keywords too", meta["search_field"])
+        self.assertIn("keywords among them", meta["search_field"])
         self.assertIn("DOAJ answered (4 requests, of which 4 from a recording)", text)
 
     def test_zenodo_counts_one_year_at_a_time(self):
