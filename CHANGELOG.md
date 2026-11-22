@@ -1,5 +1,24 @@
 # Changelog
 
+## 2.5.0
+Everything is added: no path or field of 2.4.0 was renamed or removed, and a request that was asked before is asked
+the same way.
+- **Open sources.** `search.py --db doaj|osf|zenodo|core`, and `--db all` asks them too: DOAJ (articles in
+  open-access journals), OSF Preprints (SocArXiv, PsyArXiv and the other servers on OSF; titles only), Zenodo
+  (reports, datasets, software, papers) and CORE (open full texts). They go through the same request layer:
+  cache, pacing per host from each documentation, the Coverage line. Their rows have the same shape as the other
+  databases'; they are searched by query, not by DOI.
+- **CORE's key.** `CORE_API_KEY` is read from the environment and sent in a header, never in the address, and it is
+  scrubbed from every answer, cache file and recording like the other keys. Without it CORE is not asked, and the
+  Coverage line says "CORE refused (not asked: no key, …)".
+- **Counts.** `counts.py --db doaj` and `--db zenodo`, one request per year. OSF and CORE have no yearly counts:
+  OSF's API filters titles only, and CORE's total for a quoted phrase was not a count of that phrase when tried.
+- **Notes and playbooks.** `research/notes/open-sources-2026-access`: each API's documentation read on 2026-11-22
+  and what a few keyless requests showed. `playbooks/literature.md` and `playbooks/trends.md` say when to use each
+  source and what it does not match.
+- **Not checked in this version:** CORE with a key (none was available; its rows were tested on one keyless answer),
+  Zenodo and OSF with a token, DOAJ and Zenodo counts beyond one phrase and two years, and any run on a topic.
+
 ## 2.4.0
 Everything is added: no path or field of 2.3.3 was renamed or removed, and a script that got its answers before
 gets the same ones, followed by a Coverage line. One request parameter is no longer sent (see "Removed").

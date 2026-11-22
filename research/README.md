@@ -35,4 +35,5 @@ Added for 2.4.0. Each note's **Read** line says how much of the source was read.
   Open Government Licence. [Seven signal sources](notes/signal-sources-2026-access.md), access rules read
   2026-11-21.
 - **Requests:** [Crossref, Europe PMC, arXiv and Semantic Scholar](notes/fallback-databases-2026-access.md),
-  access rules read 2026-11-21.
+  access rules read 2026-11-21. [DOAJ, OSF Preprints, Zenodo and CORE](notes/open-sources-2026-access.md), access
+  rules read and requests tried 2026-11-22.
