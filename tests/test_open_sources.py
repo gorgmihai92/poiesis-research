@@ -203,10 +203,23 @@ class Requests(LayerCase):
         self.assertIn("DOAJ refused (HTTP 404", sc.coverage_line())
         self.assertNotIn("DOAJ answered", sc.coverage_line())
 
-    def test_a_zenodo_answer_without_a_count_is_refused(self):
-        self.use([("zenodo.org", Answer(json.dumps({"hits": {"total": {}}})))])
+    def test_a_zenodo_answer_without_a_count_is_refused_and_not_cached(self):
+        net = self.use([("zenodo.org", [Answer(json.dumps({"hits": {"total": {}}})), Answer(json.dumps({"hits": {"total": 7}}))])])
         with self.assertRaises(sc.Refused):
             sc.zenodo_count("x")
+        self.assertIn("Zenodo refused (answered with something that is not data", sc.coverage_line())
+        self.assertEqual(sc.zenodo_count("x"), 7)  # asked again, not served from the cache
+        self.assertEqual(net.count("zenodo.org"), 2)
+
+    def test_a_core_document_type_given_as_a_list_is_kept_as_text(self):
+        self.assertEqual(sc.norm_core({"title": "T", "documentType": ["research", "thesis"]})["type"], "research,thesis")
+        self.assertEqual(sc.evidence_kind(sc.norm_core({"title": "T", "documentType": ["review"], "abstract": "a"})), "review")
+
+    def test_oa_only_keeps_the_open_records_of_an_open_source(self):
+        hits = {"hits": {"total": 2, "hits": [{"metadata": {"title": "Open one", "access_right": "open"}}, {"metadata": {"title": "Closed one", "access_right": "restricted"}}]}}
+        self.use([("zenodo.org", Answer(json.dumps(hits)))])
+        code, out, _ = self.run_script(search, ["x", "--db", "zenodo", "--oa-only", "--brief"])
+        self.assertEqual([x.split(" (")[0] for x in out.splitlines() if x.startswith("- ")], ["- Open one"])
 
     def test_a_busy_zenodo_is_asked_again_and_then_refused(self):
         net = self.use([("zenodo.org", Answer("", 429))])
