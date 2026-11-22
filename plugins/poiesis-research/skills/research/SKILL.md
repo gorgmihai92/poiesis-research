@@ -45,6 +45,17 @@ refused and why, and the OpenAlex budget that is left. When OpenAlex or Semantic
 PMC and arXiv answer in its place. Answers are kept on disk for a day, so a run that stopped can be run again
 without asking twice; `--fresh` asks again. `python3 -I $S/scholarly.py cache` says where they are kept.
 
+**Sources.** OpenAlex and Semantic Scholar by default; Crossref, Europe PMC and arXiv when they refuse. Four open
+sources are asked when named with `--db`, or with `--db all`, and fill the gaps journal databases leave in the
+humanities and social sciences:
+- `doaj`: DOAJ, articles in open-access journals; every field, keywords too.
+- `osf`: OSF Preprints (SocArXiv, PsyArXiv and the other servers on OSF); titles only.
+- `zenodo`: Zenodo, reports, datasets, software, presentations and papers; every field.
+- `core`: CORE, open full texts from repositories; only with `CORE_API_KEY` (free). Without it CORE is not asked,
+  and the Coverage line says so.
+They are searched by query, not by DOI. What each one matches is in the note `open-sources-2026-access` in the
+plugin's repository.
+
 ## Answers
 Short and direct: the answer first, then what it rests on, in bullets or a table; no preamble, no recap. When the
 work is saved, the chat gets the summary, the "Not checked" line and the file's path. Use an agent
@@ -119,3 +130,9 @@ Added in 2.4.0. Everything above is unchanged.
 - The Coverage line: `Coverage (<date>): <database> answered (<n> requests …); <database> refused (<why>).`
 - In a Texere vault, `Support/Texere/Bibliography/bibliography.json` is read, and sources in it are cited as
   `[@key, p. N]`. Nothing is written in Texere's folders.
+
+Added in 2.5.0. Everything above is unchanged.
+- The Coverage line can name DOAJ, OSF Preprints, Zenodo and CORE. A source that was not asked for want of a key
+  is named as `CORE refused (not asked: no key, …)`.
+- `search.py --json` works carry `doaj`, `osf`, `zenodo` and `core`: each database's own id, or null.
+- `research/data/<name>.meta.json` can have `database` DOAJ or Zenodo.

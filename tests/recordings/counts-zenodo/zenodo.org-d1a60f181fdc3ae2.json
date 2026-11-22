@@ -1,0 +1,7 @@
+{
+ "url": "https://zenodo.org/api/records?q=publication_date%3A%5B2024-01-01+TO+2024-12-31%5D&size=1",
+ "method": "GET",
+ "status": 200,
+ "fetched": "2026-11-22T16:24:54Z",
+ "body": "{\"hits\": {\"total\": 652626, \"hits\": [{\"id\": 5539565, \"doi\": \"10.5281/zenodo.5539565\", \"links\": {\"self_html\": \"https://zenodo.org/records/5539565\"}, \"metadata\": {\"title\": \"DEPRECATED\", \"publication_date\": \"2024-01-22\", \"resource_type\": {\"title\": \"Taxonomic treatment\", \"type\": \"publication\", \"subtype\": \"taxonomictreatment\"}, \"access_right\": \"restricted\", \"license\": {\"id\": \"notspecified\"}}}]}}"
+}

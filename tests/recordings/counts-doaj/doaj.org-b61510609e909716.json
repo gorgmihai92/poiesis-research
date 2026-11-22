@@ -1,0 +1,7 @@
+{
+ "url": "https://doaj.org/api/search/articles/bibjson.year%3A2024?pageSize=1",
+ "method": "GET",
+ "status": 200,
+ "fetched": "2026-11-22T16:24:50Z",
+ "body": "{\"total\": 1227758, \"page\": 1, \"pageSize\": 1, \"results\": [{\"id\": \"0000141c8d2b4e3193f26b8b21fad12d\", \"bibjson\": {\"title\": \"Microenvironment‐adaptive nanodecoy synergizes bacterial eradication, inflammation alleviation, and immunomodulation in promoting biofilm‐associated diabetic chronic wound healing cascade\", \"year\": \"2024\", \"identifier\": [{\"id\": \"2692-4560\", \"type\": \"eissn\"}, {\"id\": \"10.1002/agt2.640\", \"type\": \"doi\"}], \"link\": [{\"content_type\": \"HTML\", \"type\": \"fulltext\", \"url\": \"https://doi.org/10.1002/agt2.640\"}], \"journal\": {\"title\": \"Aggregate\"}}}]}"
+}
