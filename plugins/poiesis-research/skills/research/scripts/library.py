@@ -6,8 +6,8 @@
   library.py --json
 
 It reads `research/notes/**/*.md` (also under `docs/research/`): the title, authors and year from the heading, the
-DOI, and how much of the source was read (the **Read** line, or "abstract only" in older notes). It counts the
-files in `research/maps`, `research/signals`, `research/data` and `research/funding`.
+DOI from the **Source** line, and how much of the source was read (the **Read** line, or "abstract only" in older
+notes). It counts the files in `research/maps`, `research/signals`, `research/data` and `research/funding`.
 
 In a vault that uses Texere it also reads `Support/Texere/Bibliography/bibliography.json`: a list in which each
 entry has an `id` (the citation key), an `obsidianPath` and a `reading-status`. A source held there is cited as
@@ -21,7 +21,39 @@ import unicodedata
 from pathlib import Path
 
 TEXERE_INDEX = Path("Support") / "Texere" / "Bibliography" / "bibliography.json"
-DOI = re.compile(r"(?:doi\.org/|doi:\s*)(10\.\d{4,9}/[^\s>\]\"'`,;)]+(?:\([^\s)]*\)[^\s>\]\"'`,;)]*)*)", re.I)
+# One DOI pattern and one trim, the same in verify_citations.py, verify_quotes.py and library.py (copied: each script
+# stands alone). A DOI is read after doi.org/ or a publisher's /doi/ (…/doi/10.…, …/doi/full/10.…), or bare where it
+# starts a word: at a line's start, or after a space, a bracket, a quotation mark, a colon (doi:, arXiv:), a comma, a
+# table's bar, a `·` or bold marks. One inside another address's path (…/articles/10.…) is not read.
+DOI = re.compile(r"(?:doi\.org/|/doi/(?:[a-z]+/)?|(?<![^\s(\[<{|\"'“‘`*_·:,;]))(10\.\d{4,9}/[^\s<>\[\]\"'`,;|“”‘’·]+)", re.I)
+SOURCE_LINE = re.compile(r"^[ \t]*[-*+][ \t]+\*\*Source:?\*\*:?(.*(?:\n[ \t]+\S.*)*)", re.M | re.I)
+
+
+def trim(doi: str) -> str:
+    """Drop what ends a DOI in prose: points, commas, colons, bold or italic marks and closing quotation marks at the
+    end, and unbalanced closing parentheses; keep inner ones (S0016-3287(98)00086-X)."""
+    while True:
+        cut = doi.rstrip(".,:;*_\"'”’")
+        if cut.endswith(")") and cut.count(")") > cut.count("("):
+            cut = cut[:-1]
+        if cut == doi:
+            return doi
+        doi = cut
+
+
+def source_line(text: str) -> str:
+    """A note's **Source** line with the indented lines that continue it, or "" when the note has none."""
+    m = SOURCE_LINE.search(text)
+    return m.group(1) if m else ""
+
+
+def note_doi(text: str) -> str | None:
+    """A note's own DOI: the first one on its **Source** line. A DOI elsewhere in a note (under "Later work", or in
+    a link in its prose) is another work's."""
+    m = DOI.search(source_line(text))
+    return trim(m.group(1)) if m else None
+
+
 KINDS = {"maps": "evidence maps and prior-art maps", "signals": "signal notes", "data": "data series", "funding": "funding calls"}
 
 
@@ -43,11 +75,11 @@ def read_note(path: Path, root: Path) -> dict:
     text = path.read_text(encoding="utf-8", errors="replace")
     heading = next((line[2:].strip() for line in text.splitlines() if line.startswith("# ")), path.stem)
     who = re.search(r"\(([^()]*?),?\s*((?:19|20)\d{2})\)\s*$", heading)
-    doi = DOI.search(text)
+    doi = note_doi(text)
     read = re.search(r"^\s*[-*]\s*\*\*Read:\*\*\s*(.+)$", text, re.M)
     level = read.group(1).strip() if read else "abstract only" if re.search(r"\*\*abstract[^*]*only\*\*", text, re.I) else "not stated"
     return {"name": path.stem, "title": heading[: who.start()].strip() if who else heading, "authors": who.group(1).strip() if who else "", "year": who.group(2) if who else "",
-            "doi": doi.group(1).rstrip(".").lower() if doi else None, "read": re.split(r"[:,;.·(]", level)[0].strip()[:60] or "not stated", "path": str(path.relative_to(root))}
+            "doi": doi.lower() if doi else None, "read": re.split(r"[:,;.·(]", level)[0].strip()[:60] or "not stated", "path": str(path.relative_to(root))}
 
 
 def read_texere(index: Path) -> tuple[list[dict], str | None]:

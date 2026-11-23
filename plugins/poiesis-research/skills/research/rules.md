@@ -21,8 +21,11 @@ checked:** what was skipped, or "nothing". These rules limit what is reported as
 - Never invent a source, page, number, date or amount. Everything comes from a search result or a page or file
   you read; anything you remember but cannot confirm is marked "unconfirmed".
 - A claim taken from a source names its page; a funding detail names its official page and the date checked.
-- After writing notes, run `verify_citations.py` on them: every DOI must exist and match the note's title. Asking
-  a model whether its citations are correct is not a check: it often answers wrongly (Walters & Wilder 2023).
+- After writing notes, run `verify_citations.py` on them: each note's DOI, the one on its **Source** line, must
+  exist and match the note's title. Asking a model whether its citations are correct is not a check: it often
+  answers wrongly (Walters & Wilder 2023).
+- ERROR means the registry did not answer: the notes have not passed; run the check again when it answers. UNREAD
+  means a DOI on the Source line stands inside an address the script cannot read: write the DOI itself there.
 - Report what sources say, as they say it (sample, effect size, limits). One study is not a consensus; say when
   sources disagree. Interpretation is left to the user.
 - Search for the evidence against a claim as hard as for the evidence for it, and report both (Nickerson 1998).

@@ -10,7 +10,7 @@
     {
       "name": "poiesis-research",
       "description": "Research for any project from sources that can be checked: the literature on a topic, the evidence behind a claim, EU and Romanian grants, yearly counts, signals and prior art. One skill with six playbooks and the paper-scout, evidence-scout, funding-scout and signal-scout agents.",
-      "version": "2.6.0",
+      "version": "2.6.1",
       "author": {
         "name": "George Mihai",
         "email": "hi@georgemihai.com"

@@ -6,6 +6,7 @@ import json
 import subprocess
 import sys
 import tempfile
+import unicodedata
 import unittest
 from pathlib import Path
 
@@ -175,6 +176,44 @@ class Matching(unittest.TestCase):
         self.assertEqual(vq.find("a lens through which evidence is viewed", pages, (4, 4)), ("FOUND", "the text has no page markers"))
 
 
+class TheMarksOfANumber(unittest.TestCase):
+    """Found by the audit of 2026-11-23: with letters and digits only, "3.5%" was found where the source says "35%".
+    The comparison is now poiesis-insight's (quote_gate.py), so both plugins answer the same on the same quote."""
+
+    def found(self, quote: str, source: str) -> str:
+        return vq.find(quote, vq.pages_of(source), None)[0]
+
+    def test_a_point_comma_or_sign_in_a_number_must_match(self):
+        self.assertEqual(self.found("rose by 3.5% in a year", "The share rose by 35% in a year."), "NOT FOUND")
+        self.assertEqual(self.found("a sample of n = 1,000 adults", "a sample of n = 1000 adults"), "NOT FOUND")
+        self.assertEqual(self.found("a correlation of r = 0.2 was found", "a correlation of r = -0.2 was found"), "NOT FOUND")
+        self.assertEqual(self.found("rose by 35% in a year", "The share rose by 35% in a year."), "FOUND")
+
+    def test_any_minus_is_read_as_one(self):
+        self.assertEqual(self.found("a correlation of r = -0.2 was found", "a correlation of r = \u22120.2 was found"), "FOUND")
+        self.assertEqual(self.found("a change of -0.2 points", "a change of \u20130.2 points"), "FOUND")
+        self.assertEqual(vq.fold("-0.2"), vq.fold("\u22120.2"))
+
+    def test_space_between_a_number_and_its_mark_still_folds_away(self):
+        self.assertEqual(self.found("rose by 35% in a year", "The share rose by 35 % in a year."), "FOUND")
+        self.assertEqual(self.found("p < 0.05", "significant (p<0.05) in both"), "FOUND")
+
+    def test_plain_words_ligatures_and_accents_fold_as_before(self):
+        def before(s: str) -> str:  # the fold of 2.6.0, letters and digits only
+            return "".join(c for c in unicodedata.normalize("NFKD", s).casefold() if c.isalnum())
+
+        for text in ("Our ﬁndings reveal that web search helps", "statement-level sup-\nport", "Café, naïve, Œuvre — “quoted”",
+                     "Martín-Martín et al. found it", "COVID-19 and 2020 data"):
+            self.assertEqual(vq.fold(text), before(text), text)
+        self.assertEqual(vq.fold("ﬁndings café naïve"), "findingscafenaive")
+
+    def test_the_same_answers_as_poiesis_insight(self):
+        """What quote_gate.py's fold in poiesis-insight 2.1.0 returns for these, read from that file on 2026-11-23."""
+        for text, folded in (("3.5%", "3.5%"), ("35 %", "35%"), ("\u22120.2", "-0.2"), ("r = -0.2", "r=-0.2"), ("n = 1,000", "n=1,000"),
+                             ("p < .05", "p<05"), ("±1.5 SD", "±1.5sd"), ("+3", "+3"), ("a\u20135", "a5"), ("novel15, despite", "novel15despite")):
+            self.assertEqual(vq.fold(text), folded, text)
+
+
 class Notes(unittest.TestCase):
     def setUp(self):
         self._tmp = tempfile.TemporaryDirectory()
@@ -339,6 +378,40 @@ class References(unittest.TestCase):
         code, out = self.check("Write to someone@example.org about it.\n")
         self.assertEqual(code, 0, out)
         self.assertIn("0 references", out)
+
+    def test_a_bare_doi_is_a_reference_in_a_report_and_in_a_note(self):
+        """Found by the audit of 2026-11-23: an evidence map's DOI cell holds the DOI itself, and it was not seen."""
+        (self.tmp / "research" / "notes" / "chelli-2024.md").write_text("# Hallucination rates (Chelli et al., 2024)\n- **Source:** JMIR 26: e53164 · 10.2196/53164\n",
+                                                                         encoding="utf-8")
+        code, out = self.check("| Citation | DOI |\n|---|---|\n| Walters & Wilder, 2023 | 10.1038/s41598-023-41032-5 |\n| Chelli et al., 2024 | 10.2196/53164 |\n"
+                               "10.1136/ebmed-2016-110401 starts a line, and one in parentheses (10.1234/not-in-the-library).\n")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(out.count("NO NOTE"), 1, out)
+        self.assertIn("NO NOTE    line 5 · doi 10.1234/not-in-the-library · no note has this DOI", out)
+        self.assertIn("4 references in 2026-11-21-report.md: 3 have a note, 1 do not.", out)
+
+    def test_a_note_holds_its_own_doi_not_those_of_its_later_work(self):
+        """Found by the review of 2.6.1: every DOI under a note's Later work was counted as held."""
+        (self.tmp / "research" / "notes" / "a-book-1998.md").write_text(
+            "# A book about things (Someone, 1998)\n\n- **Source:** A Press · https://example.org/a-book\n\n## Later work\n"
+            "- A critique that cites it · 10.1234/critique-2020 (checked 2026-11-23)\n", encoding="utf-8")
+        code, out = self.check("The critique (10.1234/critique-2020) and the book [[a-book-1998]].\n")
+        self.assertEqual(code, 1, out)
+        self.assertIn("NO NOTE    line 1 · doi 10.1234/critique-2020 · no note has this DOI", out)
+        self.assertIn("2 references in 2026-11-21-report.md: 1 have a note, 1 do not.", out)
+
+    def test_a_doi_with_parentheses_in_a_note_and_a_report(self):
+        """Found by the review of 2.6.1: (10.1016/0007-6813(90)90040-i). was cut at its inner parenthesis."""
+        (self.tmp / "research" / "notes" / "porter-1990.md").write_text(
+            "# A paper (Someone, 1990)\n\n- **Source:** Business Horizons (10.1016/0007-6813(90)90040-i).\n", encoding="utf-8")
+        code, out = self.check("As shown (10.1016/0007-6813(90)90040-I).\n")
+        self.assertEqual(code, 0, out)
+        self.assertIn("1 references in 2026-11-21-report.md: 1 have a note, 0 do not.", out)
+
+    def test_a_doi_in_an_address_counts_once_and_a_doi_like_path_elsewhere_not_at_all(self):
+        code, out = self.check("Read at https://doi.org/10.1038/s41598-023-41032-5 and at https://www.nature.com/articles/10.1038/s41598-023-41032-5.\n")
+        self.assertEqual(code, 0, out)
+        self.assertIn("1 references in 2026-11-21-report.md: 1 have a note, 0 do not.", out)
 
 
 
