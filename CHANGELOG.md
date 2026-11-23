@@ -1,5 +1,44 @@
 # Changelog
 
+## 2.6.1
+Fixes found by the audit of 2026-11-23 and by the review of this version. No path or field was renamed or removed.
+- **What is read where.** A note's own DOI is the first one on its **Source** line (with the indented lines that
+  continue it), in all three scripts that read notes: `verify_citations.py` checks it, `library.py` lists it and
+  answers `--has` with it, and `verify_quotes.py --references` counts it as held. A DOI elsewhere in a note, such
+  as one under "Later work", is another work's and is not read. Before, `verify_citations.py` and `library.py` took
+  the first `doi.org/` DOI anywhere in the note and `--references` counted every one; a note with no Source line
+  now has NO DOI. In a report, `--references` still reads every DOI on every line, so an evidence map's DOI cells
+  are references.
+- **One DOI pattern and one trim,** copied the same into the three scripts, so they read the same DOI from the same
+  text. A DOI is read after `doi.org/` or a publisher's `/doi/` (`…/doi/10.…`, `…/doi/full/10.…`), or bare where
+  it starts a word: at a line's start, or after a space, a bracket, a quotation mark, a colon (`doi:`, `arXiv:`),
+  a comma, a table's bar, a `·` or bold marks. The templates ask for the DOI itself (`<DOI or URL>`,
+  `<10.xxxx/…>`), and before only the forms after `doi.org/` or `doi:` were read: a bare DOI was NO DOI and passed.
+  A DOI ends at a space, `<`, `>`, a square bracket, a quotation mark, a comma, `;`, `|` or `·`; then points,
+  commas, colons, `*`, `_`, closing quotation marks and unbalanced closing parentheses are dropped from its end, and
+  balanced ones inside are kept (`10.1016/0007-6813(90)90040-i`). A DOI-like path inside another address
+  (`…/articles/10.…`) is not read, and an address with a DOI counts once.
+- **ERROR fails.** `verify_citations.py` exited 0 when the registry could not be reached, so every note passed.
+  ERROR now makes the exit code 1, and the summary says the check could not be completed and the notes have not
+  passed.
+- **NO DOI stays exit 0,** because a work may have none (a book, a page with a URL). A Source line with something
+  shaped like a DOI that the pattern cannot read (`…/articles/10.…`) is UNREAD and fails: write the DOI itself
+  there. Something DOI-shaped elsewhere in a note does not make it UNREAD. `rules.md` and the literature playbook
+  say what to do on ERROR and on UNREAD.
+- **The quote check keeps the marks of a number.** `verify_quotes.py` compared letters and digits only, so
+  "3.5%" was FOUND where the source says "35%", and "n = 1,000" or "r = 0.2" matched "n = 1000" or "r = -0.2". It
+  now keeps a point or comma between digits, a sign before a digit (any minus read as `-`) and % < > = ±: the
+  comparison of poiesis-insight's `quote_gate.py`, copied, so both plugins answer the same on the same quote.
+  Spaces, ligatures and accents fold away as before. Not handled, as in insight: a range "3–5" and a middle dot
+  "3·5" both fold to "35".
+- **Tests.** New `test_verify_citations.py`: bare, prefixed, `/doi/` and `arXiv:` DOIs, closing marks, parentheses,
+  a DOI-like path in another address, the three scripts reading the same DOIs, only the Source line giving a
+  note's DOI, and the exit code for OK, NO DOI, UNREAD, ERROR, NOT FOUND and MISMATCH, with the registry replaced
+  by canned titles. In `test_verify_quotes.py`: the marks of a number, plain words folding as before, bare DOIs in
+  a report's table and parentheses, a Later-work DOI not held, a DOI with parentheses. In `test_library.py`:
+  `--has` by a bare DOI and by one with parentheses, and a Later-work DOI not taken for the note's.
+- **Not checked in this version:** a run against the real DOI registry, and any run on a topic.
+
 ## 2.6.0
 Everything is added: no path or field of 2.5.0 was renamed or removed, and the scripts read every note as before.
 - **Properties.** Each template starts with a block of Obsidian properties (YAML between two `---` lines): `type`,

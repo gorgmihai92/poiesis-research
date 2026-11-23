@@ -15,6 +15,7 @@ This folder is not part of the plugin, so it is not installed with it.
 | `test_databases.py` | Crossref, Europe PMC and arXiv records, and each script when OpenAlex or Semantic Scholar refuses |
 | `test_counts.py` | the share calculation against the lab's recorded run, and `counts.py` replaying recorded answers |
 | `test_verify_quotes.py` | quotes found and not found in a source's text, and references with no note |
+| `test_verify_citations.py` | which DOI a note is read as having (from its Source line: bare, after `doi.org/`, a publisher's `/doi/` or `doi:`), that the three scripts read DOIs alike, and the exit code, with the registry replaced by canned titles |
 | `test_signals.py`, `test_library.py` | the signal sources and the library listing, on recorded answers |
 | `test_open_sources.py` | DOAJ, OSF Preprints, Zenodo and CORE: their records, `search.py` and `counts.py` on recorded answers, CORE skipped without a key, and CORE's key kept out of every file and output |
 

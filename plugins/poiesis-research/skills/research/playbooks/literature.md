@@ -61,7 +61,8 @@ A record from these sources has no citation count, and an OSF record no authors:
 3. **Note:** write `research/notes/<section>/<slug>.md` from `templates/note.md`. Every claim has a page; "Later
    work" lists what `citing.py` found against it, with the date checked. The **Read** line says how much of the
    source was read: full text, part of the text (which pages), abstract only, or title only.
-4. **Verify:** `python3 -I $S/verify_citations.py research/notes` checks that every DOI exists and matches its note.
+4. **Verify:** `python3 -I $S/verify_citations.py research/notes` checks that each note's DOI (on its **Source**
+   line) exists and matches its note; on ERROR rerun it when the registry answers, on UNREAD write the DOI itself.
    `python3 -I $S/verify_quotes.py research/notes` checks that every quote is in the source's text, on the page
    given. A quote that is NOT FOUND or on the WRONG PAGE is corrected from the source or removed, never reworded
    to fit. A quote that is found shows the words are there, not that the claim built on it follows (Wu et al.
