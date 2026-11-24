@@ -7,8 +7,10 @@
 
 Quotes. A quote is a list line that starts with a quotation mark, such as `- "exact words" (p. 4)`. It is looked
 for in the text `extract_text.py` wrote for the note's source (the note's **File** line, or the same name in
---papers), on the page the note gives. Letters and digits must match in order; spaces, hyphens at line ends,
-quotation marks and ligatures are ignored, because PDF text mangles them. One line per quote:
+--papers), on the page the note gives. Letters and digits must match in order, and so must the marks that change a
+number: a point or comma between digits, a sign before a digit (any minus is read as `-`), and % < > = ±. Spaces,
+hyphens at line ends, quotation marks, accents and ligatures are ignored, because PDF text mangles them. One line
+per quote:
 FOUND, WRONG PAGE (the words are in the source, on another page), NOT FOUND, or NO TEXT (the source's text is not
 on this machine, so nothing was checked). An ellipsis splits a quote into parts that must all be there, in order.
 A quote may run onto the next page, but it has to start on the page the note gives.
@@ -20,8 +22,8 @@ and the next `---`) is skipped: its lines are not quotes or references, even a l
 quotation mark or holds a `[[link]]`. Line numbers still count its lines.
 
 References. With --references, every DOI, link to a note, `[[note]]` link and `[@key]` citation in the report is
-looked up in the notes folder (and in a Texere bibliography when there is one). One line per reference with no
-note. "Author Year" mentions that match no note are listed as leads: they are a guess from the text, so they do
+looked up in the notes folder (and in a Texere bibliography when there is one). A note holds the DOI on its
+**Source** line, not those of the later work it lists. One line per reference with no note. "Author Year" mentions that match no note are listed as leads: they are a guess from the text, so they do
 not change the exit code.
 
 Exit code 1 when a quote is not found or is on the wrong page, or when a reference has no note. NO TEXT does not
@@ -36,8 +38,9 @@ import unicodedata
 from pathlib import Path
 
 TEXERE_INDEX = Path("Support") / "Texere" / "Bibliography" / "bibliography.json"
-DOI = re.compile(r"(?:doi\.org/|doi:\s*)(10\.\d{4,9}/[^\s>\]\"'`,;)]+(?:\([^\s)]*\)[^\s>\]\"'`,;)]*)*)", re.I)
 QUOTE_MARKS = "\"“”„«»"
+NUMBER_MARKS = {"%", "<", ">", "=", "±"}
+MINUS = {"-", "−", "–", "+"}
 QUOTE_LINE = re.compile(r"^\s*[-*+]\s+[" + QUOTE_MARKS + r"](.+)$")
 PAGE = re.compile(r"\bpp?\.\s*(\d+)(?:\s*[-–—]\s*(\d+))?")
 MARKER = re.compile(r"^\[p\. (\d+)\]\s*$", re.M)
@@ -70,10 +73,25 @@ def without_properties(text: str) -> str:
     return "".join(line[len(line.rstrip("\r\n")):] for line in lines[: end + 1]) + "".join(lines[end + 1 :])
 
 
-def fold(s: str) -> str:
-    """Letters and digits only, lower case, ligatures and accents undone: what survives PDF text extraction."""
-    s = unicodedata.normalize("NFKD", s)
-    return "".join(c for c in s.casefold() if c.isalnum())
+def fold(text: str) -> str:
+    """What survives being taken out of a PDF: letters and digits in lower case, accents and ligatures undone,
+    and the marks that change a number: a point or comma between digits, a sign before a digit, %, <, >, =, ±.
+    A minus sign is kept as `-`. Copied from poiesis-insight's quote_gate.py, so that both plugins give the same
+    answer on the same quote."""
+    chars = unicodedata.normalize("NFKD", text).casefold()
+    out = []
+    for i, char in enumerate(chars):
+        before = chars[i - 1] if i else ""
+        after = chars[i + 1] if i + 1 < len(chars) else ""
+        if char.isalnum() and unicodedata.category(char) != "Mn":
+            out.append(char)
+        elif char in ".," and before.isdigit() and after.isdigit():
+            out.append(char)
+        elif char in MINUS and after.isdigit() and not before.isalnum():
+            out.append("+" if char == "+" else "-")
+        elif char in NUMBER_MARKS:
+            out.append(char)
+    return "".join(out)
 
 
 def pages_of(text: str) -> dict[int, str]:
@@ -229,21 +247,49 @@ def check_quotes(paths: list[Path], papers: list[Path], strict: bool = False) ->
 # --- References ------------------------------------------------------------------------------
 
 
+# One DOI pattern and one trim, the same in verify_citations.py, verify_quotes.py and library.py (copied: each script
+# stands alone). A DOI is read after doi.org/ or a publisher's /doi/ (…/doi/10.…, …/doi/full/10.…), or bare where it
+# starts a word: at a line's start, or after a space, a bracket, a quotation mark, a colon (doi:, arXiv:), a comma, a
+# table's bar, a `·` or bold marks. One inside another address's path (…/articles/10.…) is not read.
+DOI = re.compile(r"(?:doi\.org/|/doi/(?:[a-z]+/)?|(?<![^\s(\[<{|\"'“‘`*_·:,;]))(10\.\d{4,9}/[^\s<>\[\]\"'`,;|“”‘’·]+)", re.I)
+SOURCE_LINE = re.compile(r"^[ \t]*[-*+][ \t]+\*\*Source:?\*\*:?(.*(?:\n[ \t]+\S.*)*)", re.M | re.I)
+
+
 def trim(doi: str) -> str:
-    doi = doi.rstrip(".").lower()
-    while doi.endswith(")") and doi.count(")") > doi.count("("):
-        doi = doi[:-1].rstrip(".")
-    return doi
+    """Drop what ends a DOI in prose: points, commas, colons, bold or italic marks and closing quotation marks at the
+    end, and unbalanced closing parentheses; keep inner ones (S0016-3287(98)00086-X)."""
+    while True:
+        cut = doi.rstrip(".,:;*_\"'”’")
+        if cut.endswith(")") and cut.count(")") > cut.count("("):
+            cut = cut[:-1]
+        if cut == doi:
+            return doi
+        doi = cut
+
+
+def source_line(text: str) -> str:
+    """A note's **Source** line with the indented lines that continue it, or "" when the note has none."""
+    m = SOURCE_LINE.search(text)
+    return m.group(1) if m else ""
+
+
+def note_doi(text: str) -> str | None:
+    """A note's own DOI: the first one on its **Source** line. A DOI elsewhere in a note (under "Later work", or in
+    a link in its prose) is another work's."""
+    m = DOI.search(source_line(text))
+    return trim(m.group(1)) if m else None
 
 
 def library(notes: Path, bibliography: Path | None) -> dict:
-    """What the library holds: note names, the DOIs in them, (surname, year) pairs from their headings, and the
+    """What the library holds: note names, each note's DOI (from its Source line), (surname, year) pairs from their headings, and the
     citation keys of a Texere bibliography."""
     lib = {"names": set(), "dois": set(), "people": set(), "keys": set()}
     for f in notes.rglob("*.md") if notes.is_dir() else []:
         text = f.read_text(encoding="utf-8", errors="replace")
         lib["names"].add(f.stem.lower())
-        lib["dois"].update(trim(d) for d in DOI.findall(text))
+        doi = note_doi(text)  # its own, from the Source line: a later work's DOI in it is not held
+        if doi:
+            lib["dois"].add(doi.lower())
         heading = next((l[2:] for l in text.splitlines() if l.startswith("# ")), "")
         m = re.search(r"\(([^()]*?),?\s*((?:19|20)\d{2})\)\s*$", heading)
         if m:
@@ -259,7 +305,7 @@ def library(notes: Path, bibliography: Path | None) -> dict:
                 lib["keys"].add(str(e["id"]))
                 lib["names"].add(str(e["id"]).lower())
                 if e.get("DOI"):
-                    lib["dois"].add(trim(str(e["DOI"])))
+                    lib["dois"].add(trim(str(e["DOI"])).lower())
     return lib
 
 
@@ -276,7 +322,7 @@ def check_references(report: Path, notes: Path, bibliography: Path | None) -> in
         if fenced:
             continue
         line = re.sub(r"`[^`]*`", " ", line)  # what is shown as code is an example, not a reference
-        for doi in {trim(d) for d in DOI.findall(line)}:
+        for doi in {trim(d).lower() for d in DOI.findall(line)}:
             if doi in lib["dois"]:
                 found += 1
             else:
