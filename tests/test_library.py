@@ -103,6 +103,34 @@ class Library(unittest.TestCase):
         self.assertIn("Texere @hiltunen2008future (reading-status: read)", out)
         self.assertIn("note research/notes/methods/small-1973-co-citation.md (read: abstract only)", out)
 
+    def test_a_note_with_a_bare_doi_is_found_by_it(self):
+        """Found by the audit of 2026-11-23: --has missed a note whose DOI was written bare, as the template asks."""
+        (self.root / "research" / "notes" / "chelli-2024-hallucinated-references.md").write_text(
+            "# Hallucination rates and reference accuracy (Chelli et al., 2024)\n\n- **Source:** JMIR 26: e53164 · 10.2196/53164\n", encoding="utf-8")
+        code, out = run([str(self.root), "--has", "10.2196/53164"])
+        self.assertEqual(code, 0, out)
+        self.assertIn("note research/notes/chelli-2024-hallucinated-references.md", out)
+        code, out = run([str(self.root)])
+        self.assertIn("- chelli-2024-hallucinated-references · Chelli et al. 2024 · 10.2196/53164 · ", out)
+
+    def test_a_later_work_s_doi_is_not_the_note_s(self):
+        """Found by the review of 2.6.1: --has said a book held the DOI of a critique listed under its Later work."""
+        (self.root / "research" / "notes" / "a-book-1998.md").write_text(
+            "# A book about things (Someone, 1998)\n\n- **Source:** A Press · https://example.org/a-book\n- **Read:** abstract only · 2026-11-23\n\n"
+            "## Later work\n- A critique that cites it · 10.1234/critique-2020 (checked 2026-11-23)\n", encoding="utf-8")
+        code, out = run([str(self.root), "--has", "10.1234/critique-2020"])
+        self.assertEqual(code, 1, out)
+        self.assertEqual(out.strip(), "10.1234/critique-2020: not in the library")
+        code, out = run([str(self.root)])
+        self.assertIn("- a-book-1998 · Someone 1998 · no DOI · ", out)
+
+    def test_a_doi_with_parentheses_is_read_whole(self):
+        (self.root / "research" / "notes" / "porter-1990.md").write_text(
+            "# A paper (Someone, 1990)\n\n- **Source:** Business Horizons (10.1016/0007-6813(90)90040-i).\n", encoding="utf-8")
+        code, out = run([str(self.root), "--has", "10.1016/0007-6813(90)90040-I"])
+        self.assertEqual(code, 0, out)
+        self.assertIn("note research/notes/porter-1990.md", out)
+
     def test_has_says_when_the_library_does_not_hold_a_work(self):
         code, out = run([str(self.root), "--has", "10.9999/not-here"])
         self.assertEqual(code, 1)
