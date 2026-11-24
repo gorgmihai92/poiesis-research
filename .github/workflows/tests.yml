@@ -1,0 +1,23 @@
+name: Tests
+
+# The unit tests, on every push to main and every pull request. Tests that compare against the recorded runs kept
+# in the Poiesis Lab notebook (a private repository) are skipped here and say so; they run on a machine that has
+# the notebook (see tests/README.md).
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run the tests
+        run: python3 -I -m unittest discover -s tests -v
