@@ -1,5 +1,7 @@
 # Poiesis Research
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24501560.svg)](https://doi.org/10.5281/zenodo.24501560)
+
 Research you can check, in Claude Code. Poiesis Research finds the literature on a topic, the evidence behind a
 claim, and the EU and Romanian grants that fit a project. It also counts how much is published on a subject year
 by year, records what is being noticed about it now, and looks for the nearest existing work before anything is
